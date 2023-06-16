@@ -1,0 +1,126 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-6188830440610686907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: 636397badb968144d978b59bb250921a
+  position: {x: 789.3999, y: 304.80005}
+  children: []
+  message: Me alegro de hablar contigo
+--- !u!114 &-5441414448239111802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: fe93bd36d8584f24f92e8d73d437d9a0
+  position: {x: 274.00006, y: 418}
+  children: []
+  message: Hola
+--- !u!114 &-4284526119202958700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: 9753381ba5fc953418e7a6886134aa81
+  position: {x: 529.6, y: 372.39996}
+  children: []
+  message: Hasta luego!
+--- !u!114 &-2666392227142606524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: d488e3efa7521ad4ea1bd7c88e522db7
+  position: {x: 274.39996, y: 304.80002}
+  children:
+  - {fileID: -497716525099196037}
+  - {fileID: -4284526119202958700}
+  message: "Buenas! como tu por aqu\xED"
+--- !u!114 &-1318209042284281157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6662badd63604c1409313f1a633a4e14, type: 3}
+  m_Name: RootNode
+  m_EditorClassIdentifier: 
+  guid: 659e8b8c0019bb34fbf2a54d93e7ed57
+  position: {x: 94.20001, y: 396.80002}
+  children:
+  - {fileID: -2666392227142606524}
+  - {fileID: -5441414448239111802}
+--- !u!114 &-497716525099196037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: 607b7cc90c3e86e408fd87145430bc00
+  position: {x: 529.6, y: 246.75003}
+  children:
+  - {fileID: -6188830440610686907}
+  message: "Te deseo un buen d\xEDa"
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f8c511dcfa664e438f3056b4c07f2cd, type: 3}
+  m_Name: ConversationTree
+  m_EditorClassIdentifier: 
+  database: {fileID: 11400000, guid: b3b4235d97d17a5429a07a05e6691065, type: 2}
+  rootNode: {fileID: -1318209042284281157}
+  nodes:
+  - {fileID: -1318209042284281157}
+  - {fileID: -2666392227142606524}
+  - {fileID: -5441414448239111802}
+  - {fileID: -497716525099196037}
+  - {fileID: -6188830440610686907}
+  - {fileID: -4284526119202958700}
+  runningNode: {fileID: 0}
+  title: Conversation Demo Title
+  description: "Una buena descripci\xF3n que describe la conversaci\xF3n increible"

@@ -1,0 +1,140 @@
+VisualElement {
+    display: flex;
+}
+
+#node-border {
+    background-color: rgb(56, 56, 56);
+    -unity-background-image-tint-color: rgb(238, 238, 238);
+    border-left-color: rgb(37, 37, 37);
+    border-right-color: rgb(37, 37, 37);
+    border-top-color: rgb(37, 37, 37);
+    border-bottom-color: rgb(37, 37, 37);
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+}
+
+#selection-border {
+    border-left-color: rgb(0, 138, 255);
+    border-right-color: rgb(0, 138, 255);
+    border-top-color: rgb(0, 138, 255);
+    border-bottom-color: rgb(0, 138, 255);
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+:hover > #selection-border {
+    border-left-color: rgb(0, 104, 192);
+    border-right-color: rgb(0, 104, 192);
+    border-top-color: rgb(0, 104, 192);
+    border-bottom-color: rgb(0, 104, 192);
+    border-left-width: 3px;
+    border-right-width: 3px;
+    border-top-width: 3px;
+    border-bottom-width: 3px;
+}
+
+:selected > #selection-border {
+    border-left-color: rgb(0, 138, 255);
+    border-right-color: rgb(0, 138, 255);
+    border-top-color: rgb(0, 138, 255);
+    border-bottom-color: rgb(0, 138, 255);
+    border-left-width: 3px;
+    border-right-width: 3px;
+    border-top-width: 3px;
+    border-bottom-width: 3px;
+}
+
+:hover:selected > #selection-border {
+    border-left-width: 4px;
+    border-right-width: 4px;
+    border-top-width: 4px;
+    border-bottom-width: 4px;
+    border-left-color: rgb(0, 138, 255);
+    border-right-color: rgb(0, 138, 255);
+    border-top-color: rgb(0, 138, 255);
+    border-bottom-color: rgb(0, 138, 255);
+}
+
+.node {
+    min-width: 150px;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.root #node-container {
+    display: none;
+}
+
+.dialog #root-label {
+    display: none;
+}
+
+#node-state {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    border-left-width: 3px;
+    border-right-width: 3px;
+    border-top-width: 3px;
+    border-bottom-width: 3px;
+    -unity-background-scale-mode: stretch-to-fill;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-image: none;
+}
+
+.running #node-state {
+    border-left-color: rgb(255, 253, 0);
+    border-right-color: rgb(255, 253, 0);
+    border-top-color: rgb(255, 253, 0);
+    border-bottom-color: rgb(255, 253, 0);
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.finished #node-state {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-left-color: rgb(0, 255, 20);
+    border-right-color: rgb(0, 255, 20);
+    border-top-color: rgb(0, 255, 20);
+    border-bottom-color: rgb(0, 255, 20);
+}
+
+.unreachable #node-state {
+    background-color: rgba(0, 0, 0, 0.45);
+}
+
+#message-label {
+    text-overflow: clip;
+    white-space: normal;
+    width: auto;
+    max-width: 200px;
+}

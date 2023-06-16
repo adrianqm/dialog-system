@@ -1,0 +1,105 @@
+GridBackground {
+    --grid-background-color: rgb(40, 40, 40);
+    --line-color: rgba(193, 196, 192, 0.1);
+    --thick-line-color: rgba(193, 196, 192, 0.1);
+    --spacing: 15;
+}
+
+#tabs {
+    flex-direction: row;
+    background-color: rgb(229, 223, 223);
+    -unity-font-style: bold;
+    font-size: 12px;
+    cursor: initial;
+}
+
+.tab {
+    flex-grow: 1;
+    cursor: initial;
+}
+
+.currentlySelectedTab {
+    background-color: rgb(0, 96, 178);
+    color: rgb(255, 255, 255);
+}
+
+.nonSelectedTab:hover {
+    background-color: rgb(36, 81, 120);
+    color: rgb(255, 255, 255);
+}
+
+#tabContent {
+    background-color: rgb(255, 255, 255);
+    font-size: 12px;
+}
+
+.unselectedContent {
+    display: none;
+}
+
+.conversation-name-label--selected {
+    border-left-color: rgb(0, 138, 255);
+    border-right-color: rgb(0, 138, 255);
+    border-top-color: rgb(0, 138, 255);
+    border-bottom-color: rgb(0, 138, 255);
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-top-width: 2px;
+    border-bottom-width: 2px;
+    opacity: 1;
+}
+
+.conversation-name-label:hover {
+    border-left-color: rgb(0, 104, 192);
+    border-right-color: rgb(0, 104, 192);
+    border-top-color: rgb(0, 104, 192);
+    border-bottom-color: rgb(0, 104, 192);
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-top-width: 2px;
+    border-bottom-width: 2px;
+}
+
+.unity-multi-column-header__column {
+    display: flex;
+    flex-direction: row-reverse;
+    -unity-text-align: upper-left;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+}
+
+.createNewActorButton {
+}
+
+.actorsTextFieldCell {
+    justify-content: center;
+    align-items: stretch;
+    align-self: auto;
+    -unity-text-align: middle-center;
+    height: auto;
+    width: auto;
+    min-height: 50px;
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+.actorsTextFieldCell--textField {
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    height: 20px;
+}
+
+.actorsTextFieldCell--textField :hover {
+    cursor: text;
+}
+
+.actorsToogleCell {
+    justify-content: center;
+    align-items: center;
+    min-height: 50px;
+}
