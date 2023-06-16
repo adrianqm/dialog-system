@@ -28,10 +28,10 @@ MonoBehaviour:
   m_Name: Actor
   m_EditorClassIdentifier: 
   guid: 447477b7e3f538f4ab2396d23099e5b7
-  actorImage: {fileID: 0}
+  actorImage: {fileID: 21300000, guid: 8fbfa1bc77a0388499f83f32b410eea3, type: 3}
   fullName: Primer Actor Player
   description: Player Description 1
-  isPlayer: 0
+  isPlayer: 1
 --- !u!114 &8764563417313772611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: Actor
   m_EditorClassIdentifier: 
   guid: 75dbeb8e09a1aad4c9201731e92ca64f
-  actorImage: {fileID: 0}
+  actorImage: {fileID: 21300000, guid: 7ae9d2c635ae1274091b08b9b24d09cb, type: 3}
   fullName: Npc Name
   description: Npc description
-  isPlayer: 0
+  isPlayer: 1

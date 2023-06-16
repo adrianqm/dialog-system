@@ -39,7 +39,7 @@ public class ActorsListView : MultiColumnListView
         // Create new table
         AddColumns();
 
-        fixedItemHeight = 50;
+        fixedItemHeight = 55;
         sortingEnabled = true;
         itemsSource = actorsTree.actors;
         reorderable = true;
@@ -49,6 +49,11 @@ public class ActorsListView : MultiColumnListView
         var ve = new VisualElement();
         var image = new Image();
         ve.Add(image);
+        image.AddToClassList("actorsImageCell--image");
+        var imageSelector = new ObjectField();
+        imageSelector.objectType = typeof(Sprite);
+        ve.Add(imageSelector);
+        imageSelector.AddToClassList("actorsImageCell--image-selector");
         ve.style.paddingTop = 5;
         ve.style.paddingBottom = 5;
         ve.style.height = 50;
@@ -76,7 +81,18 @@ public class ActorsListView : MultiColumnListView
 
     private void OnBindCell(VisualElement ve, int index, int columnIndex)
     {
-        if (columnIndex == 0) ve.Q<Image>().sprite = _actorsTree.actors[index].actorImage;
+        if (columnIndex == 0)
+        {
+            ObjectField spritePicker = ve.Q<ObjectField>();
+            spritePicker.bindingPath = "actorImage";
+            spritePicker.Bind(new SerializedObject(_actorsTree.actors[index]));
+            
+            ve.Q<Image>().sprite = _actorsTree.actors[index].actorImage;
+            spritePicker.RegisterValueChangedCallback((evt) =>
+            {
+                ve.Q<Image>().sprite = _actorsTree.actors[index].actorImage;
+            });
+        }
         
         if (columnIndex == 1)
         {
@@ -141,7 +157,7 @@ public class ActorsListView : MultiColumnListView
             makeCell = OnMakeImageCell,
             stretchable = true,
             maxWidth = 100,
-            minWidth = 50,
+            minWidth = 100,
             sortable = false
         });
         columns?.Add(new Column
@@ -151,7 +167,7 @@ public class ActorsListView : MultiColumnListView
             bindCell = (x, y) => { OnBindCell(x, y, 1); },
             makeCell = OnMakeLabelCell,
             stretchable = true,
-            minWidth = 50,
+            minWidth = 75,
             sortable = true
         });
         columns?.Add(new Column
@@ -161,7 +177,7 @@ public class ActorsListView : MultiColumnListView
             bindCell = (x, y) => { OnBindCell(x, y, 2); },
             makeCell = OnMakeLabelCell,
             stretchable = true,
-            minWidth = 50,
+            minWidth = 100,
             sortable = true
         });
         columns?.Add(new Column
