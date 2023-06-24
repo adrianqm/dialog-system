@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: DialogNode
   m_EditorClassIdentifier: 
   guid: 636397badb968144d978b59bb250921a
-  position: {x: 894, y: 178}
+  position: {x: 549, y: 116}
   children: []
   actor: {fileID: 9047476911972959407, guid: 9086596a3d7d5be4eaca8cbe76b8d9af, type: 2}
-  message: Adios!!
+  message: Me alegro de hablar contigo
 --- !u!114 &-5441414448239111802
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30,10 +30,10 @@ MonoBehaviour:
   m_Name: DialogNode
   m_EditorClassIdentifier: 
   guid: fe93bd36d8584f24f92e8d73d437d9a0
-  position: {x: 229, y: 333}
+  position: {x: 33.59998, y: 244.13002}
   children: []
   actor: {fileID: 624939042611582018, guid: 9086596a3d7d5be4eaca8cbe76b8d9af, type: 2}
-  message: No voy a hablar
+  message: Hola
 --- !u!114 &-4284526119202958700
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47,10 +47,10 @@ MonoBehaviour:
   m_Name: DialogNode
   m_EditorClassIdentifier: 
   guid: 9753381ba5fc953418e7a6886134aa81
-  position: {x: 560, y: 231}
+  position: {x: 289, y: 183}
   children: []
   actor: {fileID: 0}
-  message: 'Texto inalcanzable     '
+  message: Hasta luego!
 --- !u!114 &-2666392227142606524
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64,13 +64,12 @@ MonoBehaviour:
   m_Name: DialogNode
   m_EditorClassIdentifier: 
   guid: d488e3efa7521ad4ea1bd7c88e522db7
-  position: {x: 229, y: 160}
+  position: {x: 34, y: 116}
   children:
   - {fileID: -497716525099196037}
   - {fileID: -4284526119202958700}
   actor: {fileID: 9047476911972959407, guid: 9086596a3d7d5be4eaca8cbe76b8d9af, type: 2}
-  message: Buenas! que tal esto es un texto larga de entrada para ver como responde
-    el texto responsive
+  message: "Buenas! como tu por aqu\xED"
 --- !u!114 &-1318209042284281157
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -84,7 +83,7 @@ MonoBehaviour:
   m_Name: RootNode
   m_EditorClassIdentifier: 
   guid: 659e8b8c0019bb34fbf2a54d93e7ed57
-  position: {x: 33, y: 297}
+  position: {x: -146.40002, y: 208}
   children:
   - {fileID: -2666392227142606524}
   - {fileID: -5441414448239111802}
@@ -101,11 +100,11 @@ MonoBehaviour:
   m_Name: DialogNode
   m_EditorClassIdentifier: 
   guid: 607b7cc90c3e86e408fd87145430bc00
-  position: {x: 560, y: 118}
+  position: {x: 289, y: 47}
   children:
   - {fileID: -6188830440610686907}
   actor: {fileID: 9047476911972959407, guid: 9086596a3d7d5be4eaca8cbe76b8d9af, type: 2}
-  message: Te deseo un buen dia
+  message: "Te deseo un buen d\xEDa"
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0

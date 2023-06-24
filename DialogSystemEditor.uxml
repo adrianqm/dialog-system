@@ -4,25 +4,27 @@
         <uie:ToolbarMenu tabindex="-1" display-tooltip-when-elided="true" text="Assets" />
     </uie:Toolbar>
     <ui:VisualElement name="tabs" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); opacity: 1; min-height: 30px; max-height: 30px; align-self: flex-start;">
-        <ui:Label tabindex="-1" text="Database" display-tooltip-when-elided="true" name="DatabaseTab" class="tab nonSelectedTab" style="align-self: auto; justify-content: flex-start; align-items: auto; position: relative; min-height: auto; flex-shrink: 0; -unity-text-align: middle-center; opacity: 1;" />
-        <ui:Label tabindex="-1" text="Actors" display-tooltip-when-elided="true" name="ActorsTab" class="tab currentlySelectedTab" style="align-self: auto; justify-content: flex-start; align-items: auto; position: relative; min-height: auto; flex-shrink: 0; -unity-text-align: middle-center; opacity: 1;" />
-        <ui:Label tabindex="-1" text="Conversations" display-tooltip-when-elided="true" name="ConversationsTab" class="tab nonSelectedTab" style="-unity-text-align: middle-center;" />
+        <ui:Label tabindex="-1" text="Actors" display-tooltip-when-elided="true" name="ActorsTab" class="tab nonSelectedTab" style="align-self: auto; justify-content: flex-start; align-items: auto; position: relative; min-height: auto; flex-shrink: 0; -unity-text-align: middle-center; opacity: 1;" />
+        <ui:Label tabindex="-1" text="Conversations" display-tooltip-when-elided="true" name="ConversationsTab" class="tab currentlySelectedTab" style="-unity-text-align: middle-center;" />
     </ui:VisualElement>
     <ui:VisualElement name="tabContent" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
-        <ui:VisualElement name="DatabaseContent" class="unselectedContent" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
-        <ui:VisualElement name="ActorsContent" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
-            <ui:Button text="Create New Actor" display-tooltip-when-elided="true" name="createNewActorButton" class="createNewActorButton" style="margin-left: 10px; margin-right: 10px; margin-top: 10px; margin-bottom: 10px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; max-width: none; width: 150px; height: 25px;" />
-            <ActorsListView focusable="true" style="flex-grow: 1; display: flex;" />
+        <ui:VisualElement name="ActorsContent" class="unselectedContent" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+            <ui:VisualElement name="ActorsListViewHeader" style="flex-grow: 1; background-color: rgba(39, 45, 53, 0.75); flex-direction: row; max-height: 45px; min-height: 45px; justify-content: center;">
+                <ui:VisualElement name="HeaderContainer" style="flex-grow: 1; background-color: rgb(27, 27, 32); flex-direction: row; max-height: 30px; min-height: 30px; justify-content: center; align-items: center; opacity: 1; max-width: 450px; border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; margin-top: 10px; margin-bottom: 10px; align-self: center;">
+                    <uie:ToolbarSearchField focusable="true" name="actorsSearchFilter" class="actorsSearchFilter" style="height: 16px; align-items: center; flex-shrink: 1; flex-grow: 1; margin-left: 5px; margin-right: 10px; margin-top: 20px; margin-bottom: 0; background-color: rgb(39, 45, 53); max-width: 300px; width: 300px;" />
+                    <ui:Button text="Create New Actor" display-tooltip-when-elided="true" name="createNewActorButton" class="createNewActorButton" style="padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; max-width: none; width: 120px; height: 20px; flex-direction: row; margin-left: 0; margin-right: 0; margin-top: 20px; margin-bottom: 0;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ActorsListView focusable="true" style="flex-grow: 1; display: flex; background-color: rgba(43, 48, 54, 0.75);" />
         </ui:VisualElement>
-        <ui:VisualElement name="ConversationsContent" class="unselectedContent" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); font-size: 12px; -unity-font-style: normal;">
+        <ui:VisualElement name="ConversationsContent" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); font-size: 12px; -unity-font-style: normal;">
             <SplitView fixed-pane-initial-dimension="250" orientation="Horizontal" style="flex-grow: 1;">
-                <ui:VisualElement name="left-panel" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); min-width: 250px; max-width: none;">
-                    <ui:Label tabindex="-1" text="Inspector" display-tooltip-when-elided="true" style="background-color: rgb(37, 37, 37); padding-left: 5px;" />
-                    <InspectorView style="flex-grow: 1; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 10px; min-width: auto;" />
+                <ui:VisualElement name="left-panel" style="flex-grow: 1; background-color: rgba(41, 46, 53, 0.75); min-width: 250px; max-width: none; flex-shrink: 1;">
+                    <InspectorView name="InspectorView" style="flex-grow: 1; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; min-width: auto; align-items: stretch;" />
                 </ui:VisualElement>
                 <ui:VisualElement name="right-panel" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
                     <DialogSystemView name="DialogSystemView" style="flex-grow: 1;" />
-                    <ui:Label tabindex="-1" text="Conversation Name" display-tooltip-when-elided="false" enable-rich-text="true" name="conversation-name-label" focusable="true" class="conversation-name-label" style="background-color: rgb(37, 37, 37); position: absolute; left: 10px; min-height: auto; -unity-text-align: middle-left; text-overflow: clip; white-space: nowrap; align-items: auto; top: 10px; right: auto; bottom: auto; -unity-font: initial; visibility: visible; overflow: visible; display: none; opacity: 1; flex-grow: 1; flex-shrink: 1; flex-basis: auto; padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; border-top-left-radius: 5px; border-bottom-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
+                    <ui:Label tabindex="-1" text="Conversation Name" display-tooltip-when-elided="false" enable-rich-text="true" name="conversation-name-label" focusable="true" class="conversation-name-label" style="background-color: rgb(24, 24, 29); position: absolute; left: 10px; min-height: auto; -unity-text-align: middle-left; text-overflow: clip; white-space: nowrap; align-items: auto; top: 10px; right: auto; bottom: auto; -unity-font: initial; visibility: visible; overflow: visible; display: none; opacity: 1; flex-grow: 1; flex-shrink: 1; flex-basis: auto; padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; border-top-left-radius: 5px; border-bottom-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
                 </ui:VisualElement>
             </SplitView>
         </ui:VisualElement>

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class DialogNode : Node
 {
+    public Actor actor;
     [TextArea] public string message;
 
     public override void OnRunning()

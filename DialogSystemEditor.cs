@@ -1,16 +1,12 @@
+
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using AQM.Tools;
-using Codice.Client.BaseCommands.Import;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.Callbacks;
-using UnityEditor.Experimental;
-using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.Serialization;
 using UnityEngine.UIElements;
 
 public class DialogSystemEditor : EditorWindow
@@ -21,6 +17,8 @@ public class DialogSystemEditor : EditorWindow
     private Label _conversationNameLabel;
     private TabbedMenuController _tabbedMenuController;
     private Button _createNewActorButton;
+    private Action _unregisterAll;
+    private DialogSystemDatabase _currentDatabase;
     
     [SerializeField]
     private VisualTreeAsset visualTreeAsset = default;
@@ -67,6 +65,10 @@ public class DialogSystemEditor : EditorWindow
         _actorsListView = root.Q<ActorsListView>();
         _createNewActorButton = root.Q<Button>(className: "createNewActorButton");
         _createNewActorButton.clicked += OnCreateNewActor;
+        VisualElement scrollContainer = _actorsListView.Q("unity-content-and-vertical-scroll-container");
+        _actorsListView.SetUpScrollContainerManipulator(scrollContainer);
+        ToolbarSearchField searchField = root.Q<ToolbarSearchField>(className: "actorsSearchFilter");
+        _actorsListView.SetUpSearchFieldFilterCallback(searchField);
         
         _treeView.OnNodeSelected = OnNodeSelectionChanged;
         
@@ -90,7 +92,7 @@ public class DialogSystemEditor : EditorWindow
     private void OnDisable()
     {
         EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
-        _createNewActorButton.clicked -= OnCreateNewActor;
+        if(_createNewActorButton != null) _createNewActorButton.clicked -= OnCreateNewActor;
     }
 
     private void OnCreateNewActor()
@@ -115,7 +117,11 @@ public class DialogSystemEditor : EditorWindow
     {
         DialogSystemDatabase database = Selection.activeObject as DialogSystemDatabase;
         ConversationTree tree;
-        if (database) tree = database.conversations[0];
+        if (database)
+        {
+            tree = database.conversations[0];
+            _currentDatabase = database;
+        }
         else tree = Selection.activeObject as ConversationTree;
         
         if (!tree)
@@ -147,38 +153,53 @@ public class DialogSystemEditor : EditorWindow
         SerializedObject so = new SerializedObject(tree.database);
         rootVisualElement.Bind(so);
         
+        // Show conversation inspector
+        _inspectorView.ShowConversationInspector(tree);
+        
         // Register Conversation Name Label Query
         _conversationNameLabel = rootVisualElement.Q<Label>(className: "conversation-name-label");
         if (_conversationNameLabel == null)
         {
             _conversationNameLabel = rootVisualElement.Q<Label>(className: "conversation-name-label--selected");
-        } 
-        _conversationNameLabel.style.display = DisplayStyle.Flex;
-        _conversationNameLabel.bindingPath = "title";
-        _conversationNameLabel.Bind(new SerializedObject(tree));
-        _conversationNameLabel.RegisterCallback<ClickEvent>((evt) =>
+        }
+
+        if (_conversationNameLabel != null)
         {
-            _conversationNameLabel.AddToClassList("conversation-name-label--selected");
-            _conversationNameLabel.RemoveFromClassList("conversation-name-label");
-            _treeView.ClearSelection();
-            _inspectorView.UpdateWithConversationName(tree);
-        });
+            ClearAllValueCallbacks();
+            _conversationNameLabel.style.display = DisplayStyle.Flex;
+            _conversationNameLabel.bindingPath = "title";
+            _conversationNameLabel.Bind(new SerializedObject(tree));
+            EventCallback<ClickEvent> clickEvent = (e) =>
+            {
+                _conversationNameLabel.AddToClassList("conversation-name-label--selected");
+                _conversationNameLabel.RemoveFromClassList("conversation-name-label");
+                _treeView.ClearSelection();
+                _inspectorView.ShowConversationInspector(tree);
+            };
+            
+            _conversationNameLabel.RegisterCallback(clickEvent);
+            _unregisterAll += () => _conversationNameLabel.UnregisterCallback(clickEvent);
+        }
         
         // Set Actors data
         _actorsListView.SetupTable(tree.database.actorsTree);
         
         _treeView?.PopulateView(tree);
     }
-    
-    
 
     void OnNodeSelectionChanged(NodeView node)
     {
-        _inspectorView.UpdateSelection(node);
+        _inspectorView.ShowDialogInspector(node,_currentDatabase.actorsTree);
     }
 
     private void OnInspectorUpdate()
     {
         _treeView?.UpdateNodeStates();
+    }
+    
+    private void ClearAllValueCallbacks()
+    {
+        _unregisterAll?.Invoke();
+        _unregisterAll = null;
     }
 }

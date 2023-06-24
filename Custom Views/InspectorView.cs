@@ -8,40 +8,17 @@ public class InspectorView : VisualElement
 {
     public new class UxmlFactory:  UxmlFactory<InspectorView, InspectorView.UxmlTraits> {}
 
-    private Editor editor;
-    public InspectorView() {}
-
-    internal void UpdateSelection(NodeView nodeView)
-    {
-        ClearInspector();
-        editor = Editor.CreateEditor(nodeView.node);
-        IMGUIContainer container = new IMGUIContainer(() =>
-        {
-            if (editor.target != null)
-            {
-                editor.OnInspectorGUI();
-            }
-        });
-        Add(container);
-    }
-
-    internal void UpdateWithConversationName(ConversationTree conversationTree)
-    {
-        ClearInspector();
-        editor = Editor.CreateEditor(conversationTree);
-        IMGUIContainer container = new IMGUIContainer(() =>
-        {
-            if (editor.target != null)
-            {
-                editor.OnInspectorGUI();
-            }
-        });
-        Add(container);
-    }
-
-    private void ClearInspector()
+    internal void ShowDialogInspector(NodeView nodeView,ActorsTree actorsTree)
     {
         Clear();
-        Object.DestroyImmediate(editor);
+        DialogInspectorView container = new DialogInspectorView(nodeView, actorsTree);
+        Add(container);
+    }
+
+    internal void ShowConversationInspector(ConversationTree conversationTree)
+    {
+        Clear();
+        ConversationInspectorView container = new ConversationInspectorView(conversationTree);
+        Add(container);
     }
 }

@@ -19,12 +19,12 @@ GridBackground {
 }
 
 .currentlySelectedTab {
-    background-color: rgb(0, 96, 178);
+    background-color: rgb(24, 24, 29);
     color: rgb(255, 255, 255);
 }
 
 .nonSelectedTab:hover {
-    background-color: rgb(36, 81, 120);
+    background-color: rgb(41, 41, 41);
     color: rgb(255, 255, 255);
 }
 
@@ -87,26 +87,78 @@ GridBackground {
 }
 
 .actorsTextFieldCell--textField {
-    padding-top: 0;
-    padding-bottom: 0;
-    padding-left: 0;
-    padding-right: 0;
-    height: 20px;
+    height: auto;
+    left: auto;
+    background-color: rgb(39, 45, 53);
+    min-height: 33px;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
 }
 
 .actorsTextFieldCell--textField :hover {
     cursor: text;
 }
 
-.actorsToogleCell {
+.actorsTextFieldCell--textField .unity-base-text-field__input {
+    height: 0;
+    left: auto;
+    background-color: rgb(39, 45, 53);
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    min-height: 33px;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+.actorsToggleCell {
     justify-content: center;
     align-items: center;
-    min-height: 50px;
+    min-height: 55px;
+}
+
+.actorsToggleCell .unity-toggle {
+    justify-content: center;
+    align-items: stretch;
+    min-height: auto;
+    background-color: rgb(39, 45, 53);
+    color: rgb(39, 45, 53);
+    -unity-background-image-tint-color: rgb(255, 255, 255);
+    -unity-background-scale-mode: stretch-to-fill;
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+.actorsDeleteCell {
+    justify-content: center;
+    align-items: center;
+    min-height: 53px;
+    background-color: rgba(39, 45, 53, 0);
+}
+
+.actorsDeleteCell--button {
+    padding-left: 1px;
+    padding-right: 1px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    background-color: rgb(39, 45, 53);
 }
 
 .actorsImageCell--image {
     flex-grow: 1;
     min-height: 45px;
+    padding-right: 10px;
 }
 
 .actorsImageCell--image-selector {
@@ -114,16 +166,15 @@ GridBackground {
     visibility: visible;
     left: auto;
     height: 45px;
-    background-color: rgba(0, 0, 0, 0);
-    right: 2px;
+    right: 0;
 }
 
 .unity-object-field__input {
-    background-color: rgba(255, 255, 255, 0);
     border-left-color: rgba(0, 0, 0, 0);
     border-right-color: rgba(0, 0, 0, 0);
     border-top-color: rgba(0, 0, 0, 0);
     border-bottom-color: rgba(0, 0, 0, 0);
+    background-color: rgba(0, 0, 0, 0);
 }
 
 .unity-object-field__object {
@@ -131,7 +182,6 @@ GridBackground {
     display: flex;
     opacity: 0;
     max-width: none;
-    background-color: rgba(255, 255, 255, 0);
     min-width: auto;
     width: 66px;
     border-left-color: rgba(0, 0, 0, 0);
@@ -145,4 +195,35 @@ GridBackground {
     border-bottom-left-radius: 4px;
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
+}
+
+.unity-list-view__reorderable-handle {
+    flex-grow: 1;
+    align-items: auto;
+    position: absolute;
+    left: 5px;
+    justify-content: center;
+    height: 50px;
+    top: 1px;
+}
+
+.unity-list-view__reorderable-item__container {
+}
+
+.unity-base-text-field__input :hover {
+    cursor: text;
+}
+
+.unity-search-field-base__cancel-button :hover {
+    cursor: initial;
+}
+
+.unity-multi-column-view__row-container {
+    background-color: rgb(24, 24, 29);
+    border-bottom-color: rgb(99, 99, 99);
+    border-left-width: 0.5px;
+    border-right-width: 0.5px;
+    border-top-width: 0;
+    border-bottom-width: 0.5px;
+    border-top-color: rgb(99, 99, 99);
 }

@@ -13,7 +13,7 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
     public Port input;
     public Port output;
         
-    public NodeView(Node node): base("Assets/dialog-system/NodeView.uxml")
+    public NodeView(Node node): base("Assets/dialog-system/Custom Views/NodeView.uxml")
     {
         this.node = node;
         this.title = node.name;
@@ -30,10 +30,22 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
         CreateInputPorts();
         CreateOutputPorts();
         SetupClasses();
+        
+        
+        DialogNode dialogNode = node as DialogNode;
+        if (dialogNode)
+        {
+            VisualElement actorImageContainer = this.Q<VisualElement>("actor-image");
 
-        Label messageLabel = this.Q<Label>("message-label");
-        messageLabel.bindingPath = "message";
-        messageLabel.Bind(new SerializedObject(node));
+            bool cond = dialogNode.actor && dialogNode.actor.actorImage;
+            Image image = new Image();
+            actorImageContainer.Add(image);
+            image.sprite = cond?dialogNode.actor.actorImage:Resources.Load<Sprite>( "unknown-person" );
+        }
+            
+        TextField messageTextField = this.Q<TextField>("message-textfield");
+        messageTextField.bindingPath = "message";
+        messageTextField.Bind(new SerializedObject(node));
     }
 
     private void SetupClasses()

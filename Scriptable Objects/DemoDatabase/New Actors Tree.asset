@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   guid: 41a20fc05c9016a44ac9b209ebdfe962
   actorImage: {fileID: 21300000, guid: b3211798ba9323e49a18e1dc5cd40fae, type: 3}
-  fullName: NPC 3
+  fullName: Player NPC mix
   description: defaultDesc
   isPlayer: 0
 --- !u!114 &11400000
@@ -30,11 +30,11 @@ MonoBehaviour:
   m_Name: New Actors Tree
   m_EditorClassIdentifier: 
   actors:
-  - {fileID: 9047476911972959407}
-  - {fileID: 2096307716613330869}
-  - {fileID: 6948615333648034054}
-  - {fileID: 624939042611582018}
   - {fileID: -8978422354640992209}
+  - {fileID: 2096307716613330869}
+  - {fileID: 9047476911972959407}
+  - {fileID: 624939042611582018}
+  - {fileID: 6948615333648034054}
 --- !u!114 &624939042611582018
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65,7 +65,7 @@ MonoBehaviour:
   m_Name: Actor
   m_EditorClassIdentifier: 
   guid: 6b3e3fee6c4b30e49a1ec61231dbdad8
-  actorImage: {fileID: 21300000, guid: 738a30cc0b59b154b81d0dd9a11423ba, type: 3}
+  actorImage: {fileID: 21300000, guid: 005888ede18a58e4db8d069cfa3007cb, type: 3}
   fullName: Github Name
   description: defaultDesc
   isPlayer: 0

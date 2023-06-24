@@ -132,9 +132,30 @@ VisualElement {
     background-color: rgba(0, 0, 0, 0.45);
 }
 
-#message-label {
+#message-textfield .unity-label {
     text-overflow: clip;
     white-space: normal;
     width: auto;
     max-width: 200px;
+    display: none;
+}
+
+#message-textfield .unity-base-text-field__input {
+    text-overflow: clip;
+    white-space: normal;
+    display: flex;
+    align-items: stretch;
+    flex-direction: row;
+    min-height: 40px;
+    align-self: center;
+    -unity-text-align: middle-left;
+    max-width: 212px;
+    flex-shrink: 1;
+    min-width: 212px;
+    max-height: 300px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: rgb(39, 45, 53);
 }

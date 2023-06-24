@@ -1,0 +1,33 @@
+.unity-text-field .unity-label {
+    display: none;
+}
+
+.unity-text-field__input {
+    display: flex;
+    background-color: rgb(39, 45, 53);
+    -unity-text-align: middle-left;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    align-items: stretch;
+    flex-direction: row;
+    flex-shrink: 1;
+    flex-wrap: nowrap;
+}
+
+.unity-base-text-field__multiline-container {
+    display: flex;
+    background-color: rgb(39, 45, 53);
+    -unity-text-align: middle-left;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    align-items: stretch;
+    flex-direction: column;
+    flex-shrink: 1;
+    flex-wrap: nowrap;
+    white-space: normal;
+    text-overflow: clip;
+}
