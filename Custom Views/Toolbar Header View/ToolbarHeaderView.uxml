@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/dialog-system/Custom%20Views/Toolbar%20Header%20View/ToolbarHeaderView.uss?fileID=7433441132597879392&amp;guid=afefa978f1254b34180ef51e6e899fc1&amp;type=3#ToolbarHeaderView" />
+    <ui:VisualElement name="header-container" style="flex-grow: 1; background-color: rgb(24, 24, 29); flex-direction: row; position: absolute; left: auto; justify-content: flex-start; align-self: auto; padding-left: 2px; padding-right: 2px; padding-top: 2px; padding-bottom: 2px; border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; margin-top: 2px; margin-bottom: 2px; margin-left: 2px; margin-right: 2px; height: 20px;">
+        <ui:Label tabindex="-1" text="Dialog Database Name" display-tooltip-when-elided="true" name="database-name" style="flex-shrink: 0; flex-grow: 0; height: 30px; flex-direction: row; align-self: center; -unity-text-align: middle-left; -unity-font-style: bold; padding-left: 2px;" />
+        <ui:VisualElement name="db-object-container-field" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; display: flex;" />
+        <ui:VisualElement name="db-add-new-button" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;" />
+        <ui:VisualElement name="db-edit-button" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;" />
+        <ui:VisualElement name="db-remove-current" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;" />
+    </ui:VisualElement>
+</ui:UXML>

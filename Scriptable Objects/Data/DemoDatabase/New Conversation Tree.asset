@@ -1,0 +1,93 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-5566271426749181341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: 21d93f665ca46d246923799bb1920f47
+  position: {x: 216, y: 238}
+  children:
+  - {fileID: -4876230499028064035}
+  - {fileID: 7360693370976954898}
+  actor: {fileID: 8067286837682498560, guid: 9086596a3d7d5be4eaca8cbe76b8d9af, type: 2}
+  message: Primer mensaje
+--- !u!114 &-4876230499028064035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: 4738bcf63d7e6e046a181aeeb20dea67
+  position: {x: 559, y: 238.12003}
+  children: []
+  actor: {fileID: 6948615333648034054, guid: 9086596a3d7d5be4eaca8cbe76b8d9af, type: 2}
+  message: 'Segundo mensaje '
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f8c511dcfa664e438f3056b4c07f2cd, type: 3}
+  m_Name: New Conversation Tree
+  m_EditorClassIdentifier: 
+  database: {fileID: 0}
+  rootNode: {fileID: 3607162762221716545}
+  nodes:
+  - {fileID: 3607162762221716545}
+  - {fileID: -5566271426749181341}
+  - {fileID: -4876230499028064035}
+  - {fileID: 7360693370976954898}
+  runningNode: {fileID: 0}
+  title: Conversation Example
+  description: Example Conversation desc
+--- !u!114 &3607162762221716545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6662badd63604c1409313f1a633a4e14, type: 3}
+  m_Name: RootNode
+  m_EditorClassIdentifier: 
+  guid: ec8b9d976f99a0a4686302926b1591df
+  position: {x: 31.450022, y: 272.00003}
+  children:
+  - {fileID: -5566271426749181341}
+--- !u!114 &7360693370976954898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: 0a110aac2de037246a5e04d6adc71e8b
+  position: {x: 559, y: 370.4501}
+  children: []
+  actor: {fileID: 2096307716613330869, guid: 9086596a3d7d5be4eaca8cbe76b8d9af, type: 2}
+  message: Otra conver

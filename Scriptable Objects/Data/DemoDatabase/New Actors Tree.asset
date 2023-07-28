@@ -1,22 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8978422354640992209
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 755900283b136124d8ad835b2dc923bc, type: 3}
-  m_Name: Actor
-  m_EditorClassIdentifier: 
-  guid: 41a20fc05c9016a44ac9b209ebdfe962
-  actorImage: {fileID: 21300000, guid: b3211798ba9323e49a18e1dc5cd40fae, type: 3}
-  fullName: NPC 3
-  description: defaultDesc
-  isPlayer: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29,29 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef718b20bf13d0d47bbba18c64fc4666, type: 3}
   m_Name: New Actors Tree
   m_EditorClassIdentifier: 
+  database: {fileID: 11400000, guid: b3b4235d97d17a5429a07a05e6691065, type: 2}
   actors:
   - {fileID: 9047476911972959407}
+  - {fileID: 8067286837682498560}
   - {fileID: 2096307716613330869}
+  - {fileID: 8271663155344605056}
   - {fileID: 6948615333648034054}
-  - {fileID: 624939042611582018}
-  - {fileID: -8978422354640992209}
---- !u!114 &624939042611582018
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 755900283b136124d8ad835b2dc923bc, type: 3}
-  m_Name: Actor
-  m_EditorClassIdentifier: 
-  guid: aefdfdd504ee1c547b8171cb53c1af31
-  actorImage: {fileID: 21300000, guid: 7ae9d2c635ae1274091b08b9b24d09cb, type: 3}
-  fullName: NPC 2
-  description: 3
-  isPlayer: 0
 --- !u!114 &2096307716613330869
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65,7 +32,7 @@ MonoBehaviour:
   m_Name: Actor
   m_EditorClassIdentifier: 
   guid: 6b3e3fee6c4b30e49a1ec61231dbdad8
-  actorImage: {fileID: 21300000, guid: 738a30cc0b59b154b81d0dd9a11423ba, type: 3}
+  actorImage: {fileID: 2877471580529523173, guid: c15ba1dcb835b28498cc6239dc893a2e, type: 3}
   fullName: Github Name
   description: defaultDesc
   isPlayer: 0
@@ -82,9 +49,43 @@ MonoBehaviour:
   m_Name: Actor
   m_EditorClassIdentifier: 
   guid: 80481e033dfba52489e9083b977cf82e
-  actorImage: {fileID: 2877471580529523173, guid: c15ba1dcb835b28498cc6239dc893a2e, type: 3}
-  fullName: NPC 1
+  actorImage: {fileID: 21300000, guid: deeae33315027e045bf104c3f198179d, type: 3}
+  fullName: NPC 1 nombre
   description: 2
+  isPlayer: 0
+--- !u!114 &8067286837682498560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 755900283b136124d8ad835b2dc923bc, type: 3}
+  m_Name: Actor
+  m_EditorClassIdentifier: 
+  guid: 06758804e470c2e47b7f61c2b8638810
+  actorImage: {fileID: 21300000, guid: 34c69e9a19a994b4c96aad3920938c3a, type: 3}
+  fullName: NPC 3
+  description: defaultDesc
+  isPlayer: 0
+--- !u!114 &8271663155344605056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 755900283b136124d8ad835b2dc923bc, type: 3}
+  m_Name: Actor
+  m_EditorClassIdentifier: 
+  guid: 918c7ed4e7c39684683a3d339f8fd591
+  actorImage: {fileID: 21300000, guid: 7ae9d2c635ae1274091b08b9b24d09cb, type: 3}
+  fullName: NPC 2
+  description: defaultDesc
   isPlayer: 0
 --- !u!114 &9047476911972959407
 MonoBehaviour:
@@ -99,7 +100,7 @@ MonoBehaviour:
   m_Name: Actor
   m_EditorClassIdentifier: 
   guid: 3bce4c15ceaeb9747bbbb91802a9a597
-  actorImage: {fileID: 21300000, guid: deeae33315027e045bf104c3f198179d, type: 3}
+  actorImage: {fileID: 21300000, guid: 8fbfa1bc77a0388499f83f32b410eea3, type: 3}
   fullName: Player full name
   description: Player full desc
   isPlayer: 1

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3ef0f06c2a058d419d6338f3fa5b08b, type: 3}
   m_Name: DialogDatabase
   m_EditorClassIdentifier: 
-  title: Demo Database
+  title: My Database
   description: This is an example of database
   conversations:
-  - {fileID: 11400000, guid: d80e4290b793e7c4097276585435c992, type: 2}
-  actorsTree: {fileID: 11400000, guid: 9086596a3d7d5be4eaca8cbe76b8d9af, type: 2}
+  - {fileID: 11400000, guid: 890d18e4352066e4888175dea83925be, type: 2}
+  actorsTree: {fileID: 11400000, guid: f9f2b0b3db30a4b45a90804310fa3673, type: 2}

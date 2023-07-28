@@ -12,8 +12,9 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
     public Node node;
     public Port input;
     public Port output;
+    private SpritePreviewElement _actorSprite;
         
-    public NodeView(Node node): base("Assets/dialog-system/Custom Views/NodeView.uxml")
+    public NodeView(Node node): base("Assets/dialog-system/Custom Views/Node View/NodeView.uxml")
     {
         this.node = node;
         this.title = node.name;
@@ -30,17 +31,23 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
         CreateInputPorts();
         CreateOutputPorts();
         SetupClasses();
-        
-        
+
         DialogNode dialogNode = node as DialogNode;
         if (dialogNode)
         {
-            VisualElement actorImageContainer = this.Q<VisualElement>("actor-image");
-
-            bool cond = dialogNode.actor && dialogNode.actor.actorImage;
-            Image image = new Image();
-            actorImageContainer.Add(image);
-            image.sprite = cond?dialogNode.actor.actorImage:Resources.Load<Sprite>( "unknown-person" );
+            SpritePreviewElement sprite = this.Q<SpritePreviewElement>("actor-sprite");
+            _actorSprite = sprite;
+            _actorSprite.bindingPath = "actorImage";
+            
+            if (dialogNode.actor && dialogNode.actor.actorImage)
+            {
+                
+                _actorSprite.Bind(new SerializedObject(dialogNode.actor));
+            }
+            else
+            {
+                _actorSprite.value = Resources.Load<Sprite>( "unknown-person" );
+            }
         }
             
         TextField messageTextField = this.Q<TextField>("message-textfield");
@@ -139,5 +146,10 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
                 AddToClassList("finished");
                 break;
         }
+    }
+
+    public void UpdateActorToBind(Actor selectedActor)
+    {
+        _actorSprite.Bind(new SerializedObject(selectedActor));
     }
 }

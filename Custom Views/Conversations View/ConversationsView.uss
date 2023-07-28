@@ -1,0 +1,29 @@
+GridBackground {
+    --grid-background-color: rgb(40, 40, 40);
+    --line-color: rgba(193, 196, 192, 0.1);
+    --thick-line-color: rgba(193, 196, 192, 0.1);
+    --spacing: 15;
+}
+
+.conversation-name-label--selected {
+    border-left-color: rgb(0, 138, 255);
+    border-right-color: rgb(0, 138, 255);
+    border-top-color: rgb(0, 138, 255);
+    border-bottom-color: rgb(0, 138, 255);
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-top-width: 2px;
+    border-bottom-width: 2px;
+    opacity: 1;
+}
+
+.conversation-name-label:hover {
+    border-left-color: rgb(0, 104, 192);
+    border-right-color: rgb(0, 104, 192);
+    border-top-color: rgb(0, 104, 192);
+    border-bottom-color: rgb(0, 104, 192);
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-top-width: 2px;
+    border-bottom-width: 2px;
+}

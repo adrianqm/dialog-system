@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/dialog-system/Custom%20Views/Actor%20List%20View/ActorListView.uss?fileID=7433441132597879392&amp;guid=7d5d30102eb5fb04e9b73aee4f7ce09d&amp;type=3#ActorListView" />
+    <ui:VisualElement name="ActorsListViewHeader" style="flex-grow: 1; flex-direction: row; max-height: 45px; min-height: 45px; justify-content: center;">
+        <ui:VisualElement name="HeaderContainer" style="flex-grow: 1; background-color: rgb(27, 27, 32); flex-direction: row; max-height: 30px; min-height: 30px; justify-content: center; align-items: center; opacity: 1; max-width: 450px; border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; margin-top: 10px; margin-bottom: 10px; align-self: center;">
+            <uie:ToolbarSearchField focusable="true" name="actorsSearchFilter" class="actorsSearchFilter" style="height: 16px; align-items: center; flex-shrink: 1; flex-grow: 1; margin-left: 1px; margin-right: 9px; margin-top: 20px; margin-bottom: 0; max-width: 300px; width: 300px;" />
+            <ui:Button text="Create New Actor" display-tooltip-when-elided="true" name="createNewActorButton" class="createNewActorButton" style="padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; max-width: none; width: 120px; height: 20px; flex-direction: row; margin-left: 0; margin-right: 0; margin-top: 20px; margin-bottom: 0;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ActorMultiColumListView focusable="true" style="flex-grow: 1;" />
+</ui:UXML>

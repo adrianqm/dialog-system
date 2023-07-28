@@ -7,7 +7,7 @@ public class TabbedMenuController
     private const string TabClassName = "tab";
     private const string CurrentlySelectedTabClassName = "currentlySelectedTab";
     private const string NonSelectedTabClassName = "nonSelectedTab";
-    private const string UnselectedContentClassName = "unselectedContent";
+    private const string UnselectedContentClassName = "hiddenContent";
     // Tab and tab content have the same prefix but different suffix
     // Define the suffix of the tab name
     private const string TabNameSuffix = "Tab";

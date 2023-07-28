@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,4 +11,11 @@ public class Actor : ScriptableObject
     [TextArea] public string fullName;
     [TextArea] public string description;
     public bool isPlayer;
+    public Action<Actor> onDestroyActor;
+
+    private void OnDestroy()
+    {
+        onDestroyActor?.Invoke(this);
+        onDestroyActor = null;
+    }
 }

@@ -11,13 +11,15 @@ public class ConversationInspectorView : VisualElement
     
     public ConversationInspectorView(ConversationTree conversationTree)
     {
-        string uriFile = "Assets/dialog-system/Custom Views/ConversationInspectorView/ConversationInspectorView.uxml";
+        string uriFile = "Assets/dialog-system/Custom Views/Conversation Inspector View/ConversationInspectorView.uxml";
         (EditorGUIUtility.Load(uriFile) as VisualTreeAsset)?.CloneTree(this);
 
         _conversationTree = conversationTree;
-        
-        BindTitle();
-        BindDescription();
+        if (_conversationTree != null)
+        {
+            BindTitle();
+            BindDescription();
+        }
     }
 
     private void BindTitle()

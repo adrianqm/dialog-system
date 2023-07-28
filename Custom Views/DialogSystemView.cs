@@ -10,6 +10,7 @@ public class DialogSystemView : GraphView
 {
     
     public Action<NodeView> OnNodeSelected;
+    public Action onNodesRemoved;
     public new class UxmlFactory : UxmlFactory<DialogSystemView, GraphView.UxmlTraits> {}
     
     private ConversationTree _tree;
@@ -26,13 +27,7 @@ public class DialogSystemView : GraphView
         var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/dialog-system/DialogSystemEditor.uss");
         styleSheets.Add(styleSheet);
 
-        Undo.undoRedoPerformed += OnUndoRedo;
-    }
-
-    private void OnUndoRedo()
-    {
-        PopulateView(_tree);
-        AssetDatabase.SaveAssets();
+        
     }
     
     NodeView FindNodeView(Node node)
@@ -50,20 +45,20 @@ public class DialogSystemView : GraphView
         DeleteElements(graphElements);
         graphViewChanged += OnGraphViewChanged;
         
-        if (tree.rootNode == null)
+        if (_tree.rootNode == null)
         {
-            tree.rootNode = tree.CreateNode(typeof(RootNode), Vector2.zero) as RootNode;
+            _tree.rootNode = _tree.CreateNode(typeof(RootNode), Vector2.zero) as RootNode;
             EditorUtility.SetDirty(tree);
             AssetDatabase.SaveAssets();
         }
         
         // Create node view
-        tree.nodes.ForEach(CreateNodeView);
+        _tree.nodes.ForEach(CreateNodeView);
         
         // Create edges
-        tree.nodes.ForEach(n =>
+        _tree.nodes.ForEach(n =>
         {
-            var children = tree.GetChildren(n);
+            var children = _tree.GetChildren(n);
             NodeView parentView = FindNodeView(n);
             children.ForEach(c =>
             {
@@ -104,6 +99,8 @@ public class DialogSystemView : GraphView
                     _tree.RemoveChild(parentView.node, childView.node);
                 }
             }
+            
+            onNodesRemoved?.Invoke();
         }
         
         if (graphViewChange.edgesToCreate != null)

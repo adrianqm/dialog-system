@@ -6,37 +6,48 @@ using AQM.Tools;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.UIElements;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class DialogSystemEditor : EditorWindow
 {
+    private ToolbarMenu _fileMenu;
     private DialogSystemView _treeView;
     private InspectorView _inspectorView;
-    private ActorsListView _actorsListView;
+    private ActorMultiColumListView _actorMultiColumListView;
+    private VisualElement _toolbarHeaderVE;
+    private ToolbarHeaderView _toolbarHeader;
+    private VisualElement _dialogSelectorVE;
+    private VisualElement _dialogEditorVE;
+    private VisualElement _dialogCreatorVE;
+    private VisualElement _confirmationModalVE;
+    private ConfirmationModalView _confirmationModal;
+    private DatabaseEditorView _dialogEditor;
+    private const string hiddenContentClassName = "hiddenContent";
     private Label _conversationNameLabel;
     private TabbedMenuController _tabbedMenuController;
     private Button _createNewActorButton;
     private Action _unregisterAll;
     private DialogSystemDatabase _currentDatabase;
-    
-    [SerializeField]
-    private VisualTreeAsset visualTreeAsset = default;
-    
-    [SerializeField]
-    private StyleSheet styleSheet = default;
+    private ConversationTree _currentTree;
+
+    [SerializeField] private VisualTreeAsset visualTreeAsset = default;
+
+    [SerializeField] private StyleSheet styleSheet = default;
 
     [MenuItem("AQM Tools/Dialog System Editor ...")]
     public static void OpenWindow()
     {
         DialogSystemEditor wnd = GetWindow<DialogSystemEditor>();
         wnd.titleContent = new GUIContent("Dialog System Editor");
+        wnd.minSize = new Vector2(500,400);
     }
 
     [OnOpenAsset]
     public static bool OnOpenAsset(int instanceId, int line)
     {
-        if (Selection.activeObject is ConversationTree)
+        if (Selection.activeObject is DialogSystemDatabase)
         {
             OpenWindow();
             return true;
@@ -52,26 +63,27 @@ public class DialogSystemEditor : EditorWindow
 
         // Instantiate UXML
         visualTreeAsset.CloneTree(root);
-        
+
         // Import StyleSheets 
         root.styleSheets.Add(styleSheet);
         
-        // Instanciate Tab Controller
+        // File Menu
+        _fileMenu = root.Q<ToolbarMenu>("fileMenu");
+        _fileMenu.menu.AppendAction("Import New Database...",
+            a => { OnImportDatabase(); }, 
+            a => DropdownMenuAction.Status.Normal);
+        _fileMenu.menu.AppendAction("Edit Current Database...",
+            a => { OnEditDatabase(); }, 
+            a => DropdownMenuAction.Status.Normal);
+        
+        // Instantiate Tab Controller
         _tabbedMenuController = new TabbedMenuController(root);
         _tabbedMenuController.RegisterTabCallbacks();
         
+        // Tree view
         _treeView = root.Q<DialogSystemView>();
-        _inspectorView = root.Q<InspectorView>();
-        _actorsListView = root.Q<ActorsListView>();
-        _createNewActorButton = root.Q<Button>(className: "createNewActorButton");
-        _createNewActorButton.clicked += OnCreateNewActor;
-        VisualElement scrollContainer = _actorsListView.Q("unity-content-and-vertical-scroll-container");
-        _actorsListView.SetUpScrollContainerManipulator(scrollContainer);
-        ToolbarSearchField searchField = root.Q<ToolbarSearchField>(className: "actorsSearchFilter");
-        _actorsListView.SetUpSearchFieldFilterCallback(searchField);
-        
         _treeView.OnNodeSelected = OnNodeSelectionChanged;
-        
+        _treeView.onNodesRemoved = OnNodesRemoved;
         // To remove Hover style
         _treeView.RegisterCallback<ClickEvent>((evt) =>
         {
@@ -80,6 +92,46 @@ public class DialogSystemEditor : EditorWindow
             _conversationNameLabel.AddToClassList("conversation-name-label");
         });
         
+        // Inspector view
+        _inspectorView = root.Q<InspectorView>();
+        
+        // Actor view
+        _actorMultiColumListView = root.Q<ActorMultiColumListView>();
+        _createNewActorButton = root.Q<Button>(className: "createNewActorButton");
+        _createNewActorButton.clicked += OnCreateNewActor;
+        VisualElement scrollContainer = _actorMultiColumListView.Q("unity-content-and-vertical-scroll-container");
+        _actorMultiColumListView.SetUpScrollContainerManipulator(scrollContainer);
+        ToolbarSearchField searchField = root.Q<ToolbarSearchField>(className: "actorsSearchFilter");
+        _actorMultiColumListView.SetUpSearchFieldFilterCallback(searchField);
+        _actorMultiColumListView.onActorsRemoved = OnActorsRemoved;
+
+        // DB selector
+        _dialogSelectorVE = root.Q<VisualElement>("database-selector");
+        _dialogSelectorVE.Q<DatabaseSelectorView>().OnDatabaseSelected = OnManualSet;
+        
+        // DB editor
+        _dialogEditorVE = root.Q<VisualElement>("database-editor");
+        _dialogEditor = _dialogEditorVE.Q<DatabaseEditorView>();
+        _dialogEditor.OnCloseModal = OnCloseEditDatabase;
+        
+        // DB creator
+        _dialogCreatorVE = root.Q<VisualElement>("database-creator");
+        DatabaseCreatorView dialogCreatorView = _dialogCreatorVE.Q<DatabaseCreatorView>();
+        dialogCreatorView.OnCloseModal = OnCloseCreatorDatabase;
+        
+        // Confirmation Modal
+        _confirmationModalVE = root.Q<VisualElement>("confirmation-modal");
+        _confirmationModal = _confirmationModalVE.Q<ConfirmationModalView>();
+        _confirmationModal.OnCloseModal = OnConfirmationModalClose;
+        
+        //Toolbar DB Selector
+        _toolbarHeaderVE = root.Q<VisualElement>("toolbar-header");
+        _toolbarHeader = _toolbarHeaderVE.Q<ToolbarHeaderView>();
+        _toolbarHeader.OnDatabaseSelected = OnManualSet;
+        _toolbarHeader.OnCreateDatabase = OnCreateDatabase;
+        _toolbarHeader.OnEditDatabase = OnEditDatabase;
+        _toolbarHeader.OnRemoveDatabase = OnRemoveDatabase;
+
         OnSelectionChange();
     }
 
@@ -92,12 +144,12 @@ public class DialogSystemEditor : EditorWindow
     private void OnDisable()
     {
         EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
-        if(_createNewActorButton != null) _createNewActorButton.clicked -= OnCreateNewActor;
+        if (_createNewActorButton != null) _createNewActorButton.clicked -= OnCreateNewActor;
     }
 
     private void OnCreateNewActor()
     {
-        _actorsListView.CreateNewActor();
+        _actorMultiColumListView.CreateNewActor();
     }
 
     private void OnPlayModeStateChanged(PlayModeStateChange obj)
@@ -110,20 +162,41 @@ public class DialogSystemEditor : EditorWindow
             case PlayModeStateChange.EnteredPlayMode:
                 OnSelectionChange();
                 break;
-        } 
+        }
     }
 
     private void OnSelectionChange()
     {
         DialogSystemDatabase database = Selection.activeObject as DialogSystemDatabase;
-        ConversationTree tree;
+        ConversationTree tree = null;
         if (database)
         {
+            _dialogSelectorVE.AddToClassList(hiddenContentClassName);
+            _toolbarHeaderVE.RemoveFromClassList(hiddenContentClassName);
+
+            database.RegisterUndoOperation(_actorMultiColumListView,_treeView);
             tree = database.conversations[0];
             _currentDatabase = database;
+            _toolbarHeader.SetUpSelector(_currentDatabase);
+            _dialogEditor.SetUpEditor(_currentDatabase);
+            
+            // Set root element
+            SerializedObject so = new SerializedObject(_currentDatabase);
+            rootVisualElement.Bind(so);
         }
-        else tree = Selection.activeObject as ConversationTree;
+        else if(_currentDatabase != null)
+        {
+            tree = _currentDatabase.conversations[0];
+            _toolbarHeaderVE.RemoveFromClassList(hiddenContentClassName);
+            _toolbarHeader.SetUpSelector(_currentDatabase);
+            _dialogEditor.SetUpEditor(_currentDatabase);
+        }
+        else
+        {
+            _dialogSelectorVE.RemoveFromClassList(hiddenContentClassName);
+        }
         
+        /*
         if (!tree)
         {
             if (Selection.activeGameObject)
@@ -134,7 +207,7 @@ public class DialogSystemEditor : EditorWindow
                     tree = runner.conversationTree;
                 }
             }
-        }
+        }*/
 
         if (Application.isPlaying)
         {
@@ -142,20 +215,36 @@ public class DialogSystemEditor : EditorWindow
         }
         else if (tree && AssetDatabase.CanOpenAssetInEditor(tree.GetInstanceID()))
         {
-           SetTree(tree);
+            SetTree(tree);
         }
+
+    }
+
+    private void OnManualSet(DialogSystemDatabase database)
+    {
+        ConversationTree tree;
+        _dialogSelectorVE.AddToClassList(hiddenContentClassName);
+        _toolbarHeaderVE.RemoveFromClassList(hiddenContentClassName);
         
+        database.RegisterUndoOperation(_actorMultiColumListView,_treeView);
+        tree = database.conversations[0];
+        _currentDatabase = database;
+        _toolbarHeader.SetUpSelector(_currentDatabase);
+        _dialogEditor.SetUpEditor(_currentDatabase);
+        
+        // Set root element
+        SerializedObject so = new SerializedObject(_currentDatabase);
+        rootVisualElement.Bind(so);
+        SetTree(tree);
     }
 
     private void SetTree(ConversationTree tree)
     {
-        // Set root element
-        SerializedObject so = new SerializedObject(tree.database);
-        rootVisualElement.Bind(so);
+        _currentTree = tree;
         
         // Show conversation inspector
         _inspectorView.ShowConversationInspector(tree);
-        
+
         // Register Conversation Name Label Query
         _conversationNameLabel = rootVisualElement.Q<Label>(className: "conversation-name-label");
         if (_conversationNameLabel == null)
@@ -173,23 +262,81 @@ public class DialogSystemEditor : EditorWindow
             {
                 _conversationNameLabel.AddToClassList("conversation-name-label--selected");
                 _conversationNameLabel.RemoveFromClassList("conversation-name-label");
-                _treeView.ClearSelection();
-                _inspectorView.ShowConversationInspector(tree);
+                SetConversationNameSelected();
             };
-            
+
             _conversationNameLabel.RegisterCallback(clickEvent);
             _unregisterAll += () => _conversationNameLabel.UnregisterCallback(clickEvent);
         }
-        
+
         // Set Actors data
-        _actorsListView.SetupTable(tree.database.actorsTree);
-        
+        _actorMultiColumListView.SetupTable(_currentDatabase.actorsTree);
+
         _treeView?.PopulateView(tree);
     }
 
     void OnNodeSelectionChanged(NodeView node)
     {
-        _inspectorView.ShowDialogInspector(node,_currentDatabase.actorsTree);
+        _inspectorView.ShowDialogInspector(node, _currentDatabase.actorsTree);
+    }
+
+    void OnNodesRemoved()
+    {
+        SetConversationNameSelected();
+    }
+
+    void OnActorsRemoved()
+    {
+        SetConversationNameSelected();
+        _treeView?.PopulateView(_currentTree);
+    }
+
+    void OnImportDatabase()
+    {
+        _dialogSelectorVE.RemoveFromClassList(hiddenContentClassName);
+    }
+
+    void OnCreateDatabase()
+    {
+        _dialogCreatorVE.RemoveFromClassList(hiddenContentClassName);
+    }
+
+    void OnEditDatabase()
+    {
+        _dialogEditorVE.RemoveFromClassList(hiddenContentClassName);
+    }
+
+    void OnRemoveDatabase()
+    {
+        _confirmationModal.UpdateModalText("Are you sure you want to remove the database?");
+        _confirmationModal.OnConfirmModal = OnRemoveDatabaseConfirm;
+        _confirmationModalVE.RemoveFromClassList(hiddenContentClassName);
+    }
+    
+    void OnCloseEditDatabase()
+    {
+        _dialogEditorVE.AddToClassList(hiddenContentClassName);
+    }
+
+    void OnCloseCreatorDatabase()
+    {
+        _dialogCreatorVE.AddToClassList(hiddenContentClassName);
+    }
+
+    void OnConfirmationModalClose()
+    {
+        _confirmationModalVE.AddToClassList(hiddenContentClassName);
+    }
+    
+    void OnRemoveDatabaseConfirm()
+    {
+        _confirmationModalVE.AddToClassList(hiddenContentClassName);
+    }
+
+    private void SetConversationNameSelected()
+    {
+        _treeView.ClearSelection();
+        _inspectorView.ShowConversationInspector(_currentTree);
     }
 
     private void OnInspectorUpdate()

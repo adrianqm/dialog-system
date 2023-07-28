@@ -6,8 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Actors Tree", menuName = "AQM/Tools/Dialog System/Actors Tree", order = 3)]
 public class ActorsTree : ScriptableObject
 {
-    public List<Actor> actors = new ();
-    
+    public List<Actor> actors = new();
 #if  UNITY_EDITOR
     public void CreateActor()
     {
@@ -21,7 +20,7 @@ public class ActorsTree : ScriptableObject
             newActor.description = "defaultDesc";
             Undo.RecordObject(this, "Actors Tree (CreateActor)");
             actors.Add(newActor);
-
+            
             if (!Application.isPlaying)
             {
                 AssetDatabase.AddObjectToAsset( newActor,this);
@@ -34,9 +33,9 @@ public class ActorsTree : ScriptableObject
     public void DeteleActor(Actor actor)
     {
         Undo.RecordObject(this, "Actors Tree (DeleteActor)");
-        actors.Remove(actor);
-        
+        actors.Remove(actor); 
         //AssetDatabase.RemoveObjectFromAsset(node);
+        
         Undo.DestroyObjectImmediate(actor);
         AssetDatabase.SaveAssets();
     }

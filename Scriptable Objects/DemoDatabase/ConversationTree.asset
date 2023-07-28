@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DialogNode
   m_EditorClassIdentifier: 
   guid: 636397badb968144d978b59bb250921a
-  position: {x: 549, y: 116}
+  position: {x: 718.6636, y: 115.999985}
   children: []
   actor: {fileID: 9047476911972959407, guid: 9086596a3d7d5be4eaca8cbe76b8d9af, type: 2}
   message: Me alegro de hablar contigo
@@ -47,9 +47,9 @@ MonoBehaviour:
   m_Name: DialogNode
   m_EditorClassIdentifier: 
   guid: 9753381ba5fc953418e7a6886134aa81
-  position: {x: 289, y: 183}
+  position: {x: 380.00003, y: 157.19997}
   children: []
-  actor: {fileID: 0}
+  actor: {fileID: 6948615333648034054, guid: 9086596a3d7d5be4eaca8cbe76b8d9af, type: 2}
   message: Hasta luego!
 --- !u!114 &-2666392227142606524
 MonoBehaviour:
@@ -100,7 +100,7 @@ MonoBehaviour:
   m_Name: DialogNode
   m_EditorClassIdentifier: 
   guid: 607b7cc90c3e86e408fd87145430bc00
-  position: {x: 289, y: 47}
+  position: {x: 380.00003, y: -18.47919}
   children:
   - {fileID: -6188830440610686907}
   actor: {fileID: 9047476911972959407, guid: 9086596a3d7d5be4eaca8cbe76b8d9af, type: 2}

@@ -1,0 +1,12 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/dialog-system/Custom%20Views/Conversations%20View/ConversationsView.uss?fileID=7433441132597879392&amp;guid=2ab90e006bdb05447a908f99e6af9922&amp;type=3#ConversationsView" />
+    <SplitView fixed-pane-initial-dimension="250" orientation="Horizontal" style="flex-grow: 1;">
+        <ui:VisualElement name="left-panel" style="flex-grow: 1; background-color: rgba(41, 46, 53, 0.75); min-width: 250px; max-width: none; flex-shrink: 1;">
+            <InspectorView name="InspectorView" style="flex-grow: 1; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; min-width: auto; align-items: stretch;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="right-panel" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+            <DialogSystemView name="DialogSystemView" style="flex-grow: 1;" />
+            <ui:Label tabindex="-1" text="Conversation Name" display-tooltip-when-elided="false" enable-rich-text="true" name="conversation-name-label" focusable="true" class="conversation-name-label" style="background-color: rgb(24, 24, 29); position: absolute; left: 10px; min-height: auto; -unity-text-align: middle-left; text-overflow: clip; white-space: nowrap; align-items: auto; top: 10px; right: auto; bottom: auto; -unity-font: initial; visibility: visible; overflow: visible; display: none; opacity: 1; flex-grow: 1; flex-shrink: 1; flex-basis: auto; padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; border-top-left-radius: 5px; border-bottom-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
+        </ui:VisualElement>
+    </SplitView>
+</ui:UXML>

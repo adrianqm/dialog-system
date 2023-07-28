@@ -13,7 +13,7 @@ public class ConversationTree : ScriptableObject
 {
     public Action OnEndConversation;
     
-    [HideInInspector] public DialogSystemDatabase database;
+    public DialogSystemDatabase database;
     [HideInInspector] public Node rootNode;
     [HideInInspector] public List<Node> nodes = new();
     [HideInInspector] public Node runningNode;

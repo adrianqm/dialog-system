@@ -12,10 +12,11 @@ using UnityEngine.UIElements;
 using Object = System.Object;
 using ObjectField = UnityEditor.UIElements.ObjectField;
 
-public class ActorsListView : MultiColumnListView
+public class ActorMultiColumListView : MultiColumnListView
 {
-    public new class UxmlFactory : UxmlFactory<ActorsListView, UxmlTraits>{}
-    
+    public new class UxmlFactory : UxmlFactory<ActorMultiColumListView, UxmlTraits>{}
+
+    public Action onActorsRemoved;
     private List<Actor> _filteredList;
     private List<Actor> _currentActorList;
     private ActorsTree _actorsTree;
@@ -23,24 +24,23 @@ public class ActorsListView : MultiColumnListView
     private ToolbarSearchField _searchField;
     
 
-    public ActorsListView()
+    public ActorMultiColumListView()
     {
-        Undo.undoRedoPerformed += OnUndoRedo;
         columnSortingChanged += ColumnSortChange;
     }
 
-    private void OnUndoRedo()
+    public void SetupTableAndCleanSearch(ActorsTree actorsTree)
     {
         _searchField?.SetValueWithoutNotify("");
-        SetupTable(_actorsTree);
+        SetupTable(actorsTree);
     }
 
     public void SetupTable(ActorsTree actorsTree)
     {
         if (actorsTree == null) return;
 
-        _actorsTree = actorsTree;
-        _currentActorList = _actorsTree.actors;
+        this._actorsTree = actorsTree;
+        _currentActorList = this._actorsTree.actors;
         
         // Create new table
         if(itemsSource == null) AddColumns();
@@ -128,6 +128,7 @@ public class ActorsListView : MultiColumnListView
         }
         RefreshTable();
         ClearSelection();
+        onActorsRemoved?.Invoke();
     }
 
     private VisualElement OnMakeImageCell()
@@ -231,6 +232,8 @@ public class ActorsListView : MultiColumnListView
     {
         _actorsTree.DeteleActor(actor);
         if (_currentActorList.Contains(actor)) _currentActorList.Remove(actor);
+        onActorsRemoved?.Invoke();
+        
     }
 
     private void AddColumns()
