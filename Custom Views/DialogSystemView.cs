@@ -189,5 +189,11 @@ public class DialogSystemView : GraphView
             view.UpdateState();
         });
     }
+
+    public void ClearGraph()
+    {
+        graphViewChanged -= OnGraphViewChanged;
+        DeleteElements(graphElements);
+    }
     
 }

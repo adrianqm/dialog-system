@@ -8,6 +8,14 @@ public class ActorsTree : ScriptableObject
 {
     public List<Actor> actors = new();
 #if  UNITY_EDITOR
+    public ActorsTree Create(string path)
+    {
+        string conTreePath = path + "/Actors.asset";
+        AssetDatabase.CreateAsset(this, conTreePath);
+        CreateActor();
+        return this;
+    }
+    
     public void CreateActor()
     {
         

@@ -13,6 +13,6 @@
             <ui:Label tabindex="-1" text="Description" display-tooltip-when-elided="true" style="-unity-text-align: upper-center;" />
             <ui:TextField picking-mode="Ignore" label="Message" readonly="false" password="false" multiline="true" name="db-description-text-field" style="opacity: 1; overflow: hidden; align-items: auto; flex-direction: column; height: auto; justify-content: flex-start; align-self: auto; min-height: 40px; flex-shrink: 1;" />
         </ui:VisualElement>
-        <ui:Button text="Create Database" display-tooltip-when-elided="true" name="db-create-new-button" style="margin-left: 0; margin-right: 0; margin-top: 10px; margin-bottom: 0; padding-left: 2px; padding-right: 2px; padding-top: 2px; padding-bottom: 2px; height: 25px;" />
+        <ui:Button text="Create Database" display-tooltip-when-elided="true" name="db-create" style="margin-left: 0; margin-right: 0; margin-top: 10px; margin-bottom: 0; padding-left: 2px; padding-right: 2px; padding-top: 2px; padding-bottom: 2px; height: 25px;" />
     </ui:VisualElement>
 </ui:UXML>

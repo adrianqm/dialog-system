@@ -337,6 +337,13 @@ public class ActorMultiColumListView : MultiColumnListView
         }
     }
 
+    public void ClearList()
+    {
+        ClearAllValueChangedCallbacks();
+        itemsSource = null;
+        columns.Clear();
+        RefreshItems();
+    }
     private void RefreshTable()
     {
         ClearAllValueChangedCallbacks();

@@ -15,11 +15,12 @@ public class ConversationTree : ScriptableObject
     
     public DialogSystemDatabase database;
     [HideInInspector] public Node rootNode;
-    [HideInInspector] public List<Node> nodes = new();
+    [HideInInspector] public List<Node> nodes = new ();
     [HideInInspector] public Node runningNode;
     
     [TextArea] public string title;
     [TextArea] public string description;
+    [HideInInspector] [TextArea] public string guid;
     
     private Node finishedNode;
 
@@ -102,6 +103,19 @@ public class ConversationTree : ScriptableObject
     }
 
 #if  UNITY_EDITOR
+
+    public ConversationTree Create(string path, DialogSystemDatabase db, string title, string description)
+    {
+        this.title = title;
+        this.description = description;
+        database = db;
+        guid = GUID.Generate().ToString();
+        
+        string conTreePath = path + "/Conversation.asset";
+        AssetDatabase.CreateAsset(this, conTreePath);
+        return this;
+    }
+    
     public Node CreateNode(System.Type type, Vector2 position)
     {
         Node node = ScriptableObject.CreateInstance(type) as Node;
@@ -110,6 +124,7 @@ public class ConversationTree : ScriptableObject
         node.position = position;
 
         Undo.RecordObject(this, "Conversation Tree (CreateNode)");
+        nodes ??= new List<Node>();
         nodes.Add(node);
 
         if (!Application.isPlaying)

@@ -32,7 +32,7 @@ MonoBehaviour:
   m_Name: DialogNode
   m_EditorClassIdentifier: 
   guid: 4738bcf63d7e6e046a181aeeb20dea67
-  position: {x: 559, y: 238.12003}
+  position: {x: 559, y: 238}
   children: []
   actor: {fileID: 6948615333648034054, guid: 9086596a3d7d5be4eaca8cbe76b8d9af, type: 2}
   message: 'Segundo mensaje '
@@ -58,6 +58,7 @@ MonoBehaviour:
   runningNode: {fileID: 0}
   title: Conversation Example
   description: Example Conversation desc
+  guid: 
 --- !u!114 &3607162762221716545
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -87,7 +88,7 @@ MonoBehaviour:
   m_Name: DialogNode
   m_EditorClassIdentifier: 
   guid: 0a110aac2de037246a5e04d6adc71e8b
-  position: {x: 559, y: 370.4501}
+  position: {x: 559, y: 369}
   children: []
   actor: {fileID: 2096307716613330869, guid: 9086596a3d7d5be4eaca8cbe76b8d9af, type: 2}
   message: Otra conver

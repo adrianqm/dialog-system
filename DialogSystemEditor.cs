@@ -19,8 +19,10 @@ public class DialogSystemEditor : EditorWindow
     private VisualElement _toolbarHeaderVE;
     private ToolbarHeaderView _toolbarHeader;
     private VisualElement _dialogSelectorVE;
+    private DatabaseSelectorView _dialogSelector;
     private VisualElement _dialogEditorVE;
     private VisualElement _dialogCreatorVE;
+    private DatabaseCreatorView _dialogCreatorView;
     private VisualElement _confirmationModalVE;
     private ConfirmationModalView _confirmationModal;
     private DatabaseEditorView _dialogEditor;
@@ -107,7 +109,9 @@ public class DialogSystemEditor : EditorWindow
 
         // DB selector
         _dialogSelectorVE = root.Q<VisualElement>("database-selector");
-        _dialogSelectorVE.Q<DatabaseSelectorView>().OnDatabaseSelected = OnManualSet;
+        _dialogSelector = _dialogSelectorVE.Q<DatabaseSelectorView>();
+        _dialogSelector.OnDatabaseSelected = OnManualSet;
+        _dialogSelector.OnCreateNewDatabaseClicked = OnCreateNewDatabaseClicked;
         
         // DB editor
         _dialogEditorVE = root.Q<VisualElement>("database-editor");
@@ -116,8 +120,9 @@ public class DialogSystemEditor : EditorWindow
         
         // DB creator
         _dialogCreatorVE = root.Q<VisualElement>("database-creator");
-        DatabaseCreatorView dialogCreatorView = _dialogCreatorVE.Q<DatabaseCreatorView>();
-        dialogCreatorView.OnCloseModal = OnCloseCreatorDatabase;
+        _dialogCreatorView = _dialogCreatorVE.Q<DatabaseCreatorView>();
+        _dialogCreatorView.OnCloseModal = OnCloseCreatorDatabase;
+        _dialogCreatorView.OnCreatedDatabase = OnCreatedDatabase;
         
         // Confirmation Modal
         _confirmationModalVE = root.Q<VisualElement>("confirmation-modal");
@@ -131,6 +136,9 @@ public class DialogSystemEditor : EditorWindow
         _toolbarHeader.OnCreateDatabase = OnCreateDatabase;
         _toolbarHeader.OnEditDatabase = OnEditDatabase;
         _toolbarHeader.OnRemoveDatabase = OnRemoveDatabase;
+
+        // Register Conversation Name Label Query
+        _conversationNameLabel = root.Q<Label>(className: "conversation-name-label");
 
         OnSelectionChange();
     }
@@ -193,7 +201,8 @@ public class DialogSystemEditor : EditorWindow
         }
         else
         {
-            _dialogSelectorVE.RemoveFromClassList(hiddenContentClassName);
+            OpenDatabaseSelector();
+            ClearView();
         }
         
         /*
@@ -244,9 +253,7 @@ public class DialogSystemEditor : EditorWindow
         
         // Show conversation inspector
         _inspectorView.ShowConversationInspector(tree);
-
-        // Register Conversation Name Label Query
-        _conversationNameLabel = rootVisualElement.Q<Label>(className: "conversation-name-label");
+        
         if (_conversationNameLabel == null)
         {
             _conversationNameLabel = rootVisualElement.Q<Label>(className: "conversation-name-label--selected");
@@ -293,11 +300,24 @@ public class DialogSystemEditor : EditorWindow
 
     void OnImportDatabase()
     {
+        OpenDatabaseSelector();
+    }
+
+    void OpenDatabaseSelector()
+    {
+        _dialogSelector.ClearDatabaseSelection();
         _dialogSelectorVE.RemoveFromClassList(hiddenContentClassName);
+    }
+
+    void OnCreateNewDatabaseClicked()
+    {
+        _dialogSelectorVE.AddToClassList(hiddenContentClassName);
+        OnCreateDatabase();
     }
 
     void OnCreateDatabase()
     {
+        _dialogCreatorView.ResetInputs();
         _dialogCreatorVE.RemoveFromClassList(hiddenContentClassName);
     }
 
@@ -321,6 +341,16 @@ public class DialogSystemEditor : EditorWindow
     void OnCloseCreatorDatabase()
     {
         _dialogCreatorVE.AddToClassList(hiddenContentClassName);
+        if (_currentDatabase == null)
+        {
+            OpenDatabaseSelector();
+        }
+    }
+
+    void OnCreatedDatabase(DialogSystemDatabase newDb)
+    {
+        _dialogCreatorVE.AddToClassList(hiddenContentClassName);
+        OnManualSet(newDb);
     }
 
     void OnConfirmationModalClose()
@@ -330,7 +360,10 @@ public class DialogSystemEditor : EditorWindow
     
     void OnRemoveDatabaseConfirm()
     {
+        _currentDatabase.Delete();
         _confirmationModalVE.AddToClassList(hiddenContentClassName);
+        OpenDatabaseSelector();
+        ClearView();
     }
 
     private void SetConversationNameSelected()
@@ -342,6 +375,20 @@ public class DialogSystemEditor : EditorWindow
     private void OnInspectorUpdate()
     {
         _treeView?.UpdateNodeStates();
+    }
+
+    private void ClearView()
+    {
+        _currentDatabase = null;
+        _toolbarHeaderVE.AddToClassList(hiddenContentClassName);
+        _actorMultiColumListView.ClearList();
+        _inspectorView.ClearInspector();
+        _treeView.ClearGraph();
+        
+        ClearAllValueCallbacks();
+        _conversationNameLabel.RemoveFromClassList("conversation-name-label--selected");
+        _conversationNameLabel.AddToClassList("conversation-name-label");
+        _conversationNameLabel.style.display = DisplayStyle.None;
     }
     
     private void ClearAllValueCallbacks()

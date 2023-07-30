@@ -9,6 +9,8 @@ using UnityEngine.UIElements;
 public class DatabaseSelectorView : VisualElement
 {
     public Action<DialogSystemDatabase> OnDatabaseSelected;
+    public Action OnCreateNewDatabaseClicked;
+    private ObjectField _dbSelector;
     public new class UxmlFactory:  UxmlFactory<DatabaseSelectorView, DatabaseSelectorView.UxmlTraits> {}
     
     public DatabaseSelectorView()
@@ -16,20 +18,39 @@ public class DatabaseSelectorView : VisualElement
         string uriFile = "Assets/dialog-system/Custom Views/Database Selector View/DatabaseSelectorView.uxml";
         (EditorGUIUtility.Load(uriFile) as VisualTreeAsset)?.CloneTree(this);
 
+        Button createNewButton = this.Q<Button>("db-create-new-button");
+        createNewButton.clicked += OnCreateNewButtonClicked;
         VisualElement fieldContainer = this.Q("db-object-container-field");
-        var dbSelector = new ObjectField
+        _dbSelector = new ObjectField
         {
             objectType = typeof(DialogSystemDatabase)
         };
-        fieldContainer.Add(dbSelector);
+        fieldContainer.Add(_dbSelector);
         
-        //dbSelector.bindingPath = "actorImage";
-        //dbSelector.Bind(new SerializedObject(_currentActorList[index]));
+        RegisterCallbacks();
+    }
+
+    public void ClearDatabaseSelection()
+    {
+        _dbSelector.value = null;
+    }
+
+    private void RegisterCallbacks()
+    {
         EventCallback<ChangeEvent<UnityEngine.Object>> changeEvent = (e) =>
         {
-            OnDatabaseSelected?.Invoke(e.newValue as DialogSystemDatabase);
+            if (e.newValue != null)
+            {
+                OnDatabaseSelected?.Invoke(e.newValue as DialogSystemDatabase);
+            }
         };
  
-        dbSelector.RegisterValueChangedCallback(changeEvent);
+        _dbSelector.RegisterValueChangedCallback(changeEvent);
+    }
+    
+
+    private void OnCreateNewButtonClicked()
+    {
+        OnCreateNewDatabaseClicked?.Invoke();
     }
 }

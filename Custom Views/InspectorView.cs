@@ -21,4 +21,9 @@ public class InspectorView : VisualElement
         ConversationInspectorView container = new ConversationInspectorView(conversationTree);
         Add(container);
     }
+    
+    internal void ClearInspector()
+    {
+        Clear();
+    }
 }
