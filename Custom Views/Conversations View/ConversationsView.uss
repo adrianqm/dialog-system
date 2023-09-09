@@ -1,15 +1,15 @@
 GridBackground {
-    --grid-background-color: rgb(40, 40, 40);
-    --line-color: rgba(193, 196, 192, 0.1);
+    --grid-background-color: rgb(250, 0, 0);
+    --line-color: rgb(0, 138, 255);
     --thick-line-color: rgba(193, 196, 192, 0.1);
     --spacing: 15;
 }
 
 .conversation-name-label--selected {
-    border-left-color: rgb(0, 138, 255);
-    border-right-color: rgb(0, 138, 255);
-    border-top-color: rgb(0, 138, 255);
-    border-bottom-color: rgb(0, 138, 255);
+    border-left-color: rgb(68, 192, 255);
+    border-right-color: rgb(68, 192, 255);
+    border-top-color: rgb(68, 192, 255);
+    border-bottom-color: rgb(68, 192, 255);
     border-left-width: 2px;
     border-right-width: 2px;
     border-top-width: 2px;
@@ -18,12 +18,31 @@ GridBackground {
 }
 
 .conversation-name-label:hover {
-    border-left-color: rgb(0, 104, 192);
-    border-right-color: rgb(0, 104, 192);
-    border-top-color: rgb(0, 104, 192);
-    border-bottom-color: rgb(0, 104, 192);
+    border-left-color: rgb(50, 142, 188);
+    border-right-color: rgb(50, 142, 188);
+    border-top-color: rgb(50, 142, 188);
+    border-bottom-color: rgb(50, 142, 188);
     border-left-width: 2px;
     border-right-width: 2px;
     border-top-width: 2px;
     border-bottom-width: 2px;
+}
+
+#centralContainer {
+    background-color: rgb(8, 8, 8);
+}
+
+:hover > .scope > .mainContainer > #headerContainer {
+    border-color: rgb(0, 138, 255);
+}
+
+.top-conversation-bar--button {
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    min-height: 23px;
+    min-width: 23px;
+    width: 23px;
+    height: 23px;
 }

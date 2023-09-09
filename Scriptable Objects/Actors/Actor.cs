@@ -10,7 +10,7 @@ public class Actor : ScriptableObject
     public Sprite actorImage;
     [TextArea] public string fullName;
     [TextArea] public string description;
-    public bool isPlayer;
+    public Color bgColor;
     public Action<Actor> onDestroyActor;
 
     private void OnDestroy()

@@ -5,6 +5,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Object = UnityEngine.Object;
 
 public class NodeView : UnityEditor.Experimental.GraphView.Node
 {
@@ -12,10 +13,17 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
     public Node node;
     public Port input;
     public Port output;
-    private SpritePreviewElement _actorSprite;
+    
+    private readonly SpritePreviewElement _actorSprite;
+    private readonly TextField _messageTextField;
+    private Label _actorLabel;
+    private Actor _actor;
+    private DialogSystemView _graphView;
+    
         
-    public NodeView(Node node): base("Assets/dialog-system/Custom Views/Node View/NodeView.uxml")
+    public NodeView(Node node, DialogSystemView graphView): base("Assets/dialog-system/Custom Views/Node View/NodeView.uxml")
     {
+        _graphView = graphView;
         this.node = node;
         this.title = node.name;
         this.viewDataKey = node.guid;
@@ -39,20 +47,23 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
             _actorSprite = sprite;
             _actorSprite.bindingPath = "actorImage";
             
+            Label label = this.Q<Label>("actor-name-text");
+            _actorLabel = label;
+            _actorLabel.bindingPath = "fullName";
+            
             if (dialogNode.actor && dialogNode.actor.actorImage)
             {
-                
-                _actorSprite.Bind(new SerializedObject(dialogNode.actor));
+                BindActor(dialogNode.actor);
             }
             else
             {
                 _actorSprite.value = Resources.Load<Sprite>( "unknown-person" );
+                _actorLabel.text = "-";
             }
-        }
             
-        TextField messageTextField = this.Q<TextField>("message-textfield");
-        messageTextField.bindingPath = "message";
-        messageTextField.Bind(new SerializedObject(node));
+            _messageTextField = this.Q<TextField>("message-textfield");
+            BindMessage();
+        }
     }
 
     private void SetupClasses()
@@ -150,6 +161,33 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
 
     public void UpdateActorToBind(Actor selectedActor)
     {
-        _actorSprite.Bind(new SerializedObject(selectedActor));
+        BindActor(selectedActor);
+    }
+
+    private void BindActor(Actor selectedActor)
+    {
+        this.Unbind();
+        this.TrackSerializedObjectValue(new SerializedObject(selectedActor), CheckForWarnings);
+        _actor = selectedActor;
+        SerializedObject actor = new SerializedObject(_actor);
+        _actorSprite.Bind(actor);
+        _actorLabel.Bind(actor);
+        _actorSprite.style.backgroundColor = _actor.bgColor;
+        _actorLabel.style.backgroundColor = _actor.bgColor;
+        BindMessage();
+    }
+
+    void BindMessage()
+    {
+        if (_messageTextField == null) return;
+        
+        _messageTextField.bindingPath = "message";
+        _messageTextField.Bind(new SerializedObject(node));
+    }
+    
+    void CheckForWarnings(SerializedObject serializedObject)
+    {
+        _actorSprite.style.backgroundColor = _actor.bgColor;
+        _actorLabel.style.backgroundColor = _actor.bgColor;
     }
 }

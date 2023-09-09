@@ -54,84 +54,11 @@
     border-bottom-right-radius: 3px;
 }
 
-.actorsToggleCell {
+.actorsColorCell {
     justify-content: center;
     align-items: center;
     min-height: 55px;
-}
-
-.actorsToggleCell .unity-toggle {
-    justify-content: center;
-    align-items: stretch;
-    min-height: auto;
-    background-color: rgba(255, 255, 255, 0.5);
-    color: rgb(255, 255, 255);
-    -unity-background-image-tint-color: rgb(255, 255, 255);
-    -unity-background-scale-mode: stretch-to-fill;
-    padding-left: 0;
-    padding-right: 0;
-    padding-top: 0;
-    padding-bottom: 0;
-    border-top-left-radius: 3px;
-    border-bottom-left-radius: 3px;
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
-    border-left-color: rgb(255, 255, 255);
-    border-right-color: rgb(255, 255, 255);
-    border-top-color: rgb(255, 255, 255);
-    border-bottom-color: rgb(255, 255, 255);
-}
-
-.actorsToggleCell .unity-toggle :hover {
-    justify-content: center;
-    align-items: stretch;
-    min-height: auto;
-    background-color: rgba(255, 255, 255, 0);
-    color: rgb(255, 255, 255);
-    -unity-background-image-tint-color: rgb(255, 255, 255);
-    -unity-background-scale-mode: stretch-to-fill;
-    padding-left: 0;
-    padding-right: 0;
-    padding-top: 0;
-    padding-bottom: 0;
-    border-top-left-radius: 3px;
-    border-bottom-left-radius: 3px;
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
-    border-left-color: rgba(255, 255, 255, 0);
-    border-right-color: rgba(255, 255, 255, 0);
-    border-top-color: rgba(255, 255, 255, 0);
-    border-bottom-color: rgba(255, 255, 255, 0);
-    border-left-width: 1px;
-    border-right-width: 1px;
-    border-top-width: 1px;
-    border-bottom-width: 1px;
-}
-
-.actorsToggleCell .unity-toggle__checkmark {
-    justify-content: center;
-    align-items: stretch;
-    min-height: auto;
-    background-color: rgba(255, 255, 255, 0.5);
-    color: rgb(255, 255, 255);
-    -unity-background-image-tint-color: rgb(255, 255, 255);
-    -unity-background-scale-mode: stretch-to-fill;
-    padding-left: 8px;
-    padding-right: 8px;
-    padding-top: 8px;
-    padding-bottom: 8px;
-    border-top-left-radius: 3px;
-    border-bottom-left-radius: 3px;
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
-    border-left-color: rgba(255, 255, 255, 0.5);
-    border-right-color: rgba(255, 255, 255, 0.5);
-    border-top-color: rgba(255, 255, 255, 0.5);
-    border-bottom-color: rgba(255, 255, 255, 0.5);
-    border-left-width: 1px;
-    border-right-width: 1px;
-    border-top-width: 1px;
-    border-bottom-width: 1px;
+    width: 100px;
 }
 
 .actorsDeleteCell {
@@ -174,8 +101,15 @@
 
 .actorsImageCell--image {
     flex-grow: 1;
-    min-height: 45px;
-    padding-right: 10px;
+    padding-right: 0;
+    width: 50px;
+    padding-left: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    align-self: center;
+    margin-right: 11px;
+    justify-content: flex-start;
+    align-items: stretch;
 }
 
 .actorsImageCell--image-selector {

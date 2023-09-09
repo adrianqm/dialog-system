@@ -10,10 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a3ef0f06c2a058d419d6338f3fa5b08b, type: 3}
-  m_Name: DialogDatabase
+  m_Name: Default Title
   m_EditorClassIdentifier: 
-  title: My Database
-  description: This is an example of database
+  title: Default Title
+  description: Default Description
+  guid: 0a8548a261d7a1744869f71586a9befc
   conversations:
-  - {fileID: 11400000, guid: 890d18e4352066e4888175dea83925be, type: 2}
-  actorsTree: {fileID: 11400000, guid: f9f2b0b3db30a4b45a90804310fa3673, type: 2}
+  - {fileID: 11400000, guid: d308799059f10c846a1a684bc8a64b3a, type: 2}
+  actorsTree: {fileID: 11400000, guid: b3a0fffdfea246f4694bd9d3b62877e6, type: 2}

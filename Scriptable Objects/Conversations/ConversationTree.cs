@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using AQM.Tools.Serializable;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -15,7 +16,8 @@ public class ConversationTree : ScriptableObject
     
     public DialogSystemDatabase database;
     [HideInInspector] public Node rootNode;
-    [HideInInspector] public List<Node> nodes = new ();
+    public List<Node> nodes = new ();
+    public List<GroupNode> groups = new ();
     [HideInInspector] public Node runningNode;
     
     [TextArea] public string title;
@@ -23,11 +25,6 @@ public class ConversationTree : ScriptableObject
     [HideInInspector] [TextArea] public string guid;
     
     private Node finishedNode;
-
-    ConversationTree(DialogSystemDatabase database)
-    {
-        this.database = database;
-    }
 
     public void StartConversation()
     {
@@ -116,6 +113,69 @@ public class ConversationTree : ScriptableObject
         return this;
     }
     
+    public GroupNode CreateGroup(string groupTitle, Vector2 position)
+    {
+        GroupNode groupNode = ScriptableObject.CreateInstance(typeof(GroupNode)) as GroupNode;
+        groupNode.name = groupTitle;
+        groupNode.title = groupTitle;
+        groupNode.guid = GUID.Generate().ToString();
+        groupNode.position = position;
+        
+        Undo.RecordObject(this, "Conversation Tree (CreateGroup)");
+        groups ??= new List<GroupNode>();
+        groups.Add(groupNode);
+        
+        if (!Application.isPlaying)
+        {
+            AssetDatabase.AddObjectToAsset(groupNode,this);
+        }
+        Undo.RegisterCreatedObjectUndo(groupNode, "Conversation Tree (CreateGroup)");
+        AssetDatabase.SaveAssets();
+        return groupNode;
+    }
+    
+    public void DeteleGroupNode(GroupNode groupNode)
+    {
+        Undo.RecordObject(this, "Conversation Tree (DeleteGroupNode)");
+        groups.Remove(groupNode);
+        
+        //AssetDatabase.RemoveObjectFromAsset(node);
+        Undo.DestroyObjectImmediate(groupNode);
+        AssetDatabase.SaveAssets();
+    }
+    
+    public bool AddGroupToNode(Node node,GroupNode group)
+    {
+        bool hasBeenAdded = false;
+        if(node  && group)
+        {
+            Undo.RecordObject(node, "Conversation Tree (AddGroupToNode)");
+            node.group = group;
+            EditorUtility.SetDirty(node);
+            hasBeenAdded = true;
+        }
+
+        return hasBeenAdded;
+    }
+    
+    public void RemoveGroupFromNode(Node node)
+    {
+        if(node)
+        {
+            Undo.RecordObject(node, "Conversation Tree (RemoveGroupFromNode)");
+            node.group = null;
+            EditorUtility.SetDirty(node);
+        }
+    }
+    
+    public void SetGroupTitle(GroupNode group, string title)
+    {
+        if (!group) return;
+        Undo.RecordObject(group, "Conversation Tree (SetGroupTitle)");
+        group.title = title;
+        EditorUtility.SetDirty(group);
+    }
+    
     public Node CreateNode(System.Type type, Vector2 position)
     {
         Node node = ScriptableObject.CreateInstance(type) as Node;
@@ -123,6 +183,27 @@ public class ConversationTree : ScriptableObject
         node.guid = GUID.Generate().ToString();
         node.position = position;
 
+        AddNodeToList(node);
+        
+        return node;
+    }
+    
+    public DialogNode CreateDialogNodeCopy(System.Type type, Vector2 position, SerializableDialogNode nodeToCopy)
+    {
+        DialogNode node = ScriptableObject.CreateInstance(type) as DialogNode;
+        node.name = type.Name;
+        node.guid = GUID.Generate().ToString();
+        node.position = position;
+        node.actor = database.actorsTree.actors.Find(actor => actor.guid == nodeToCopy.actorGuid);
+        node.message = nodeToCopy.message;
+
+        AddNodeToList(node);
+        
+        return node;
+    }
+
+    private void AddNodeToList(Node node)
+    {
         Undo.RecordObject(this, "Conversation Tree (CreateNode)");
         nodes ??= new List<Node>();
         nodes.Add(node);
@@ -133,7 +214,6 @@ public class ConversationTree : ScriptableObject
         }
         Undo.RegisterCreatedObjectUndo(node, "Conversation Tree (CreateNode)");
         AssetDatabase.SaveAssets();
-        return node;
     }
 
     public void DeteleNode(Node node)
@@ -150,7 +230,7 @@ public class ConversationTree : ScriptableObject
     {
         bool hasAdded = false;
         DialogNode node = parent as DialogNode;
-        if(node && !node.children.Contains(child))
+        if(node && !node.children.Contains(child) )
         {
             Undo.RecordObject(node, "Conversation Tree (AddChild)");
             node.children.Add(child);
@@ -207,7 +287,7 @@ public class ConversationTree : ScriptableObject
         return children;
     }
 
-    public void Traverse(Node node, System.Action<Node> visiter)
+    private void Traverse(Node node, System.Action<Node> visiter)
     {
         if (!node) return;
         visiter.Invoke(node);

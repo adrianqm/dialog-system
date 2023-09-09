@@ -26,21 +26,21 @@ public class ActorsTree : ScriptableObject
             newActor.guid = GUID.Generate().ToString();
             newActor.fullName = "defaultName";
             newActor.description = "defaultDesc";
-            Undo.RecordObject(this, "Actors Tree (CreateActor)");
+            //Undo.RecordObject(this, "Actors Tree (CreateActor)");
             actors.Add(newActor);
             
             if (!Application.isPlaying)
             {
                 AssetDatabase.AddObjectToAsset( newActor,this);
             }
-            Undo.RegisterCreatedObjectUndo(newActor, "Actors Tree (CreateActor)");
+            //Undo.RegisterCreatedObjectUndo(newActor, "Actors Tree (CreateActor)");
             AssetDatabase.SaveAssets();
         }
     }
     
     public void DeteleActor(Actor actor)
     {
-        Undo.RecordObject(this, "Actors Tree (DeleteActor)");
+        //Undo.RecordObject(this, "Actors Tree (DeleteActor)");
         actors.Remove(actor); 
         //AssetDatabase.RemoveObjectFromAsset(node);
         

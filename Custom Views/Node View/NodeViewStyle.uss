@@ -40,36 +40,36 @@ VisualElement {
 }
 
 :hover > #selection-border {
-    border-left-color: rgb(0, 104, 192);
-    border-right-color: rgb(0, 104, 192);
-    border-top-color: rgb(0, 104, 192);
-    border-bottom-color: rgb(0, 104, 192);
-    border-left-width: 3px;
-    border-right-width: 3px;
-    border-top-width: 3px;
-    border-bottom-width: 3px;
+    border-left-color: rgb(50, 142, 189);
+    border-right-color: rgb(50, 142, 189);
+    border-top-color: rgb(50, 142, 189);
+    border-bottom-color: rgb(50, 142, 189);
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-top-width: 2px;
+    border-bottom-width: 2px;
 }
 
 :selected > #selection-border {
-    border-left-color: rgb(0, 138, 255);
-    border-right-color: rgb(0, 138, 255);
-    border-top-color: rgb(0, 138, 255);
-    border-bottom-color: rgb(0, 138, 255);
-    border-left-width: 3px;
-    border-right-width: 3px;
-    border-top-width: 3px;
-    border-bottom-width: 3px;
+    border-left-color: rgb(68, 192, 255);
+    border-right-color: rgb(68, 192, 255);
+    border-top-color: rgb(68, 192, 255);
+    border-bottom-color: rgb(68, 192, 255);
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-top-width: 2px;
+    border-bottom-width: 2px;
 }
 
 :hover:selected > #selection-border {
-    border-left-width: 4px;
-    border-right-width: 4px;
-    border-top-width: 4px;
-    border-bottom-width: 4px;
-    border-left-color: rgb(0, 138, 255);
-    border-right-color: rgb(0, 138, 255);
-    border-top-color: rgb(0, 138, 255);
-    border-bottom-color: rgb(0, 138, 255);
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-top-width: 2px;
+    border-bottom-width: 2px;
+    border-left-color: rgb(68, 192, 255);
+    border-right-color: rgb(68, 192, 255);
+    border-top-color: rgb(68, 192, 255);
+    border-bottom-color: rgb(68, 192, 255);
 }
 
 .node {
@@ -146,16 +146,20 @@ VisualElement {
     display: flex;
     align-items: stretch;
     flex-direction: row;
-    min-height: 40px;
+    min-height: 35px;
     align-self: center;
     -unity-text-align: middle-left;
-    max-width: 212px;
+    max-width: 211px;
     flex-shrink: 1;
-    min-width: 212px;
+    min-width: 211px;
     max-height: 300px;
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 10px;
     padding-bottom: 10px;
     background-color: rgb(39, 45, 53);
+}
+
+#message-textfield .unity-base-text-field__input :hover {
+    cursor: text;
 }

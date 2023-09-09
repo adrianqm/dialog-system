@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public abstract class Node : ScriptableObject
 {
     [HideInInspector] public string guid;
     [HideInInspector] public Vector2 position;
     [HideInInspector] public List<Node> children = new();
+    public GroupNode group;
 
     public enum State
     {

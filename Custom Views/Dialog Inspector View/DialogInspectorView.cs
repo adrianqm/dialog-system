@@ -50,8 +50,8 @@ public class DialogInspectorView : VisualElement
             }
             findActorButton.clickable = new Clickable(() =>
             {
-                NonPlayerActorsSearchProvider provider =
-                    ScriptableObject.CreateInstance<NonPlayerActorsSearchProvider>();
+                ActorsSearchProvider provider =
+                    ScriptableObject.CreateInstance<ActorsSearchProvider>();
                 provider.SetUp(_actorsTree.actors,
                     (actorSelected) =>
                     {

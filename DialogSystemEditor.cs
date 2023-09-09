@@ -5,6 +5,7 @@ using System.Linq;
 using AQM.Tools;
 using UnityEditor;
 using UnityEditor.Callbacks;
+using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEditor.VersionControl;
 using UnityEngine;
@@ -28,6 +29,7 @@ public class DialogSystemEditor : EditorWindow
     private DatabaseEditorView _dialogEditor;
     private const string hiddenContentClassName = "hiddenContent";
     private Label _conversationNameLabel;
+    private VisualElement _topConversationBar;
     private TabbedMenuController _tabbedMenuController;
     private Button _createNewActorButton;
     private Action _unregisterAll;
@@ -84,6 +86,7 @@ public class DialogSystemEditor : EditorWindow
         
         // Tree view
         _treeView = root.Q<DialogSystemView>();
+        _treeView.SetUpEditorWindor(this);
         _treeView.OnNodeSelected = OnNodeSelectionChanged;
         _treeView.onNodesRemoved = OnNodesRemoved;
         // To remove Hover style
@@ -139,6 +142,32 @@ public class DialogSystemEditor : EditorWindow
 
         // Register Conversation Name Label Query
         _conversationNameLabel = root.Q<Label>(className: "conversation-name-label");
+        _topConversationBar = rootVisualElement.Q("top-conversation-bar");
+        
+        VisualElement buttonShowMinimap = rootVisualElement.Q("show-minimap");
+        Button minimapButton = new Button();
+        var texture = EditorGUIUtility.IconContent("d_AnimatorController On Icon").image;
+        minimapButton.AddToClassList("top-conversation-bar--button");
+        buttonShowMinimap.Add(minimapButton);
+        minimapButton.Add(new Image {
+            image = texture,
+        });
+        minimapButton.clickable = new Clickable(()=>{
+            _treeView.ChangeMinimapDisplay();
+        });
+        
+        VisualElement buttonFrameNode= rootVisualElement.Q("frame-nodes");
+        Button frameNodesButton = new Button();
+        var frameTexture = EditorGUIUtility.IconContent("d_GridLayoutGroup Icon").image;
+        frameNodesButton.AddToClassList("top-conversation-bar--button");
+        buttonFrameNode.Add(frameNodesButton);
+        frameNodesButton.Add(new Image {
+            image = frameTexture,
+        });
+        frameNodesButton.clickable = new Clickable(()=>
+        {
+            _treeView.FrameAllNodes();
+        });
 
         OnSelectionChange();
     }
@@ -182,7 +211,7 @@ public class DialogSystemEditor : EditorWindow
             _dialogSelectorVE.AddToClassList(hiddenContentClassName);
             _toolbarHeaderVE.RemoveFromClassList(hiddenContentClassName);
 
-            database.RegisterUndoOperation(_actorMultiColumListView,_treeView);
+            //database.RegisterUndoOperation(_actorMultiColumListView,_treeView);
             tree = database.conversations[0];
             _currentDatabase = database;
             _toolbarHeader.SetUpSelector(_currentDatabase);
@@ -235,7 +264,7 @@ public class DialogSystemEditor : EditorWindow
         _dialogSelectorVE.AddToClassList(hiddenContentClassName);
         _toolbarHeaderVE.RemoveFromClassList(hiddenContentClassName);
         
-        database.RegisterUndoOperation(_actorMultiColumListView,_treeView);
+        //database.RegisterUndoOperation(_actorMultiColumListView,_treeView);
         tree = database.conversations[0];
         _currentDatabase = database;
         _toolbarHeader.SetUpSelector(_currentDatabase);
@@ -256,13 +285,13 @@ public class DialogSystemEditor : EditorWindow
         
         if (_conversationNameLabel == null)
         {
-            _conversationNameLabel = rootVisualElement.Q<Label>(className: "conversation-name-label--selected");
+            _conversationNameLabel = rootVisualElement.Q<Label>("conversation-name-label");
         }
 
         if (_conversationNameLabel != null)
         {
             ClearAllValueCallbacks();
-            _conversationNameLabel.style.display = DisplayStyle.Flex;
+            _topConversationBar.style.display = DisplayStyle.Flex;
             _conversationNameLabel.bindingPath = "title";
             _conversationNameLabel.Bind(new SerializedObject(tree));
             EventCallback<ClickEvent> clickEvent = (e) =>
@@ -279,7 +308,7 @@ public class DialogSystemEditor : EditorWindow
         // Set Actors data
         _actorMultiColumListView.SetupTable(_currentDatabase.actorsTree);
 
-        _treeView?.PopulateView(tree);
+        _treeView?.PopulateViewAndFrameNodes(tree); 
     }
 
     void OnNodeSelectionChanged(NodeView node)
@@ -295,7 +324,7 @@ public class DialogSystemEditor : EditorWindow
     void OnActorsRemoved()
     {
         SetConversationNameSelected();
-        _treeView?.PopulateView(_currentTree);
+        _treeView?.PopulateViewAndFrameNodes(_currentTree);
     }
 
     void OnImportDatabase()
@@ -386,9 +415,12 @@ public class DialogSystemEditor : EditorWindow
         _treeView.ClearGraph();
         
         ClearAllValueCallbacks();
-        _conversationNameLabel.RemoveFromClassList("conversation-name-label--selected");
-        _conversationNameLabel.AddToClassList("conversation-name-label");
-        _conversationNameLabel.style.display = DisplayStyle.None;
+        if (_conversationNameLabel != null)
+        {
+            _conversationNameLabel.RemoveFromClassList("conversation-name-label--selected");
+            _conversationNameLabel.AddToClassList("conversation-name-label");
+        }
+        _topConversationBar.style.display = DisplayStyle.None;
     }
     
     private void ClearAllValueCallbacks()

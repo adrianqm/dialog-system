@@ -1,0 +1,176 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8694312221809898600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: 8458e1787a5eb8649965f63099388af8
+  position: {x: 606.56134, y: -8.000002}
+  children:
+  - {fileID: 825408903309232674}
+  group: {fileID: 0}
+  actor: {fileID: 2640927171283110620, guid: b3a0fffdfea246f4694bd9d3b62877e6, type: 2}
+  message: c
+--- !u!114 &-8115944393051410685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: 7df8c3234829f544ba72494d7fa9ec2f
+  position: {x: 1244.0002, y: 60.000053}
+  children: []
+  group: {fileID: 0}
+  actor: {fileID: 2640927171283110620, guid: b3a0fffdfea246f4694bd9d3b62877e6, type: 2}
+  message: f
+--- !u!114 &-7575587961874528453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6662badd63604c1409313f1a633a4e14, type: 3}
+  m_Name: RootNode
+  m_EditorClassIdentifier: 
+  guid: 072a65979a023c54c9e2213a7e068fc8
+  position: {x: -20.76147, y: -7.9999795}
+  children:
+  - {fileID: -1041755364094512497}
+  - {fileID: 6847667222542558936}
+  group: {fileID: 0}
+--- !u!114 &-1706047598771967604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: 10fdbdfac4334bb4a85427f6f580489f
+  position: {x: 606.39996, y: 201.90776}
+  children: []
+  group: {fileID: 0}
+  actor: {fileID: 1087748239177273683, guid: b3a0fffdfea246f4694bd9d3b62877e6, type: 2}
+  message: 
+--- !u!114 &-1041755364094512497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: 4d81f40effac65645abaf0ab926964ef
+  position: {x: 263.09552, y: -194.71269}
+  children: []
+  group: {fileID: 4618751529805286813}
+  actor: {fileID: -6390176592927412095, guid: b3a0fffdfea246f4694bd9d3b62877e6, type: 2}
+  message: Buenas
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f8c511dcfa664e438f3056b4c07f2cd, type: 3}
+  m_Name: Conversation
+  m_EditorClassIdentifier: 
+  database: {fileID: 11400000, guid: f03fc47b05838cc49975099f28cce609, type: 2}
+  rootNode: {fileID: -7575587961874528453}
+  nodes:
+  - {fileID: -7575587961874528453}
+  - {fileID: -1041755364094512497}
+  - {fileID: 6847667222542558936}
+  - {fileID: -8694312221809898600}
+  - {fileID: -8115944393051410685}
+  - {fileID: 825408903309232674}
+  - {fileID: -1706047598771967604}
+  groups:
+  - {fileID: 4618751529805286813}
+  runningNode: {fileID: 0}
+  title: Conversacion
+  description: Default Description
+  guid: aad1e7fea4e245f44bd7dea0e75986cd
+--- !u!114 &825408903309232674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: ad732a2504407204b972719e05ead1f4
+  position: {x: 921.1453, y: -8.000002}
+  children:
+  - {fileID: -8115944393051410685}
+  group: {fileID: 0}
+  actor: {fileID: 2640927171283110620, guid: b3a0fffdfea246f4694bd9d3b62877e6, type: 2}
+  message: d
+--- !u!114 &4618751529805286813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a7b63e5f1620b84386096f10e203759, type: 3}
+  m_Name: Group Box
+  m_EditorClassIdentifier: 
+  guid: 1c73f031217d7cb4ea9f5d78043dde0b
+  position: {x: 237.49551, y: -254.71269}
+  title: Group Box
+--- !u!114 &6847667222542558936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: 55cf997dda0481248a4821db1c1d8201
+  position: {x: 268.80017, y: 59.99997}
+  children:
+  - {fileID: -8694312221809898600}
+  - {fileID: -8115944393051410685}
+  - {fileID: -1706047598771967604}
+  group: {fileID: 0}
+  actor: {fileID: 2640927171283110620, guid: b3a0fffdfea246f4694bd9d3b62877e6, type: 2}
+  message: b

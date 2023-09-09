@@ -117,18 +117,26 @@ public class ActorMultiColumListView : MultiColumnListView
 
     private void RemoveSelectedActors()
     {
-        
-        List<Actor> auxArray = new List<Actor>(_actorsTree.actors);
-        foreach (var actor in auxArray)
+        bool deleteClicked = EditorUtility.DisplayDialog(
+            "Delete actors selected",
+            "Are you sure you want to delete these actors?",
+            "Delete",
+            "Cancel");
+
+        if (deleteClicked)
         {
-            if (selectedItems.Contains(actor))
+            List<Actor> auxArray = new List<Actor>(_actorsTree.actors);
+            foreach (var actor in auxArray)
             {
-                DeleteActor(actor);
+                if (selectedItems.Contains(actor))
+                {
+                    DeleteActor(actor);
+                }
             }
+            RefreshTable();
+            ClearSelection();
+            onActorsRemoved?.Invoke();
         }
-        RefreshTable();
-        ClearSelection();
-        onActorsRemoved?.Invoke();
     }
 
     private VisualElement OnMakeImageCell()
@@ -157,19 +165,19 @@ public class ActorMultiColumListView : MultiColumnListView
         return ve;
     }
     
-    private VisualElement OnMakeToggleCell()
+    private VisualElement OnMakeColorCell()
     {
         var ve = new VisualElement();
-        var toggle = new Toggle();
-        ve.Add(toggle);
-        ve.AddToClassList("actorsToggleCell");
+        var color = new ColorField();
+        ve.Add(color);
+        ve.AddToClassList("actorsColorCell");
         return ve;
     }
     
     private VisualElement OnMakeDeleteCell()
     {
         var ve = new VisualElement();
-        var texture = EditorGUIUtility.IconContent("winbtn_win_close").image;
+        var texture = EditorGUIUtility.IconContent("TreeEditor.Trash").image;
         var button = new Button();
         button.AddToClassList("actorsDeleteCell--button");
         button.focusable = false;
@@ -213,16 +221,25 @@ public class ActorMultiColumListView : MultiColumnListView
                 descText.Bind(new SerializedObject(_currentActorList[index]));
                 break;
             case 3:
-                Toggle toggle = ve.Q<Toggle>();
-                toggle.bindingPath = "isPlayer";
-                toggle.Bind(new SerializedObject(_currentActorList[index]));
+                ColorField color = ve.Q<ColorField>();
+                color.bindingPath = "bgColor";
+                color.Bind(new SerializedObject(_currentActorList[index]));
                 break;
             case 4: 
                 Button deleteButton = ve.Q<Button>();
                 deleteButton.clickable = new Clickable(()=>{
-                    DeleteActor(_currentActorList[index]);
-                    RefreshTable();
-                    ClearSelection();
+                    bool deleteClicked = EditorUtility.DisplayDialog(
+                        "Delete actor selected",
+                        "Are you sure you want to delete this actor?",
+                        "Delete",
+                        "Cancel");
+
+                    if (deleteClicked)
+                    {
+                        DeleteActor(_currentActorList[index]);
+                        RefreshTable();
+                        ClearSelection();
+                    }
                 });
                 break;
         }
@@ -233,7 +250,6 @@ public class ActorMultiColumListView : MultiColumnListView
         _actorsTree.DeteleActor(actor);
         if (_currentActorList.Contains(actor)) _currentActorList.Remove(actor);
         onActorsRemoved?.Invoke();
-        
     }
 
     private void AddColumns()
@@ -255,8 +271,8 @@ public class ActorMultiColumListView : MultiColumnListView
             title = "Name",
             bindCell = (x, y) => { OnBindCell(x, y, 1); },
             makeCell = OnMakeLabelCell,
-            stretchable = true,
-            minWidth = 75,
+            width = 150,
+            minWidth = 100,
             sortable = true
         });
         columns?.Add(new Column
@@ -271,13 +287,14 @@ public class ActorMultiColumListView : MultiColumnListView
         });
         columns?.Add(new Column
         {
-            name = "isPlayerColumn",
-            title = "Player",
+            name = "backgroundColorColumn",
+            title = "Color",
             bindCell = (x, y) => { OnBindCell(x, y, 3); },
-            makeCell = OnMakeToggleCell,
+            makeCell = OnMakeColorCell,
             stretchable = false,
-            maxWidth = 70,
-            minWidth = 70
+            maxWidth = 100,
+            minWidth = 100,
+            sortable = false
         });
         columns?.Add(new Column
         {
@@ -310,29 +327,14 @@ public class ActorMultiColumListView : MultiColumnListView
             {
                 if (sortColumnDescription.direction == SortDirection.Ascending)
                 {
-                    _currentActorList.Sort((x,y) => String.CompareOrdinal(x.description,y.description));
+                    _currentActorList.Sort((x, y) => String.CompareOrdinal(x.description, y.description));
                 }
                 else
                 {
-                    _currentActorList.Sort((x,y) => String.CompareOrdinal(y.description,x.description));
+                    _currentActorList.Sort((x, y) => String.CompareOrdinal(y.description, x.description));
                 }
-            }else if (sortColumnDescription.columnName.Contains("isPlayerColumn"))
-            {
-                if (sortColumnDescription.direction == SortDirection.Ascending)
-                {
-                    _currentActorList.Sort((x, y) =>
-                    {
-                        return Convert.ToInt32(x.isPlayer) - Convert.ToInt32(y.isPlayer);
-                    });
-                }
-                else
-                {
-                    _currentActorList.Sort((x, y) =>
-                    {
-                        return Convert.ToInt32(y.isPlayer) - Convert.ToInt32(x.isPlayer);
-                    });
-                } 
             }
+
             RefreshTable();
         }
     }

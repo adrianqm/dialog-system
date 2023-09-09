@@ -52,21 +52,5 @@ public class DialogSystemDatabase : ScriptableObject
         AssetDatabase.DeleteAsset(path);
         AssetDatabase.SaveAssets();
     }
-
-    public void RegisterUndoOperation(ActorMultiColumListView actorMultiColumLisView, DialogSystemView treeView)
-    {
-        Undo.undoRedoPerformed -= OnUndoRedo;
-        _actorMultiColumListView = actorMultiColumLisView;
-        _treeView = treeView;
-        Undo.undoRedoPerformed += OnUndoRedo;
-    }
-    
-    private void OnUndoRedo()
-    {
-        _actorMultiColumListView.SetupTableAndCleanSearch(actorsTree);
-        _treeView.MarkDirtyRepaint();
-        _treeView.PopulateView(conversations[0]);
-        AssetDatabase.SaveAssets();
-    }
 #endif
 }
