@@ -10,15 +10,15 @@ public class DialogInspectorView : VisualElement
 {
     private NodeView _nodeView;
     private DialogNode _node;
-    private ActorsTree _actorsTree;
-    public DialogInspectorView(NodeView nodeView,ActorsTree actorsTree)
+    private List<Actor> _actors;
+    public DialogInspectorView(NodeView nodeView,List<Actor> actors)
     {
         string uriFile = "Assets/dialog-system/Custom Views/Dialog Inspector View/DialogInspectorView.uxml";
         (EditorGUIUtility.Load(uriFile) as VisualTreeAsset)?.CloneTree(this);
 
         _nodeView = nodeView;
         _node = nodeView.node as DialogNode;
-        _actorsTree = actorsTree;
+        _actors = actors;
         
         PopulateInspector();
     }
@@ -52,7 +52,7 @@ public class DialogInspectorView : VisualElement
             {
                 ActorsSearchProvider provider =
                     ScriptableObject.CreateInstance<ActorsSearchProvider>();
-                provider.SetUp(_actorsTree.actors,
+                provider.SetUp(_actors,
                     (actorSelected) =>
                     {
                         actorSprite.Bind(new SerializedObject(actorSelected));

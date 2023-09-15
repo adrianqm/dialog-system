@@ -71,24 +71,16 @@ public class DialogSystemEditor : EditorWindow
         // Import StyleSheets 
         root.styleSheets.Add(styleSheet);
         
-        // File Menu
-        _fileMenu = root.Q<ToolbarMenu>("fileMenu");
-        _fileMenu.menu.AppendAction("Import New Database...",
-            a => { OnImportDatabase(); }, 
-            a => DropdownMenuAction.Status.Normal);
-        _fileMenu.menu.AppendAction("Edit Current Database...",
-            a => { OnEditDatabase(); }, 
-            a => DropdownMenuAction.Status.Normal);
-        
         // Instantiate Tab Controller
         _tabbedMenuController = new TabbedMenuController(root);
         _tabbedMenuController.RegisterTabCallbacks();
         
         // Tree view
         _treeView = root.Q<DialogSystemView>();
-        _treeView.SetUpEditorWindor(this);
+        _treeView.SetUpEditorWindow(this);
         _treeView.OnNodeSelected = OnNodeSelectionChanged;
         _treeView.onNodesRemoved = OnNodesRemoved;
+        
         // To remove Hover style
         _treeView.RegisterCallback<ClickEvent>((evt) =>
         {
@@ -144,32 +136,54 @@ public class DialogSystemEditor : EditorWindow
         _conversationNameLabel = root.Q<Label>(className: "conversation-name-label");
         _topConversationBar = rootVisualElement.Q("top-conversation-bar");
         
-        VisualElement buttonShowMinimap = rootVisualElement.Q("show-minimap");
-        Button minimapButton = new Button();
-        var texture = EditorGUIUtility.IconContent("d_AnimatorController On Icon").image;
-        minimapButton.AddToClassList("top-conversation-bar--button");
-        buttonShowMinimap.Add(minimapButton);
-        minimapButton.Add(new Image {
-            image = texture,
-        });
-        minimapButton.clickable = new Clickable(()=>{
+        RegisterConversationHeaderButton("show-minimap", "d_AnimatorController On Icon", () =>
+        {
             _treeView.ChangeMinimapDisplay();
         });
         
-        VisualElement buttonFrameNode= rootVisualElement.Q("frame-nodes");
-        Button frameNodesButton = new Button();
-        var frameTexture = EditorGUIUtility.IconContent("d_GridLayoutGroup Icon").image;
-        frameNodesButton.AddToClassList("top-conversation-bar--button");
-        buttonFrameNode.Add(frameNodesButton);
-        frameNodesButton.Add(new Image {
-            image = frameTexture,
-        });
-        frameNodesButton.clickable = new Clickable(()=>
+        
+        RegisterConversationHeaderButton("frame-nodes", "d_GridLayoutGroup Icon", () =>
         {
             _treeView.FrameAllNodes();
         });
 
+        RegisterConversationHeaderButton("conversation-list", "ListView@8x", () =>
+        {
+            _treeView.FrameAllNodes();
+        });
+        
+        SetDefaultIconForDatabase();
         OnSelectionChange();
+    }
+
+    private void RegisterConversationHeaderButton(string buttonName,string iconTextureName, System.Action callback)
+    {
+        VisualElement buttonConversationList= rootVisualElement.Q(buttonName);
+        Button conversationListButton = new Button();
+        var conversationListTexture = EditorGUIUtility.IconContent(iconTextureName).image;
+        conversationListButton.AddToClassList("conversation-bar--button");
+        buttonConversationList.Add(conversationListButton);
+        conversationListButton.Add(new Image {
+            image = conversationListTexture,
+        });
+        conversationListButton.clickable = new Clickable(()=>
+        {
+            callback.Invoke();
+        });
+    }
+
+    private void SetDefaultIconForDatabase()
+    {
+        string[] guids = AssetDatabase.FindAssets($"t:{nameof(DialogSystemDatabase)}");
+        Texture2D icon = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/dialog-system/Assets/Icon.png", typeof(Texture2D));
+        foreach (var guid in guids)
+        {
+            string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+            DialogSystemDatabase db = AssetDatabase.LoadAssetAtPath<DialogSystemDatabase>(assetPath);
+            EditorGUIUtility.SetIconForObject(db, icon);
+            AssetDatabase.ImportAsset(assetPath);
+        }
+        AssetDatabase.Refresh();
     }
 
     private void OnEnable()
@@ -210,16 +224,18 @@ public class DialogSystemEditor : EditorWindow
         {
             _dialogSelectorVE.AddToClassList(hiddenContentClassName);
             _toolbarHeaderVE.RemoveFromClassList(hiddenContentClassName);
-
-            //database.RegisterUndoOperation(_actorMultiColumListView,_treeView);
-            tree = database.conversations[0];
-            _currentDatabase = database;
-            _toolbarHeader.SetUpSelector(_currentDatabase);
-            _dialogEditor.SetUpEditor(_currentDatabase);
             
             // Set root element
+            _currentDatabase = database;
             SerializedObject so = new SerializedObject(_currentDatabase);
             rootVisualElement.Bind(so);
+            
+            //database.RegisterUndoOperation(_actorMultiColumListView,_treeView);
+            tree = database.conversations[0];
+            _toolbarHeader.SetUpSelector(_currentDatabase);
+            _dialogEditor.SetUpEditor(_currentDatabase);
+            _treeView.SetUpTreeView(_currentDatabase);
+            _actorMultiColumListView.SetupTable(_currentDatabase);
         }
         else if(_currentDatabase != null)
         {
@@ -227,13 +243,14 @@ public class DialogSystemEditor : EditorWindow
             _toolbarHeaderVE.RemoveFromClassList(hiddenContentClassName);
             _toolbarHeader.SetUpSelector(_currentDatabase);
             _dialogEditor.SetUpEditor(_currentDatabase);
+            _treeView.SetUpTreeView(_currentDatabase);
+            _actorMultiColumListView.SetupTable(_currentDatabase);
         }
         else
         {
             OpenDatabaseSelector();
             ClearView();
         }
-        
         /*
         if (!tree)
         {
@@ -264,15 +281,19 @@ public class DialogSystemEditor : EditorWindow
         _dialogSelectorVE.AddToClassList(hiddenContentClassName);
         _toolbarHeaderVE.RemoveFromClassList(hiddenContentClassName);
         
-        //database.RegisterUndoOperation(_actorMultiColumListView,_treeView);
-        tree = database.conversations[0];
-        _currentDatabase = database;
-        _toolbarHeader.SetUpSelector(_currentDatabase);
-        _dialogEditor.SetUpEditor(_currentDatabase);
-        
         // Set root element
+        _currentDatabase = database;
         SerializedObject so = new SerializedObject(_currentDatabase);
         rootVisualElement.Bind(so);
+        
+        //database.RegisterUndoOperation(_actorMultiColumListView,_treeView);
+        tree = database.conversations[0];
+        //_currentDatabase = database;
+        _toolbarHeader.SetUpSelector(_currentDatabase);
+        _dialogEditor.SetUpEditor(_currentDatabase);
+        _treeView.SetUpTreeView(_currentDatabase);
+        _actorMultiColumListView.SetupTable(_currentDatabase);
+        
         SetTree(tree);
     }
 
@@ -304,16 +325,12 @@ public class DialogSystemEditor : EditorWindow
             _conversationNameLabel.RegisterCallback(clickEvent);
             _unregisterAll += () => _conversationNameLabel.UnregisterCallback(clickEvent);
         }
-
-        // Set Actors data
-        _actorMultiColumListView.SetupTable(_currentDatabase.actorsTree);
-
         _treeView?.PopulateViewAndFrameNodes(tree); 
     }
 
     void OnNodeSelectionChanged(NodeView node)
     {
-        _inspectorView.ShowDialogInspector(node, _currentDatabase.actorsTree);
+        _inspectorView.ShowDialogInspector(node, _currentDatabase.actors);
     }
 
     void OnNodesRemoved()

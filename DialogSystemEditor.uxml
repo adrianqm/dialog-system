@@ -1,21 +1,20 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <Style src="project://database/Assets/dialog-system/DialogSystemEditor.uss?fileID=7433441132597879392&amp;guid=d7654b6f86c175149902ffe450d822a7&amp;type=3#DialogSystemEditor" />
-    <uie:Toolbar style="height: 30px;">
-        <uie:ToolbarMenu tabindex="-1" display-tooltip-when-elided="true" text="File" enable-rich-text="false" name="fileMenu" style="min-width: 44px;" />
-    </uie:Toolbar>
+    <ui:VisualElement name="header" style="flex-grow: 0; height: 30px; align-self: center; flex-direction: row; justify-content: center; width: 100%;">
+        <ToolbarHeaderView name="toolbar-header" class="hiddenContent" style="position: relative; left: auto; right: auto; align-self: center; flex-grow: 1; justify-content: center; min-height: 30px; flex-direction: row; align-items: center;" />
+    </ui:VisualElement>
     <ui:VisualElement name="tabs" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); opacity: 1; min-height: 30px; max-height: 30px; align-self: flex-start;">
         <ui:Label tabindex="-1" text="Actors" display-tooltip-when-elided="true" name="ActorsTab" class="tab nonSelectedTab" style="align-self: auto; justify-content: flex-start; align-items: auto; position: relative; min-height: auto; flex-shrink: 0; -unity-text-align: middle-center; opacity: 1;" />
         <ui:Label tabindex="-1" text="Conversations" display-tooltip-when-elided="true" name="ConversationsTab" class="tab currentlySelectedTab" style="-unity-text-align: middle-center;" />
     </ui:VisualElement>
     <ui:VisualElement name="tabContent" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
         <ui:VisualElement name="ActorsContent" class="hiddenContent" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
-            <ActorListView name="ActorListView" style="background-color: rgba(43, 48, 54, 0.75); flex-grow: 1;" />
+            <ActorListView name="ActorListView" style="background-color: rgba(43, 48, 54, 0.6); flex-grow: 1;" />
         </ui:VisualElement>
         <ui:VisualElement name="ConversationsContent" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); font-size: 12px; -unity-font-style: normal;">
             <ConversationsView style="flex-grow: 1;" />
         </ui:VisualElement>
     </ui:VisualElement>
-    <ToolbarHeaderView name="toolbar-header" class="hiddenContent" style="position: absolute; left: auto; right: auto; align-self: center; flex-grow: 1; justify-content: center; min-height: 30px; min-width: 243px;" />
     <ui:VisualElement name="database-selector" class="hiddenContent" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.5); position: absolute; right: 0; left: 0; top: 0; bottom: 0; -unity-background-image-tint-color: rgb(255, 255, 255); background-image: none; justify-content: center; align-items: center; align-self: center; -unity-text-align: upper-left; flex-direction: column; opacity: 1;">
         <DatabaseSelectorView name="DatabaseSelectorView" style="position: absolute; align-items: stretch; justify-content: center; flex-grow: 1; flex-direction: column; align-self: center; height: auto; top: auto; width: auto; min-width: 277px; min-height: 170px; max-height: none;" />
     </ui:VisualElement>

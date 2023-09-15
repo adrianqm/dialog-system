@@ -8,10 +8,10 @@ public class InspectorView : VisualElement
 {
     public new class UxmlFactory:  UxmlFactory<InspectorView, InspectorView.UxmlTraits> {}
 
-    internal void ShowDialogInspector(NodeView nodeView,ActorsTree actorsTree)
+    internal void ShowDialogInspector(NodeView nodeView,List<Actor> actors)
     {
         Clear();
-        DialogInspectorView container = new DialogInspectorView(nodeView, actorsTree);
+        DialogInspectorView container = new DialogInspectorView(nodeView, actors);
         Add(container);
     }
 

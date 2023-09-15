@@ -13,7 +13,8 @@ public class DialogSystemView : GraphView
     public Action<NodeView> OnNodeSelected;
     public Action onNodesRemoved;
     public new class UxmlFactory : UxmlFactory<DialogSystemView, GraphView.UxmlTraits> {}
-    
+
+    private DialogSystemDatabase _currentDatabase;
     private ConversationTree _tree;
     private NodeSearchProvider _nodeSearchProvider;
     private DialogSystemEditor _editorWindow;
@@ -38,7 +39,12 @@ public class DialogSystemView : GraphView
 
         Undo.undoRedoPerformed += OnUndoRedo;
     }
-
+    
+    public void SetUpTreeView(DialogSystemDatabase db)
+    {
+        _currentDatabase = db;
+    }
+    
     private void OnGroupsChanged()
     {
         elementsAddedToGroup = (group, elements) =>
@@ -80,7 +86,7 @@ public class DialogSystemView : GraphView
         };
     }
 
-    public void SetUpEditorWindor(DialogSystemEditor dialogSystemEditor)
+    public void SetUpEditorWindow(DialogSystemEditor dialogSystemEditor)
     {
         _editorWindow = dialogSystemEditor;
     }
@@ -167,7 +173,7 @@ public class DialogSystemView : GraphView
         
         if (_tree.rootNode == null)
         {
-            _tree.rootNode = _tree.CreateNode(typeof(RootNode), Vector2.zero) as RootNode;
+            _tree.rootNode = _tree.CreateNode(_currentDatabase, typeof(RootNode), Vector2.zero) as RootNode;
             EditorUtility.SetDirty(tree);
             AssetDatabase.SaveAssets();
         }
@@ -407,7 +413,7 @@ public class DialogSystemView : GraphView
     
     public GroupNodeView CreateGroupBox(Vector2 pos, string title = "Group Box")
     {
-        GroupNode groupNode = _tree.CreateGroup(title, pos);
+        GroupNode groupNode = _tree.CreateGroup(_currentDatabase, title, pos);
         return CreateGroupBoxView(groupNode);
     }
     
@@ -438,12 +444,12 @@ public class DialogSystemView : GraphView
 
     public void CreateNode(Type type,Vector2 position)
     {
-        Node node = _tree.CreateNode(type,position);
+        Node node = _tree.CreateNode(_currentDatabase, type,position);
         CreateNodeView(node);
     }
     private NodeView CreateDialogNodeCopy(Type type,Vector2 position, SerializableDialogNode nodeToCopy)
     {
-        Node node = _tree.CreateDialogNodeCopy(type,position,nodeToCopy);
+        Node node = _tree.CreateDialogNodeCopy(_currentDatabase, type,position,nodeToCopy);
         return CreateNodeView(node);
     }
 
