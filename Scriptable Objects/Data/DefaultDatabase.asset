@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8868197143976894478
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6662badd63604c1409313f1a633a4e14, type: 3}
+  m_Name: RootNode
+  m_EditorClassIdentifier: 
+  guid: fb301ead0f72ba84ea8a2c42073af63d
+  position: {x: 0, y: 0}
+  children: []
+  group: {fileID: 0}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3ef0f06c2a058d419d6338f3fa5b08b, type: 3}
+  m_Name: DefaultDatabase
+  m_EditorClassIdentifier: 
+  title: DefaultDatabase
+  description: DefaultDatabase
+  guid: 73cdcdd036cc05e49b8b045b503528b6
+  conversations:
+  - {fileID: 5066860292543886284}
+  actors:
+  - {fileID: 5587737470514000735}
+--- !u!114 &5066860292543886284
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f8c511dcfa664e438f3056b4c07f2cd, type: 3}
+  m_Name: Default Conversation
+  m_EditorClassIdentifier: 
+  rootNode: {fileID: -8868197143976894478}
+  nodes:
+  - {fileID: -8868197143976894478}
+  groups: []
+  runningNode: {fileID: 0}
+  title: Default Conversation
+  description: Default Description
+  guid: 1007c224f264eba4cb629b5ff3b7dd0b
+--- !u!114 &5587737470514000735
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 755900283b136124d8ad835b2dc923bc, type: 3}
+  m_Name: Actor
+  m_EditorClassIdentifier: 
+  guid: f0e1c020c050f2f4f81f6f7b2c1a0814
+  actorImage: {fileID: 0}
+  fullName: defaultName
+  description: desc
+  bgColor: {r: 0, g: 0, b: 0, a: 0}

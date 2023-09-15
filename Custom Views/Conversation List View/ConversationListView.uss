@@ -1,0 +1,137 @@
+.unity-multi-column-header__column {
+    display: flex;
+    flex-direction: row-reverse;
+    -unity-text-align: upper-left;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+}
+
+.createNewConversationButton {
+}
+
+.conversationsTextFieldCell {
+    height: auto;
+    left: auto;
+    background-color: rgb(39, 45, 53);
+    min-height: 33px;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+.conversationsTextFieldCell--textField :hover {
+    justify-content: center;
+    align-items: center;
+    min-height: 55px;
+    width: 100px;
+}
+
+.conversationsDeleteCell {
+    justify-content: center;
+    align-items: center;
+    min-height: 53px;
+}
+
+.conversationsDeleteCell--button {
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    background-color: rgb(42, 42, 42);
+    border-left-color: rgba(255, 255, 255, 0.5);
+    border-right-color: rgba(255, 255, 255, 0.5);
+    border-top-color: rgba(255, 255, 255, 0.5);
+    border-bottom-color: rgba(255, 255, 255, 0.5);
+    min-height: 10px;
+    min-width: 10px;
+}
+
+.conversationsDeleteCell--button :hover {
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    background-color: rgb(42, 42, 42);
+    border-left-color: rgba(255, 255, 255, 0.5);
+    border-right-color: rgba(255, 255, 255, 0.5);
+    border-top-color: rgba(255, 255, 255, 0.5);
+    border-bottom-color: rgba(255, 255, 255, 0.5);
+    min-height: 10px;
+    min-width: 10px;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+}
+
+.unity-object-field__input {
+    border-left-color: rgba(0, 0, 0, 0);
+    border-right-color: rgba(0, 0, 0, 0);
+    border-top-color: rgba(0, 0, 0, 0);
+    border-bottom-color: rgba(0, 0, 0, 0);
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.unity-object-field__object {
+    visibility: visible;
+    display: flex;
+    opacity: 0;
+    max-width: none;
+    min-width: auto;
+    width: 66px;
+    border-left-color: rgba(0, 0, 0, 0);
+    border-right-color: rgba(0, 0, 0, 0);
+    border-top-color: rgba(0, 0, 0, 0);
+    border-bottom-color: rgba(0, 0, 0, 0);
+}
+
+.unity-object-field__selector {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.unity-list-view__reorderable-handle {
+    flex-grow: 1;
+    align-items: auto;
+    position: absolute;
+    left: 5px;
+    justify-content: center;
+    height: 50px;
+    top: 1px;
+}
+
+.unity-list-view__reorderable-item__container {
+}
+
+.unity-base-text-field__input :hover {
+    cursor: text;
+}
+
+.unity-search-field-base__cancel-button :hover {
+    cursor: initial;
+}
+
+.unity-multi-column-view__row-container:hover {
+    background-color: rgba(60, 60, 60, 0.2);
+}
+
+.unity-multi-column-view__row-container:selected {
+    background-color: rgba(60, 60, 60, 0.9);
+}
+
+.unity-multi-column-view__row-container {
+    background-color: rgb(24, 24, 29);
+}
+
+.unity-multi-column-header__column {
+    display: flex;
+    flex-direction: row-reverse;
+    -unity-text-align: upper-left;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+}
