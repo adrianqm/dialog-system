@@ -65,11 +65,11 @@ MonoBehaviour:
   m_Name: DialogNode
   m_EditorClassIdentifier: 
   guid: c5814eed9a63b834ab3f1fa573a274c6
-  position: {x: 217.6, y: 68}
+  position: {x: 217.99998, y: 66.999985}
   children: []
   group: {fileID: 0}
   actor: {fileID: -7824585118953527511}
-  message: Bonjour
+  message: Adios
 --- !u!114 &-2600236885904571024
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -102,11 +102,32 @@ MonoBehaviour:
   m_Name: DialogNode
   m_EditorClassIdentifier: 
   guid: 6cb599ce83759ed42aeed483340cc097
-  position: {x: 217.60004, y: -40.799995}
+  position: {x: 218, y: -41.99998}
   children: []
   group: {fileID: 0}
   actor: {fileID: -315341339396191111}
   message: Hola
+--- !u!114 &-1511675361508560059
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f8c511dcfa664e438f3056b4c07f2cd, type: 3}
+  m_Name: ConversationTree
+  m_EditorClassIdentifier: 
+  rootNode: {fileID: 7045443450395205963}
+  nodes:
+  - {fileID: 7045443450395205963}
+  - {fileID: -93474963051940286}
+  groups: []
+  runningNode: {fileID: 0}
+  title: Conversation 3
+  description: Third Conversation
+  guid: 14cfe34a053aa774588c28586df9bd78
 --- !u!114 &-315341339396191111
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -124,6 +145,24 @@ MonoBehaviour:
   fullName: NPC
   description: bbb
   bgColor: {r: 0.25, g: 0.42350483, b: 0.5, a: 0.5019608}
+--- !u!114 &-93474963051940286
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: 5bc12cd9e64d52b4e81c0e4b719f7c21
+  position: {x: 210, y: -41}
+  children: []
+  group: {fileID: 0}
+  actor: {fileID: -7202288894803428011}
+  message: Buenas 3!
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -141,10 +180,32 @@ MonoBehaviour:
   guid: 5668216104d22504f9eb4307013d7334
   conversations:
   - {fileID: 2823319589293632870}
+  - {fileID: 1445251875078507344}
+  - {fileID: -1511675361508560059}
   actors:
   - {fileID: -7202288894803428011}
   - {fileID: -315341339396191111}
   - {fileID: -7824585118953527511}
+--- !u!114 &1445251875078507344
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f8c511dcfa664e438f3056b4c07f2cd, type: 3}
+  m_Name: ConversationTree
+  m_EditorClassIdentifier: 
+  rootNode: {fileID: 8692017309082157858}
+  nodes:
+  - {fileID: 8692017309082157858}
+  groups: []
+  runningNode: {fileID: 0}
+  title: Conversation 2
+  description: Second Conversation
+  guid: 6b1eeebe569c7ae4fae915df068a2e10
 --- !u!114 &2823319589293632870
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -165,8 +226,8 @@ MonoBehaviour:
   - {fileID: -5090452286623400254}
   groups: []
   runningNode: {fileID: 0}
-  title: Default Conversation
-  description: Default Description
+  title: Conversation 1
+  description: First Conversation
   guid: 91a00504fbeb0b245a2a5cef729c0beb
 --- !u!114 &4564591602328167693
 MonoBehaviour:
@@ -202,6 +263,23 @@ MonoBehaviour:
   fullName: defaultName
   description: defaultDesc
   bgColor: {r: 0, g: 0, b: 0, a: 0}
+--- !u!114 &7045443450395205963
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6662badd63604c1409313f1a633a4e14, type: 3}
+  m_Name: RootNode
+  m_EditorClassIdentifier: 
+  guid: ae0d3f5df754a8f4db8b2e6006df1118
+  position: {x: 0, y: 0}
+  children:
+  - {fileID: -93474963051940286}
+  group: {fileID: 0}
 --- !u!114 &7138197116795946599
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -219,3 +297,19 @@ MonoBehaviour:
   fullName: defaultName
   description: defaultDesc
   bgColor: {r: 0, g: 0, b: 0, a: 0}
+--- !u!114 &8692017309082157858
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6662badd63604c1409313f1a633a4e14, type: 3}
+  m_Name: RootNode
+  m_EditorClassIdentifier: 
+  guid: 369d24bbdbe763941a2c2e8ef77dee91
+  position: {x: 0, y: 0}
+  children: []
+  group: {fileID: 0}

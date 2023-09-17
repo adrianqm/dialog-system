@@ -11,6 +11,20 @@
 }
 
 .conversationsTextFieldCell {
+    justify-content: center;
+    align-items: stretch;
+    align-self: auto;
+    -unity-text-align: middle-center;
+    height: auto;
+    width: auto;
+    min-height: 55px;
+    padding-left: 6px;
+    padding-right: 3px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
+.conversationsTextFieldCell--textField {
     height: auto;
     left: auto;
     background-color: rgb(39, 45, 53);
@@ -22,10 +36,22 @@
 }
 
 .conversationsTextFieldCell--textField :hover {
-    justify-content: center;
-    align-items: center;
-    min-height: 55px;
-    width: 100px;
+    cursor: text;
+}
+
+.conversationsTextFieldCell--textField .unity-base-text-field__input {
+    height: 0;
+    left: auto;
+    background-color: rgb(39, 45, 53);
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    min-height: 33px;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
 }
 
 .conversationsDeleteCell {
@@ -64,6 +90,9 @@
     border-right-width: 1px;
     border-top-width: 1px;
     border-bottom-width: 1px;
+}
+
+.conversationsSearchFilter {
 }
 
 .unity-object-field__input {

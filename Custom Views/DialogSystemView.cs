@@ -148,9 +148,9 @@ public class DialogSystemView : GraphView
 
     internal void PopulateViewAndFrameNodes(ConversationTree tree)
     {
-        EditorApplication.delayCall -= FrameAllNodes;
+        //EditorApplication.delayCall -= FrameAllNodes;
         PopulateView(tree);
-        EditorApplication.delayCall += FrameAllNodes;
+        //EditorApplication.delayCall += FrameAllNodes;
     }
 
     internal void PopulateView(ConversationTree tree)

@@ -17,6 +17,9 @@ public class DialogSystemEditor : EditorWindow
     private DialogSystemView _treeView;
     private InspectorView _inspectorView;
     private ActorMultiColumListView _actorMultiColumListView;
+    private ConversationMultiColumListView _conversationMultiColumListView;
+    private ConversationsView _conversationEditView;
+    private ConversationListView _conversationListView;
     private VisualElement _toolbarHeaderVE;
     private ToolbarHeaderView _toolbarHeader;
     private VisualElement _dialogSelectorVE;
@@ -94,13 +97,23 @@ public class DialogSystemEditor : EditorWindow
         
         // Actor view
         _actorMultiColumListView = root.Q<ActorMultiColumListView>();
-        _createNewActorButton = root.Q<Button>(className: "createNewActorButton");
-        _createNewActorButton.clicked += OnCreateNewActor;
         VisualElement scrollContainer = _actorMultiColumListView.Q("unity-content-and-vertical-scroll-container");
         _actorMultiColumListView.SetUpScrollContainerManipulator(scrollContainer);
         ToolbarSearchField searchField = root.Q<ToolbarSearchField>(className: "actorsSearchFilter");
         _actorMultiColumListView.SetUpSearchFieldFilterCallback(searchField);
         _actorMultiColumListView.onActorsRemoved = OnActorsRemoved;
+        
+        // Conversations List view
+        _conversationMultiColumListView = root.Q<ConversationMultiColumListView>();
+        VisualElement conversationScrollContainer = _conversationMultiColumListView.Q("unity-content-and-vertical-scroll-container");
+        _conversationMultiColumListView.SetUpScrollContainerManipulator(conversationScrollContainer);
+        ToolbarSearchField conversationSearchField = root.Q<ToolbarSearchField>(className: "conversationsSearchFilter");
+        _conversationMultiColumListView.SetUpSearchFieldFilterCallback(conversationSearchField);
+        _conversationMultiColumListView.onEditConversation = OnEditConversation;
+        
+        // Conversations GraphView
+        _conversationListView = root.Q<ConversationListView>();
+        _conversationEditView = root.Q<ConversationsView>();
 
         // DB selector
         _dialogSelectorVE = root.Q<VisualElement>("database-selector");
@@ -147,10 +160,7 @@ public class DialogSystemEditor : EditorWindow
             _treeView.FrameAllNodes();
         });
 
-        RegisterConversationHeaderButton("conversation-list", "ListView@8x", () =>
-        {
-            _treeView.FrameAllNodes();
-        });
+        RegisterConversationHeaderButton("conversation-list", "ListView@8x", OnBackToConversationsList);
         
         SetDefaultIconForDatabase();
         OnSelectionChange();
@@ -195,12 +205,6 @@ public class DialogSystemEditor : EditorWindow
     private void OnDisable()
     {
         EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
-        if (_createNewActorButton != null) _createNewActorButton.clicked -= OnCreateNewActor;
-    }
-
-    private void OnCreateNewActor()
-    {
-        _actorMultiColumListView.CreateNewActor();
     }
 
     private void OnPlayModeStateChanged(PlayModeStateChange obj)
@@ -219,32 +223,32 @@ public class DialogSystemEditor : EditorWindow
     private void OnSelectionChange()
     {
         DialogSystemDatabase database = Selection.activeObject as DialogSystemDatabase;
-        ConversationTree tree = null;
+        
         if (database)
         {
             _dialogSelectorVE.AddToClassList(hiddenContentClassName);
             _toolbarHeaderVE.RemoveFromClassList(hiddenContentClassName);
+            OnBackToConversationsList();
             
             // Set root element
             _currentDatabase = database;
             SerializedObject so = new SerializedObject(_currentDatabase);
             rootVisualElement.Bind(so);
             
-            //database.RegisterUndoOperation(_actorMultiColumListView,_treeView);
-            tree = database.conversations[0];
             _toolbarHeader.SetUpSelector(_currentDatabase);
             _dialogEditor.SetUpEditor(_currentDatabase);
             _treeView.SetUpTreeView(_currentDatabase);
             _actorMultiColumListView.SetupTable(_currentDatabase);
+            _conversationMultiColumListView.SetupTable(_currentDatabase);
         }
         else if(_currentDatabase != null)
         {
-            tree = _currentDatabase.conversations[0];
             _toolbarHeaderVE.RemoveFromClassList(hiddenContentClassName);
             _toolbarHeader.SetUpSelector(_currentDatabase);
             _dialogEditor.SetUpEditor(_currentDatabase);
             _treeView.SetUpTreeView(_currentDatabase);
             _actorMultiColumListView.SetupTable(_currentDatabase);
+            _conversationMultiColumListView.SetupTable(_currentDatabase);
         }
         else
         {
@@ -263,7 +267,8 @@ public class DialogSystemEditor : EditorWindow
                 }
             }
         }*/
-
+        
+        /*
         if (Application.isPlaying)
         {
             if (tree) SetTree(tree);
@@ -272,29 +277,27 @@ public class DialogSystemEditor : EditorWindow
         {
             SetTree(tree);
         }
+        */
 
     }
 
     private void OnManualSet(DialogSystemDatabase database)
     {
-        ConversationTree tree;
         _dialogSelectorVE.AddToClassList(hiddenContentClassName);
         _toolbarHeaderVE.RemoveFromClassList(hiddenContentClassName);
+        OnBackToConversationsList();
         
         // Set root element
         _currentDatabase = database;
         SerializedObject so = new SerializedObject(_currentDatabase);
         rootVisualElement.Bind(so);
         
-        //database.RegisterUndoOperation(_actorMultiColumListView,_treeView);
-        tree = database.conversations[0];
-        //_currentDatabase = database;
         _toolbarHeader.SetUpSelector(_currentDatabase);
         _dialogEditor.SetUpEditor(_currentDatabase);
         _treeView.SetUpTreeView(_currentDatabase);
         _actorMultiColumListView.SetupTable(_currentDatabase);
+        _conversationMultiColumListView.SetupTable(_currentDatabase);
         
-        SetTree(tree);
     }
 
     private void SetTree(ConversationTree tree)
@@ -344,11 +347,6 @@ public class DialogSystemEditor : EditorWindow
         _treeView?.PopulateViewAndFrameNodes(_currentTree);
     }
 
-    void OnImportDatabase()
-    {
-        OpenDatabaseSelector();
-    }
-
     void OpenDatabaseSelector()
     {
         _dialogSelector.ClearDatabaseSelection();
@@ -365,6 +363,20 @@ public class DialogSystemEditor : EditorWindow
     {
         _dialogCreatorView.ResetInputs();
         _dialogCreatorVE.RemoveFromClassList(hiddenContentClassName);
+    }
+
+    void OnEditConversation(ConversationTree conversation)
+    {
+        _conversationListView.style.display = DisplayStyle.None;
+        _conversationEditView.style.display = DisplayStyle.Flex;
+        SetTree(conversation);
+    }
+    
+    void OnBackToConversationsList()
+    {
+        _conversationListView.style.display = DisplayStyle.Flex;
+        _conversationEditView.style.display = DisplayStyle.None;
+        //Reset tree
     }
 
     void OnEditDatabase()

@@ -87,5 +87,39 @@ public class DialogSystemDatabase : ScriptableObject
         Undo.DestroyObjectImmediate(actor);
         AssetDatabase.SaveAssets();
     }
+    
+    public void CreateConversation()
+    {
+        
+        ConversationTree newConversation = ScriptableObject.CreateInstance(typeof(ConversationTree)) as ConversationTree;
+        if (newConversation)
+        {
+            newConversation.name = "ConversationTree";
+            newConversation.guid = GUID.Generate().ToString();
+            newConversation.title = "Default Title";
+            newConversation.description = "Default Desc";
+            newConversation.hideFlags = HideFlags.HideInHierarchy;
+            
+            //Undo.RecordObject(this, "Actors Tree (CreateActor)");
+            conversations.Add(newConversation);
+            
+            if (!Application.isPlaying)
+            {
+                AssetDatabase.AddObjectToAsset( newConversation,this);
+            }
+            //Undo.RegisterCreatedObjectUndo(newActor, "Actors Tree (CreateActor)");
+            AssetDatabase.SaveAssets();
+        }
+    }
+    
+    public void DeteleConversation(ConversationTree conversation)
+    {
+        //Undo.RecordObject(this, "Actors Tree (DeleteActor)");
+        conversations.Remove(conversation); 
+        //AssetDatabase.RemoveObjectFromAsset(node);
+        
+        Undo.DestroyObjectImmediate(conversation);
+        AssetDatabase.SaveAssets();
+    }
 #endif
 }
