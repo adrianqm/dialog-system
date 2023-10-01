@@ -1,9 +1,12 @@
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
 
@@ -13,97 +16,189 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
     public Node node;
     public Port input;
     public Port output;
+    public readonly Dictionary<Port, Choice> portTranslationMap; 
     
-    private readonly SpritePreviewElement _actorSprite;
-    private readonly TextField _messageTextField;
+    private SpritePreviewElement _actorSprite;
+    private TextField _messageTextField;
+    private VisualElement _outputChoiceContainer;
     private Label _actorLabel;
     private Actor _actor;
     private DialogSystemView _graphView;
+    private DialogSystemDatabase _currentDatabase;
     
         
     public NodeView(Node node, DialogSystemView graphView): base("Assets/dialog-system/Custom Views/Node View/NodeView.uxml")
     {
         _graphView = graphView;
+        _currentDatabase = graphView.GetDatabase();
+        portTranslationMap = new Dictionary<Port, Choice>();
+        
         this.node = node;
         this.title = node.name;
         this.viewDataKey = node.guid;
+        
+        style.left = node.position.x;
+        style.top = node.position.y;
+        
         if (node is RootNode)
         {
             capabilities -= Capabilities.Deletable;
             capabilities -= Capabilities.Copiable;
-        }
-        
-        style.left = node.position.x;
-        style.top = node.position.y;
-
-        CreateInputPorts();
-        CreateOutputPorts();
-        SetupClasses();
-
-        DialogNode dialogNode = node as DialogNode;
-        if (dialogNode)
-        {
-            SpritePreviewElement sprite = this.Q<SpritePreviewElement>("actor-sprite");
-            _actorSprite = sprite;
-            _actorSprite.bindingPath = "actorImage";
-            
-            Label label = this.Q<Label>("actor-name-text");
-            _actorLabel = label;
-            _actorLabel.bindingPath = "fullName";
-            
-            if (dialogNode.actor && dialogNode.actor.actorImage)
-            {
-                BindActor(dialogNode.actor);
-            }
-            else
-            {
-                _actorSprite.value = Resources.Load<Sprite>( "unknown-person" );
-                _actorLabel.text = "-";
-            }
-            
-            _messageTextField = this.Q<TextField>("message-textfield");
-            BindMessage();
-        }
-    }
-
-    private void SetupClasses()
-    {
-        if (node is DialogNode)
-        {
-            AddToClassList("dialog");
-        }else if (node is RootNode)
-        {
             AddToClassList("root");
+            inputContainer.AddToClassList("singleInputContainer");
+            outputContainer.AddToClassList("singleOutputContainer");
+            
+            CreateSingleOutputPorts();
+        }
+        else
+        {
+            CreateInputPorts();
+            
+            DialogNode dialogNode = node as DialogNode;
+            if (dialogNode)
+            {
+                GetAndBindActor(dialogNode.actor);
+                _messageTextField = this.Q<TextField>("message-textfield");
+                BindMessage();
+                
+                AddToClassList("dialog");
+                VisualElement topContainerView = this.Q("top");
+                topContainerView.style.flexDirection = FlexDirection.Row;
+                inputContainer.AddToClassList("singleInputContainer");
+                outputContainer.AddToClassList("singleOutputContainer");
+                CreateSingleOutputPorts();
+            }
+            
+            ChoiceNode choiceNode = node as ChoiceNode;
+            if (choiceNode)
+            {
+                GetAndBindActor(choiceNode.actor);
+                _messageTextField = this.Q<TextField>("message-textfield");
+                BindMessage();
+                
+                SetUpChoiceNode(choiceNode);
+            }
         }
     }
     
     private void CreateInputPorts()
     {
-        if (node is DialogNode)
-        {
-            input = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Multi, typeof(bool));
-        }
-
-        if (input != null)
-        {
-            input.portName = "";
-            inputContainer.Add(input);
-        }
-
+        input = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Multi, typeof(bool));
+        input.portName = "";
+        inputContainer.Add(input);
     }
 
-    private void CreateOutputPorts()
+    private void CreateSingleOutputPorts()
     {
-        if (node is DialogNode or RootNode)
-        {
-            output = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, typeof(bool));
-        }
+        output = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, typeof(bool));
+        output.portName = "";
+        outputContainer.Add(output);
+    }
+
+    private void SetUpChoiceNode(ChoiceNode choiceNode)
+    {
+        AddToClassList("choice");
+        inputContainer.AddToClassList("choiceInputContainer");
+        outputContainer.AddToClassList("choiceOutputContainer");
         
-        if (output != null)
+        TextField newChoiceField = new TextField();
+        newChoiceField.RegisterCallback<KeyDownEvent>(e =>
         {
-            output.portName = "";
-            outputContainer.Add(output);
+            if (e.keyCode == KeyCode.Return)
+            {
+                CreateNewOutput(choiceNode,newChoiceField.value);
+                newChoiceField.value = "";
+                newChoiceField.Focus();
+            }
+        });
+        newChoiceField.RegisterCallback<FocusOutEvent>((e) =>
+        {
+            newChoiceField.value = "";
+        });
+        newChoiceField.AddToClassList("choiceDataAddText");
+        inputContainer.Add(newChoiceField);
+        
+        Button newChoiceButton = new Button();
+        newChoiceButton.Add(new Image {
+            image = EditorGUIUtility.IconContent("d_CreateAddNew").image
+        });
+        newChoiceButton.AddToClassList("choiceDataBtn");
+        inputContainer.Add(newChoiceButton);
+        
+        // Draw previous Choices
+        foreach (var choice in choiceNode.choices)
+        {
+            CreateNewOutputView(choiceNode, choice);
         }
+        // Register New Callback
+        newChoiceButton.clickable = new Clickable(() =>CreateNewOutput(choiceNode));
+    }
+    
+    private void CreateNewOutput(ChoiceNode choiceNode, string defaultText = "")
+    {
+        Choice choice = choiceNode.CreateChoice(_currentDatabase, defaultText);
+        CreateNewOutputView(choiceNode, choice);
+    }
+
+    private void CreateNewOutputView(ChoiceNode choiceNode, Choice choice)
+    {
+        VisualElement ve = new VisualElement();
+        
+        Button deleteButton = new Button();
+        deleteButton.Add(new Image{
+            image = EditorGUIUtility.IconContent("TreeEditor.Trash").image
+        });
+        deleteButton.AddToClassList("choiceDataBtn");
+        ve.Add(deleteButton);
+        
+        TextField choiceTextField = new TextField()
+        {
+            value = choice.choiceMessage,
+            multiline = true
+        };
+        choiceTextField.AddToClassList("choice-textfield");
+        choiceTextField.bindingPath = "choiceMessage";
+        choiceTextField.Bind(new SerializedObject(choice));
+        ve.Add(choiceTextField);
+        
+        Port newOutput = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, typeof(bool));
+        newOutput.portName = "";
+        ve.Add(newOutput);
+        
+        ve.AddToClassList("choiceDataContainer");
+        outputContainer.Add(ve);
+        portTranslationMap.Add(newOutput,choice);
+
+        deleteButton.clickable = new Clickable(() =>
+        {
+            choiceTextField.Unbind();
+            choiceNode.DeteleChoice(choice);
+            List<Edge> edges = new List<Edge>(newOutput.connections);
+            _graphView.DeleteElements(edges);
+            outputContainer.Remove(ve);
+            portTranslationMap.Remove(newOutput);
+        });
+    }
+
+    public Choice FindPortChoice(Port port)
+    {
+        return portTranslationMap[port];
+    }
+
+    public List<Edge> DeleteAndGetAllChoiceEdges()
+    {
+        List<Edge> edgesToRemove = new List<Edge>();
+        if (node is not ChoiceNode) return edgesToRemove;
+        ChoiceNode choiceNode = node as ChoiceNode;
+        foreach(KeyValuePair<Port, Choice> entry in portTranslationMap)
+        {
+            Port port = entry.Key;
+            if (choiceNode != null) choiceNode.DeteleChoice(entry.Value);
+            if (!port.connected) continue;
+            List<Edge> edges = new List<Edge>(port.connections);
+            edgesToRemove = edgesToRemove.Concat(edges).ToList();
+        }
+        return edgesToRemove;
     }
 
     public override void SetPosition(Rect newPos)
@@ -126,7 +221,11 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
 
     public void SortChildren()
     {
-        node.children.Sort(SortByVerticalPosition);
+        ParentNode parentNode = node as ParentNode;
+        if (parentNode)
+        {
+            parentNode.children.Sort(SortByVerticalPosition);
+        }
     }
 
     private int SortByVerticalPosition(Node top, Node bottom)
@@ -164,6 +263,26 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
         BindActor(selectedActor);
     }
 
+    private void GetAndBindActor(Actor actor)
+    {
+        SpritePreviewElement sprite = this.Q<SpritePreviewElement>("actor-sprite");
+        _actorSprite = sprite;
+        _actorSprite.bindingPath = "actorImage";
+            
+        Label label = this.Q<Label>("actor-name-text");
+        _actorLabel = label;
+        _actorLabel.bindingPath = "fullName";
+            
+        if (actor && actor.actorImage)
+        {
+            BindActor(actor);
+        }
+        else
+        {
+            _actorSprite.value = Resources.Load<Sprite>( "unknown-person" );
+            _actorLabel.text = "-";
+        }
+    }
     private void BindActor(Actor selectedActor)
     {
         this.Unbind();

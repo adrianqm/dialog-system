@@ -114,10 +114,8 @@ public class DialogSystemDatabase : ScriptableObject
     
     public void DeteleConversation(ConversationTree conversation)
     {
-        //Undo.RecordObject(this, "Actors Tree (DeleteActor)");
         conversations.Remove(conversation); 
-        //AssetDatabase.RemoveObjectFromAsset(node);
-        
+        _treeView.ClearGraph();
         Undo.DestroyObjectImmediate(conversation);
         AssetDatabase.SaveAssets();
     }

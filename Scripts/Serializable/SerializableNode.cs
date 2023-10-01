@@ -7,6 +7,5 @@ public class SerializableNode
 {
     public string guid;
     public Vector2Serializable position;
-    public List<SerializableNodeChild> children = new ();
     public SerializableGroupNode group;
 }

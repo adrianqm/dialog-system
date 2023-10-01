@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class DialogNode : ParentNode
+public class ParentNode : Node
 {
-    public Actor actor;
-    [TextArea] public string message;
+    [HideInInspector] public List<Node> children = new();
 
     public override void OnRunning()
     {
         NodeState = State.Running;
-        Debug.Log(message);
     }
 }

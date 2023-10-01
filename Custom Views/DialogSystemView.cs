@@ -193,19 +193,37 @@ public class DialogSystemView : GraphView
         // Create edges
         _tree.nodes.ForEach(n =>
         {
-            var children = _tree.GetChildren(n);
-            NodeView parentView = FindNodeView(n);
-            children.ForEach(c =>
+            ParentNode parentNode = n as ParentNode;
+            if (parentNode != null)
             {
-                NodeView childView = FindNodeView(c);
-
-                if (childView != null)
+                NodeView parentView = FindNodeView(n);
+                CreateEdgeView(_tree.GetChildren(parentNode),parentView.output);
+            }
+            
+            ChoiceNode choiceNode = n as ChoiceNode;
+            if (choiceNode != null)
+            {
+                NodeView nodeView = FindNodeView(n);
+                foreach(KeyValuePair<Port, Choice> entry in nodeView.portTranslationMap)
                 {
-                    Edge edge = parentView.output.ConnectTo(childView.input);
-                    AddElement(edge);
+                    Port choicePort = entry.Key;
+                    CreateEdgeView(entry.Value.children,choicePort);
                 }
-            });
+            }
         });
+    }
+
+    private void CreateEdgeView(List<Node> children, Port port)
+    {
+        children.ForEach(child =>
+        {
+            NodeView childView = FindNodeView(child);
+            if (childView != null)
+            {
+                Edge edge = port.ConnectTo(childView.input);
+                AddElement(edge);
+            }
+        }); 
     }
 
     public void FrameAllNodes()
@@ -222,9 +240,19 @@ public class DialogSystemView : GraphView
             NodeView nodeView = n as NodeView;
             if(nodeView != null) 
             {
+                DialogNode dialogNode = nodeView.node as DialogNode;
+                if (dialogNode)
+                {
+                    cutCopyData.dialogNodesToCopy.Add(GeneralUtils.ConvertToSerializableDialogNode(dialogNode));
+                    continue;
+                }
                 
-                cutCopyData.dialogNodesToCopy.Add(GeneralUtils.ConvertToSerializableNode(nodeView.node));
-                continue;
+                ChoiceNode choiceNode = nodeView.node as ChoiceNode;
+                if (choiceNode)
+                {
+                    cutCopyData.choiceNodesToCopy.Add(GeneralUtils.ConvertToSerializableChoiceNode(choiceNode));
+                    continue;
+                }
             }
             
             GroupNodeView groupView = n as GroupNodeView;
@@ -234,7 +262,8 @@ public class DialogSystemView : GraphView
             }
         }
         
-        _canPaste = cutCopyData.dialogNodesToCopy.Count > 0 || cutCopyData.groupNodesToCopy.Count > 0;
+        _canPaste = cutCopyData.choiceNodesToCopy.Count > 0 || cutCopyData.dialogNodesToCopy.Count > 0 || 
+                    cutCopyData.groupNodesToCopy.Count > 0;
         //string jsonStr = JsonUtility.ToJson(cutCopyData,);
         string jsonStr = JsonConvert.SerializeObject(cutCopyData, Formatting.Indented);
         return jsonStr;
@@ -245,6 +274,7 @@ public class DialogSystemView : GraphView
         CutCopySerializedData cutCopyData = JsonConvert.DeserializeObject<CutCopySerializedData>(data);
         ClearSelection();
         Dictionary<string, NodeView> nodeTranslationMap = new Dictionary<string, NodeView>();
+        Dictionary<string, Choice> choiceTranslationMap = new Dictionary<string, Choice>();
         Dictionary<string, GroupNodeView> groupTranslationMap = new Dictionary<string, GroupNodeView>();
         Vector2 offset = new Vector2(Random.Range(-15, 15), Random.Range(-175, -225));
         
@@ -259,6 +289,7 @@ public class DialogSystemView : GraphView
             AddToSelection(groupNodeView);
         }
         
+        // Create DialogNode
         foreach (SerializableDialogNode serializedDialogNode in cutCopyData.dialogNodesToCopy)
         {
             NodeView nodeView = 
@@ -282,24 +313,65 @@ public class DialogSystemView : GraphView
             }
         }
         
-        // Create Edges
+        // Create Choice Node
+        foreach (SerializableChoiceNode serializableChoiceNode in cutCopyData.choiceNodesToCopy)
+        {
+            NodeView nodeView = 
+                CreateChoiceNodeCopy(
+                    serializableChoiceNode.position.ToVector2() - offset,serializableChoiceNode,choiceTranslationMap);
+            nodeTranslationMap.Add(serializableChoiceNode.guid,nodeView);
+
+            AddToSelection(nodeView);
+
+            if (serializableChoiceNode.group != null)
+            {
+                if (!groupTranslationMap.TryGetValue(serializableChoiceNode.group.guid, out GroupNodeView groupNodeView)) continue;
+                bool hasBeenAAdded = _tree.AddGroupToNode(nodeView.node, groupNodeView.group);
+                if (hasBeenAAdded)
+                {
+                    groupNodeView.AddElement(nodeView);
+                }
+            }
+        }
+        
+        // Create Dialog Edges
         foreach (SerializableDialogNode serializedDialogNode in cutCopyData.dialogNodesToCopy)
         {
             NodeView parentView = nodeTranslationMap[serializedDialogNode.guid];
             foreach (SerializableNodeChild childOriginalNode in serializedDialogNode.children)
             {
-                NodeView childView = nodeTranslationMap[childOriginalNode.guid];
-                if (childView != null)
+                if (!nodeTranslationMap.TryGetValue(childOriginalNode.guid, out NodeView childView)) continue;
+                bool hasAdded = _tree.AddChild(parentView.node, childView.node);
+                if (hasAdded)
                 {
-                    bool hasAdded = _tree.AddChild(parentView.node, childView.node);
+                    Edge edge = parentView.output.ConnectTo(childView.input);
+                    AddElement(edge);
+                    AddToSelection(edge);
+                }
+            }
+        }
+        
+        // Create Choice Edges
+        foreach (SerializableChoiceNode serializableChoiceNode in cutCopyData.choiceNodesToCopy )
+        {
+            NodeView parentView = nodeTranslationMap[serializableChoiceNode.guid];
+            foreach (var choice in serializableChoiceNode.choices)
+            {
+                foreach (SerializableNodeChild childOriginalNode in choice.children)
+                {
+                    if (!nodeTranslationMap.TryGetValue(childOriginalNode.guid, out NodeView childView)) continue;
+                    if (!choiceTranslationMap.TryGetValue(choice.guid, out Choice newChoice)) continue;
+                    Port choicePort = parentView.portTranslationMap.FirstOrDefault(x => x.Value.guid == newChoice.guid).Key;
+                    bool hasAdded = _tree.AddChild(parentView.node, childView.node, choicePort);
                     if (hasAdded)
                     {
-                        Edge edge = parentView.output.ConnectTo(childView.input);
+                        Edge edge = choicePort.ConnectTo(childView.input);
                         AddElement(edge);
                         AddToSelection(edge);
                     } 
-                }
+                } 
             }
+           
         }
     }
     
@@ -320,6 +392,23 @@ public class DialogSystemView : GraphView
     {
         if (graphViewChange.elementsToRemove != null)
         {
+            // To prevent edges that has to be removed
+            List<Edge> edgesToRemoveLater = new List<Edge>();
+            foreach (GraphElement element in graphViewChange.elementsToRemove)
+            {
+                NodeView nodeView = element as NodeView;
+                if (nodeView != null)
+                {
+                    nodeView.DeleteAndGetAllChoiceEdges().ForEach((edge) =>{edgesToRemoveLater.Add(edge);});
+                }
+            }
+            
+            foreach (var edge in edgesToRemoveLater)
+            {
+                graphViewChange.elementsToRemove.Add(edge);
+            }
+            
+            // Delete elements
             foreach (GraphElement element in graphViewChange.elementsToRemove)
             {
                 NodeView nodeView = element as NodeView;
@@ -334,7 +423,7 @@ public class DialogSystemView : GraphView
                 {
                     NodeView  parentView = edge.output.node as NodeView;
                     NodeView  childView = edge.input.node as NodeView;
-                    _tree.RemoveChild(parentView.node, childView.node);
+                    _tree.RemoveChild(parentView?.node, childView?.node, edge.output);
                     continue;
                 }
                 
@@ -357,7 +446,7 @@ public class DialogSystemView : GraphView
             {
                 NodeView  parentView = edge.output.node as NodeView;
                 NodeView  childView = edge.input.node as NodeView;
-                bool hasAdded = _tree.AddChild(parentView.node, childView.node);
+                bool hasAdded = _tree.AddChild(parentView?.node, childView?.node,edge.output);
                 if(!hasAdded) edgesNotAdded.Add(edge);
             }
 
@@ -385,7 +474,7 @@ public class DialogSystemView : GraphView
             var types = TypeCache.GetTypesDerivedFrom<Node>();
             foreach (var type in types)
             {
-                if (type != typeof(RootNode))
+                if (type != typeof(RootNode) && type != typeof(ParentNode))
                 {
                     evt.menu.AppendAction("Create "+type.Name+" Node", (a)=> CreateNode(type,pos));
                 }
@@ -452,6 +541,12 @@ public class DialogSystemView : GraphView
         Node node = _tree.CreateDialogNodeCopy(_currentDatabase, type,position,nodeToCopy);
         return CreateNodeView(node);
     }
+    
+    private NodeView CreateChoiceNodeCopy(Vector2 position, SerializableChoiceNode nodeToCopy, Dictionary<string, Choice> choiceMap)
+    {
+        Node node = _tree.CreateChoiceNodeToCopy(_currentDatabase,position,nodeToCopy, choiceMap);
+        return CreateNodeView(node);
+    }
 
     NodeView CreateNodeView(Node node)
     {
@@ -493,6 +588,11 @@ public class DialogSystemView : GraphView
     {
         graphViewChanged -= OnGraphViewChanged;
         DeleteElements(graphElements);
+    }
+
+    public DialogSystemDatabase GetDatabase()
+    {
+        return _currentDatabase;
     }
     
 }

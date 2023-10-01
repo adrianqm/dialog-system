@@ -169,11 +169,11 @@ public class ConversationTree : ScriptableObject
         }
     }
     
-    public void SetGroupTitle(GroupNode group, string title)
+    public void SetGroupTitle(GroupNode group, string newTitle)
     {
         if (!group) return;
         Undo.RecordObject(group, "Conversation Tree (SetGroupTitle)");
-        group.title = title;
+        group.title = newTitle;
         EditorUtility.SetDirty(group);
     }
     
@@ -197,6 +197,27 @@ public class ConversationTree : ScriptableObject
         node.position = position;
         node.actor = db.actors.Find(actor => actor.guid == nodeToCopy.actorGuid);
         node.message = nodeToCopy.message;
+
+        AddNodeToList(db,node);
+        
+        return node;
+    }
+    
+    public ChoiceNode CreateChoiceNodeToCopy(DialogSystemDatabase db, Vector2 position, SerializableChoiceNode nodeToCopy, Dictionary<string, Choice> choiceMap)
+    {
+        Type type = typeof(ChoiceNode);
+        ChoiceNode node = ScriptableObject.CreateInstance(type) as ChoiceNode;
+        node.name = type.Name;
+        node.guid = GUID.Generate().ToString();
+        node.position = position;
+        node.actor = db.actors.Find(actor => actor.guid == nodeToCopy.actorGuid);
+        node.message = nodeToCopy.message;
+        node.choices = new List<Choice>();
+        foreach (var serializableChoice in nodeToCopy.choices)
+        {
+            Choice choice = node.CreateChoice(db, serializableChoice.choiceMessage);
+            choiceMap.Add(serializableChoice.guid, choice);
+        }
 
         AddNodeToList(db,node);
         
@@ -228,73 +249,73 @@ public class ConversationTree : ScriptableObject
         AssetDatabase.SaveAssets();
     }
 
-    public bool AddChild(Node parent, Node child)
+    public bool AddChild(Node parent, Node child, Port parentPort = null)
     {
         bool hasAdded = false;
-        DialogNode node = parent as DialogNode;
-        if(node && !node.children.Contains(child) )
+        ParentNode parentNode = parent as ParentNode;
+        if(parentNode && !parentNode.children.Contains(child) )
         {
-            Undo.RecordObject(node, "Conversation Tree (AddChild)");
-            node.children.Add(child);
-            EditorUtility.SetDirty(node);
+            Undo.RecordObject(parentNode, "Conversation Tree (AddChild)");
+            parentNode.children.Add(child);
+            EditorUtility.SetDirty(parentNode);
             hasAdded = true;
         }
         
-        RootNode rootNode = parent as RootNode;
-        if (rootNode && !rootNode.children.Contains(child))
+        ChoiceNode choiceNode = parent as ChoiceNode;
+        if(choiceNode && parentPort != null)
         {
-            Undo.RecordObject(rootNode, "Conversation Tree (AddChild)");
-            rootNode.children.Add(child);
-            EditorUtility.SetDirty(rootNode);
-            hasAdded = true;
+            NodeView  choiceView = parentPort.node as NodeView;
+            Choice choice = choiceView?.FindPortChoice(parentPort);
+            if (choice)
+            {
+                Undo.RecordObject(choice, "Conversation Tree (AddChoice)");
+                choice.children.Add(child);
+                EditorUtility.SetDirty(choice);
+                hasAdded = true;
+            }
         }
 
         return hasAdded;
     }
     
-    public void RemoveChild(Node parent, Node child)
+    public void RemoveChild(Node parent, Node child, Port parentPort = null)
     {
-        DialogNode node = parent as DialogNode;
-        if(node)
+        ParentNode parentNode = parent as ParentNode;
+        if(parentNode)
         {
-            Undo.RecordObject(node, "Conversation Tree (RemoveChild)");
-            node.children.Remove(child);
-            EditorUtility.SetDirty(node);
+            Undo.RecordObject(parentNode, "Conversation Tree (RemoveChild)");
+            parentNode.children.Remove(child);
+            EditorUtility.SetDirty(parentNode);
         }
         
-        RootNode rootNode = parent as RootNode;
-        if (rootNode)
+        ChoiceNode choiceNode = parent as ChoiceNode;
+        if(choiceNode && parentPort != null)
         {
-            Undo.RecordObject(rootNode, "Conversation Tree (RemoveChild)");
-            rootNode.children.Remove(child);
-            EditorUtility.SetDirty(rootNode);
+            NodeView  choiceView = parentPort.node as NodeView;
+            Choice choice = choiceView?.FindPortChoice(parentPort);
+            if (choice)
+            {
+                Undo.RecordObject(choice, "Conversation Tree (RemoveChild)");
+                choice.children.Remove(child);
+                EditorUtility.SetDirty(choice);
+            }
         }
     }
-    public List<Node> GetChildren(Node parent)
+    public List<Node> GetChildren(ParentNode parent)
     {
-        List<Node> children = new();
-        
-        DialogNode node = parent as DialogNode;
-        if(node)
-        {
-            return node.children;
-        }
-        
-        RootNode rootNode = parent as RootNode;
-        if (rootNode)
-        {
-            return rootNode.children;
-        }
-
-        return children;
+        return parent.children;
     }
 
     private void Traverse(Node node, System.Action<Node> visiter)
     {
         if (!node) return;
         visiter.Invoke(node);
-        var children = GetChildren(node);
-        children.ForEach((n)=> Traverse(n,visiter));
+        ParentNode parentNode = node as ParentNode;
+        if (parentNode != null)
+        {
+            var children = GetChildren(parentNode);
+            children.ForEach((n)=> Traverse(n,visiter));
+        }
     }
     
     public ConversationTree Clone()

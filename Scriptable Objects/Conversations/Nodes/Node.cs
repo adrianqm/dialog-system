@@ -7,7 +7,6 @@ public abstract class Node : ScriptableObject
 {
     [HideInInspector] public string guid;
     [HideInInspector] public Vector2 position;
-    [HideInInspector] public List<Node> children = new();
     public GroupNode group;
 
     public enum State
@@ -34,7 +33,6 @@ public abstract class Node : ScriptableObject
     public Node Clone()
     {
         Node node = Instantiate(this);
-        node.children = children.ConvertAll(c => c.Clone());
         return node;
     }
 

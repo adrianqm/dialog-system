@@ -17,11 +17,15 @@ public static class CustomDFS
     private static void DFSUtil(Node currentNode, List<Node> visitedNodes)
     {
         visitedNodes.Add(currentNode);
-        foreach (var n in currentNode.children)
+        ParentNode parentNode = currentNode as ParentNode;
+        if (parentNode)
         {
-            if (!visitedNodes.Contains(n))
+            foreach (var n in parentNode.children)
             {
-                DFSUtil(n, visitedNodes);
+                if (!visitedNodes.Contains(n))
+                {
+                    DFSUtil(n, visitedNodes);
+                }
             }
         }
     }

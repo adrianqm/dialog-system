@@ -18,9 +18,9 @@
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="top" style="opacity: 1; display: flex; justify-content: flex-start; flex-direction: row; align-items: auto; align-self: auto;">
-                <ui:VisualElement name="input" style="align-items: flex-start; background-color: rgb(37, 37, 37); flex-grow: 0; min-width: 50%;" />
-                <ui:VisualElement name="output" style="align-items: flex-end; justify-content: flex-end; align-self: flex-end; flex-direction: row; flex-shrink: 1; flex-grow: 1; background-color: rgb(48, 48, 48);" />
+            <ui:VisualElement name="top" style="opacity: 1; display: flex; justify-content: flex-start; align-items: auto; align-self: auto;">
+                <ui:VisualElement name="input" />
+                <ui:VisualElement name="output" />
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>

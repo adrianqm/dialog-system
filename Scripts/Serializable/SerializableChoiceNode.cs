@@ -3,10 +3,10 @@
 namespace AQM.Tools.Serializable
 {
     [System.Serializable]
-    public class SerializableDialogNode : SerializableNode
+    public class SerializableChoiceNode : SerializableNode
     {
         public string actorGuid;
         public string message;
-        public List<SerializableNodeChild> children = new ();
+        public List<SerializableChoice> choices = new();
     }
 }
