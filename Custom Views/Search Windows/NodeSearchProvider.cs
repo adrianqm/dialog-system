@@ -62,7 +62,7 @@ public class NodeSearchProvider: ScriptableObject, ISearchWindowProvider
 
             case Types.MultipleChoice:
             {
-                _graphView.CreateNode(typeof(DialogNode),pos);
+                _graphView.CreateNode(typeof(ChoiceNode),pos);
                 return true;
             }
 
