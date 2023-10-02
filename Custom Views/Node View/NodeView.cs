@@ -57,7 +57,12 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
             DialogNode dialogNode = node as DialogNode;
             if (dialogNode)
             {
-                GetAndBindActor(dialogNode.actor);
+                GetAndBindActor(dialogNode.actor,(actor) =>
+                {
+                    dialogNode.actor = actor;
+                    EditorUtility.SetDirty(node);
+                    onNodeSelected.Invoke(this);
+                });
                 _messageTextField = this.Q<TextField>("message-textfield");
                 BindMessage();
                 
@@ -72,7 +77,12 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
             ChoiceNode choiceNode = node as ChoiceNode;
             if (choiceNode)
             {
-                GetAndBindActor(choiceNode.actor);
+                GetAndBindActor(choiceNode.actor, (actor) =>
+                {
+                    choiceNode.actor = actor;
+                    EditorUtility.SetDirty(node);
+                    onNodeSelected.Invoke(this);
+                });
                 _messageTextField = this.Q<TextField>("message-textfield");
                 BindMessage();
                 
@@ -263,7 +273,7 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
         BindActor(selectedActor);
     }
 
-    private void GetAndBindActor(Actor actor)
+    private void GetAndBindActor(Actor actor, Action<Actor> onSelectActor)
     {
         SpritePreviewElement sprite = this.Q<SpritePreviewElement>("actor-sprite");
         _actorSprite = sprite;
@@ -279,6 +289,19 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
             image = EditorGUIUtility.IconContent("d_pick_uielements").image
         });
         actorSearchButton.AddToClassList("actorSearchBtn");
+        actorSearchButton.clickable = new Clickable(() =>
+        {
+            ActorsSearchProvider provider =
+                ScriptableObject.CreateInstance<ActorsSearchProvider>();
+            provider.SetUp(_currentDatabase.actors,
+                (actorSelected) =>
+                {
+                    UpdateActorToBind(actorSelected);
+                    onSelectActor.Invoke(actorSelected);
+                });
+            SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(Event.current.mousePosition)),
+                provider);
+        });
         actorSearchVe.Add(actorSearchButton);
             
         if (actor && actor.actorImage)

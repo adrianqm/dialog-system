@@ -254,7 +254,7 @@ MonoBehaviour:
   m_Name: ChoiceNode
   m_EditorClassIdentifier: 
   guid: f1b4897a670dcf344bcec4e0b95868b0
-  position: {x: 225.4, y: -22.400024}
+  position: {x: 225.95001, y: -22.400066}
   group: {fileID: 0}
   actor: {fileID: -7202288894803428011}
   message: "\xBFCual es tu color fav?"
@@ -363,7 +363,7 @@ MonoBehaviour:
   m_Name: Actor
   m_EditorClassIdentifier: 
   guid: 9913379817d3d0c4ea8018cdc9cb8f57
-  actorImage: {fileID: 21300000, guid: a558e8c32dbc5bc409d1b7aae6638ff0, type: 3}
+  actorImage: {fileID: 2877471580529523173, guid: c15ba1dcb835b28498cc6239dc893a2e, type: 3}
   fullName: NPC 1
   description: bbb
   bgColor: {r: 0.25, g: 0.42350483, b: 0.5, a: 0.5019608}
@@ -631,7 +631,7 @@ MonoBehaviour:
   position: {x: 1330.6783, y: -29.600029}
   group: {fileID: 0}
   children: []
-  actor: {fileID: 0}
+  actor: {fileID: -7202288894803428011}
   message: 
 --- !u!114 &8543545460823485800
 MonoBehaviour:
