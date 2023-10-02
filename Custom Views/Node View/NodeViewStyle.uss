@@ -44,10 +44,10 @@ VisualElement {
     border-right-color: rgb(50, 142, 189);
     border-top-color: rgb(50, 142, 189);
     border-bottom-color: rgb(50, 142, 189);
-    border-left-width: 2px;
-    border-right-width: 2px;
-    border-top-width: 2px;
-    border-bottom-width: 2px;
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
     display: flex;
 }
 
@@ -137,12 +137,50 @@ VisualElement {
     background-color: rgba(0, 0, 0, 0.45);
 }
 
+.actor-text-container {
+    margin-left: 1px;
+    max-width: 214px;
+}
+
+.actor-name-text-container {
+    flex-grow: 1;
+    flex-direction: row;
+    align-self: center;
+    justify-content: center;
+    width: 214px;
+    min-height: 20px;
+    margin-bottom: 2px;
+    margin-left: 4px;
+}
+
+.actorSearchBtn {
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    background-color: rgba(0, 0, 0, 0);
+    border-left-color: rgba(0, 0, 0, 0);
+    border-right-color: rgba(0, 0, 0, 0);
+    border-top-color: rgba(0, 0, 0, 0);
+    border-bottom-color: rgba(0, 0, 0, 0);
+}
+
+.message-container {
+    max-width: 217px;
+    flex-direction: row;
+    flex-grow: 1;
+}
+
 #message-textfield .unity-label {
     text-overflow: clip;
     white-space: normal;
     width: auto;
-    max-width: 200px;
     display: none;
+    max-width: 200px;
 }
 
 #message-textfield .unity-base-text-field__input {

@@ -254,7 +254,7 @@ MonoBehaviour:
   m_Name: ChoiceNode
   m_EditorClassIdentifier: 
   guid: f1b4897a670dcf344bcec4e0b95868b0
-  position: {x: 221.27473, y: -2.4000301}
+  position: {x: 225.4, y: -22.400024}
   group: {fileID: 0}
   actor: {fileID: -7202288894803428011}
   message: "\xBFCual es tu color fav?"
@@ -557,7 +557,7 @@ MonoBehaviour:
   m_Name: DialogNode
   m_EditorClassIdentifier: 
   guid: fa86d407ff38d434dbd04c8ca947bfd0
-  position: {x: 969.6, y: 126.39999}
+  position: {x: 970.3999, y: 126.39996}
   group: {fileID: 0}
   children: []
   actor: {fileID: -7202288894803428011}

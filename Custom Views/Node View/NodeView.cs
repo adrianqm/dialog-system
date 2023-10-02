@@ -272,6 +272,14 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
         Label label = this.Q<Label>("actor-name-text");
         _actorLabel = label;
         _actorLabel.bindingPath = "fullName";
+        
+        VisualElement actorSearchVe = this.Q("actor-search");
+        Button actorSearchButton = new Button();
+        actorSearchButton.Add(new Image {
+            image = EditorGUIUtility.IconContent("d_pick_uielements").image
+        });
+        actorSearchButton.AddToClassList("actorSearchBtn");
+        actorSearchVe.Add(actorSearchButton);
             
         if (actor && actor.actorImage)
         {
