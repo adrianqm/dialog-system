@@ -11,4 +11,11 @@ public class ParentNode : Node
     {
         NodeState = State.Running;
     }
+
+    public override Node Clone()
+    {
+        ParentNode node = Instantiate(this);
+        node.children = children.ConvertAll(c => c.Clone());
+        return node;
+    }
 }

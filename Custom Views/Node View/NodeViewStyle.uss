@@ -81,15 +81,15 @@ VisualElement {
     margin-bottom: 0;
 }
 
-.root #node-container {
+.static #node-container {
     display: none;
 }
 
-.dialog #root-label {
+.dialog #static-label {
     display: none;
 }
 
-.choice #root-label {
+.choice #static-label {
     display: none;
 }
 
@@ -135,6 +135,38 @@ VisualElement {
 
 .unreachable #node-state {
     background-color: rgba(0, 0, 0, 0.45);
+}
+
+.visited #node-state {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-left-color: rgba(255, 253, 0, 0.5);
+    border-right-color: rgba(255, 253, 0, 0.5);
+    border-top-color: rgba(255, 253, 0, 0.5);
+    border-bottom-color: rgba(255, 253, 0, 0.5);
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-top-width: 2px;
+    border-bottom-width: 2px;
+}
+
+.visitedUnreachable #node-state {
+    background-color: rgba(0, 0, 0, 0.45);
+    border-left-color: rgba(255, 253, 0, 0.5);
+    border-right-color: rgba(255, 253, 0, 0.5);
+    border-top-color: rgba(255, 253, 0, 0.5);
+    border-bottom-color: rgba(255, 253, 0, 0.5);
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-top-width: 2px;
+    border-bottom-width: 2px;
 }
 
 .actor-text-container {
@@ -228,6 +260,11 @@ VisualElement {
 
 .unity-base-text-field__input :hover {
     cursor: text;
+}
+
+.static .singleInputContainer {
+    max-width: 100%;
+    min-width: 100%;
 }
 
 .singleInputContainer {

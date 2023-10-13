@@ -14,7 +14,9 @@ public abstract class Node : ScriptableObject
         Initial,
         Running,
         Unreachable,
-        Finished
+        Finished,
+        Visited,
+        VisitedUnreachable
     }
 
     private State nodeState = State.Initial;
@@ -30,11 +32,7 @@ public abstract class Node : ScriptableObject
         return true;
     }
 
-    public Node Clone()
-    {
-        Node node = Instantiate(this);
-        return node;
-    }
+    public abstract Node Clone();
 
     public abstract void OnRunning();
 }

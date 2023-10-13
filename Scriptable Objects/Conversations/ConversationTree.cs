@@ -13,9 +13,10 @@ using UnityEngine.UIElements;
 public class ConversationTree : ScriptableObject
 {
     public Action OnEndConversation;
+    public Action OnUpdateViewStates;
     
-    
-    [HideInInspector] public Node rootNode;
+    public Node startNode;
+    public Node completeNode;
     public List<Node> nodes = new ();
     public List<GroupNode> groups = new ();
     [HideInInspector] public Node runningNode;
@@ -26,13 +27,18 @@ public class ConversationTree : ScriptableObject
     
     private Node finishedNode;
 
-    public void StartConversation()
+    public Node StartConversation()
     {
         if (finishedNode) ResetNodeStates();
         
-        runningNode = rootNode;
-        RootNode node = runningNode as RootNode;
-        if (node) CheckNextChildMove(node.children);
+        runningNode = startNode;
+        StartNode node = runningNode as StartNode;
+        if (node)
+        {
+            return CheckNextChildMove(node.children);
+        }
+
+        return null;
     }
 
     private void ResetNodeStates()
@@ -49,19 +55,21 @@ public class ConversationTree : ScriptableObject
         runningNode.NodeState = Node.State.Finished;
         finishedNode = runningNode;
         runningNode = null;
-        Debug.Log("Conversation finished");
         OnEndConversation.Invoke();
     }
     
-    public void NextMessage()
+    public Node GetNextNode()
     {
-        if (!runningNode) return;
-        
+        if (!runningNode) return null;
+
+        Node nextNode = null;
         DialogNode node = runningNode as DialogNode;
         if (node)
         {
-            CheckNextChildMove(node.children);
+            nextNode = CheckNextChildMove(node.children);
         }
+
+        return nextNode;
     }
 
     private Node CheckNextChildMove(List<Node> children)
@@ -69,7 +77,7 @@ public class ConversationTree : ScriptableObject
         Node childToMove = null;
         foreach (var child in children.Where(child => child.CheckConditions()))
         {
-            runningNode.NodeState = Node.State.Initial;
+            runningNode.NodeState = Node.State.Visited;
             childToMove = child;
             SetRunningNode(child);
             break;
@@ -80,21 +88,36 @@ public class ConversationTree : ScriptableObject
             // Conversation finished
             EndConversation();
         }
+        
+        OnUpdateViewStates?.Invoke();
         return childToMove;
     }
 
     private void SetRunningNode(Node node)
     {
-        node.OnRunning();
-        runningNode = node;
-        
         // Update unreachable status
         List<Node> visitedNodes = CustomDFS.StartDFS(node);
         foreach (var n in nodes)
         {
-            if (!visitedNodes.Contains(n))
+            if (node.guid == n.guid)
             {
-                n.NodeState = Node.State.Unreachable;
+                if (n is CompleteNode)
+                {
+                    runningNode = n;
+                    EndConversation();
+                }
+                else
+                {
+                    n.NodeState = Node.State.Running;
+                    runningNode = n;
+                }
+                continue;
+            }
+            
+            if (!visitedNodes.Find(vn => vn.guid == n.guid))
+            {
+                if (n.NodeState == Node.State.Visited) n.NodeState = Node.State.VisitedUnreachable;
+                else if(n.NodeState != Node.State.VisitedUnreachable) n.NodeState = Node.State.Unreachable;
             }
         }
     }
@@ -311,25 +334,41 @@ public class ConversationTree : ScriptableObject
         if (!node) return;
         visiter.Invoke(node);
         ParentNode parentNode = node as ParentNode;
-        if (parentNode != null)
+        if (parentNode)
         {
             var children = GetChildren(parentNode);
             children.ForEach((n)=> Traverse(n,visiter));
+        }
+        
+        ChoiceNode choiceNode = node as ChoiceNode;
+        if (choiceNode)
+        {
+            choiceNode.choices.ForEach((choice) =>
+            {
+                choice.children.ForEach((n)=> Traverse(n,visiter));
+            });
         }
     }
     
     public ConversationTree Clone()
     {
         ConversationTree tree = Instantiate(this);
-        tree.rootNode = tree.rootNode.Clone();
+        tree.startNode = tree.startNode.Clone();
+        
+        tree.groups = groups.ConvertAll(g => g.Clone());
         tree.nodes = new List<Node>();
         List<string> nonRepeatNodeList = new();
-        Traverse(tree.rootNode, (n) =>
+        Traverse(tree.startNode, (n) =>
         {
             if (nonRepeatNodeList.Contains(n.guid)) return;
             tree.nodes.Add(n);
             nonRepeatNodeList.Add(n.guid);
         });
+
+        if (!nonRepeatNodeList.Contains(tree.completeNode.guid))
+        {
+            tree.nodes.Add(tree.completeNode.Clone());
+        }
         return tree;
     }
 #endif

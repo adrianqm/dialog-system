@@ -16,6 +16,22 @@ MonoBehaviour:
   choiceMessage: 1
   children:
   - {fileID: 6227142754766596748}
+--- !u!114 &-8894410608833524209
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6662badd63604c1409313f1a633a4e14, type: 3}
+  m_Name: StartNode
+  m_EditorClassIdentifier: 
+  guid: ed1cd5c11776f6d41a36efc9e622ff61
+  position: {x: 0, y: 0}
+  group: {fileID: 0}
+  children: []
 --- !u!114 &-8371533830600500607
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -31,6 +47,34 @@ MonoBehaviour:
   guid: 
   choiceMessage: Rojo
   children: []
+--- !u!114 &-8153819669095170832
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f8c511dcfa664e438f3056b4c07f2cd, type: 3}
+  m_Name: ConversationTree
+  m_EditorClassIdentifier: 
+  startNode: {fileID: 6039066232926734924}
+  completeNode: {fileID: -4227811378593971641}
+  nodes:
+  - {fileID: 2580431248754397487}
+  - {fileID: -3711034562052487462}
+  - {fileID: -875564993501790223}
+  - {fileID: 4553096028422913869}
+  - {fileID: -6342511937515151472}
+  - {fileID: 3405020705174648712}
+  - {fileID: 6039066232926734924}
+  - {fileID: -4227811378593971641}
+  groups: []
+  runningNode: {fileID: 0}
+  title: Normal Conver
+  description: Default Desc
+  guid: a223aa2807906fc4083d744d323a3781
 --- !u!114 &-7849650756820939181
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -136,6 +180,44 @@ MonoBehaviour:
   choiceMessage: Rojo
   children:
   - {fileID: -5834220192843112223}
+--- !u!114 &-6342511937515151472
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: f662cd028431d6f42aeb7a22bf04b115
+  position: {x: 859.2004, y: 88.76491}
+  group: {fileID: 0}
+  children:
+  - {fileID: -4227811378593971641}
+  actor: {fileID: -7202288894803428011}
+  message: "Extra dialogo porque s\xED"
+--- !u!114 &-6245666290129599875
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: 1dd6d5dff6c3fcd4a91004eee15a2be9
+  position: {x: 550, y: 84.922165}
+  group: {fileID: 0}
+  children:
+  - {fileID: -5311534606950478465}
+  actor: {fileID: -7202288894803428011}
+  message: Ta bien
 --- !u!114 &-6089811183759056427
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -167,9 +249,9 @@ MonoBehaviour:
   m_Name: ChoiceNode
   m_EditorClassIdentifier: 
   guid: 7c573a1135c93164d8394828460606c9
-  position: {x: 602.35443, y: 24.502182}
+  position: {x: 561.9583, y: -6.8894653}
   group: {fileID: 9115495699628771785}
-  actor: {fileID: -7824585118953527511}
+  actor: {fileID: -315341339396191111}
   message: Another choice node
   choices:
   - {fileID: -9024865291932541183}
@@ -189,6 +271,65 @@ MonoBehaviour:
   guid: 
   choiceMessage: Rojo
   children: []
+--- !u!114 &-5478158193426519720
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: 8fbc04ed937cb7f4b8462ee2265b087f
+  position: {x: 1296.275, y: -223.84581}
+  group: {fileID: 0}
+  children: []
+  actor: {fileID: 0}
+  message: 
+--- !u!114 &-5471901116755713981
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f8c511dcfa664e438f3056b4c07f2cd, type: 3}
+  m_Name: ConversationTree
+  m_EditorClassIdentifier: 
+  startNode: {fileID: -2691464762228316433}
+  completeNode: {fileID: -5311534606950478465}
+  nodes:
+  - {fileID: -2691464762228316433}
+  - {fileID: -5311534606950478465}
+  - {fileID: 27963429755922888}
+  - {fileID: -2586893916623026644}
+  - {fileID: 8280699233209630042}
+  - {fileID: -6245666290129599875}
+  groups: []
+  runningNode: {fileID: 0}
+  title: Choice Dialog
+  description: Default Desc
+  guid: 75cbe8ce733843c428157d5a8cf1b19e
+--- !u!114 &-5311534606950478465
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0190e7bf12f2e8342959e5370aac2a9a, type: 3}
+  m_Name: CompleteNode
+  m_EditorClassIdentifier: 
+  guid: 857f971f616b3774b9cd6fa5c326ab75
+  position: {x: 993.3956, y: 17.999996}
+  group: {fileID: 0}
 --- !u!114 &-5180515183100383367
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -241,6 +382,21 @@ MonoBehaviour:
   choiceMessage: Verde
   children:
   - {fileID: -5834220192843112223}
+--- !u!114 &-4227811378593971641
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0190e7bf12f2e8342959e5370aac2a9a, type: 3}
+  m_Name: CompleteNode
+  m_EditorClassIdentifier: 
+  guid: 620d680bdb5a0244dac3d8a524ffa6b6
+  position: {x: 1219.7728, y: 0.0000009536743}
+  group: {fileID: 0}
 --- !u!114 &-3794272653668301776
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -254,14 +410,34 @@ MonoBehaviour:
   m_Name: ChoiceNode
   m_EditorClassIdentifier: 
   guid: f1b4897a670dcf344bcec4e0b95868b0
-  position: {x: 225.95001, y: -22.400066}
+  position: {x: 189.1216, y: -39.99997}
   group: {fileID: 0}
   actor: {fileID: -7202288894803428011}
   message: "\xBFCual es tu color fav?"
   choices:
   - {fileID: -6558176862304912761}
-  - {fileID: 8543545460823485800}
   - {fileID: -5056399794056061201}
+  - {fileID: 1365149785398130771}
+--- !u!114 &-3711034562052487462
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: 6e63ca24bc375d3449aca3e70ff61e4c
+  position: {x: 201.28386, y: -40.799988}
+  group: {fileID: 0}
+  children:
+  - {fileID: 3405020705174648712}
+  - {fileID: -875564993501790223}
+  actor: {fileID: -7202288894803428011}
+  message: Buenas
 --- !u!114 &-3390251601246957663
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -277,6 +453,23 @@ MonoBehaviour:
   guid: 56f84f6e8df896e45a6bbaa77bdb4071
   position: {x: 599.3844, y: -39.824875}
   title: Choice Node
+--- !u!114 &-2691464762228316433
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6662badd63604c1409313f1a633a4e14, type: 3}
+  m_Name: StartNode
+  m_EditorClassIdentifier: 
+  guid: 26faec1a8b79fef4a9ca877f60ca3600
+  position: {x: 0, y: 0}
+  group: {fileID: 0}
+  children:
+  - {fileID: 27963429755922888}
 --- !u!114 &-2600236885904571024
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -296,6 +489,25 @@ MonoBehaviour:
   - {fileID: -7140067237811485461}
   - {fileID: -2236722092604925192}
   - {fileID: -5090452286623400254}
+--- !u!114 &-2586893916623026644
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: 97e996ebb6efc6f4688d8ac3df0dd905
+  position: {x: 550, y: -143.07782}
+  group: {fileID: 0}
+  children:
+  - {fileID: -5311534606950478465}
+  actor: {fileID: -7202288894803428011}
+  message: Vaya gusto de mierda
 --- !u!114 &-2236722092604925192
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -326,10 +538,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f8c511dcfa664e438f3056b4c07f2cd, type: 3}
   m_Name: ConversationTree
   m_EditorClassIdentifier: 
-  rootNode: {fileID: 7045443450395205963}
+  startNode: {fileID: 0}
+  completeNode: {fileID: 0}
   nodes:
   - {fileID: 7045443450395205963}
   - {fileID: -93474963051940286}
+  - {fileID: 5628349384811712993}
+  - {fileID: -5478158193426519720}
   groups: []
   runningNode: {fileID: 0}
   title: Conversation 2
@@ -350,6 +565,26 @@ MonoBehaviour:
   guid: 8ee023a24d7397547b234a961a63490b
   choiceMessage: Azul
   children: []
+--- !u!114 &-875564993501790223
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: 64a6d55d9f19cde43b26e30f0c3861b0
+  position: {x: 533.60004, y: 0.000009536743}
+  group: {fileID: 0}
+  children:
+  - {fileID: 4553096028422913869}
+  - {fileID: -6342511937515151472}
+  actor: {fileID: -7202288894803428011}
+  message: Conver larga y tal
 --- !u!114 &-315341339396191111
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -363,10 +598,26 @@ MonoBehaviour:
   m_Name: Actor
   m_EditorClassIdentifier: 
   guid: 9913379817d3d0c4ea8018cdc9cb8f57
-  actorImage: {fileID: 2877471580529523173, guid: c15ba1dcb835b28498cc6239dc893a2e, type: 3}
+  actorImage: {fileID: 21300000, guid: afe564cd16103044697441a95757b74d, type: 3}
   fullName: NPC 1
   description: bbb
-  bgColor: {r: 0.25, g: 0.42350483, b: 0.5, a: 0.5019608}
+  bgColor: {r: 0.5019608, g: 0.48107916, b: 0.2509804, a: 0.5019608}
+--- !u!114 &-116218828020163764
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fcdbbda8660e124a86a4a5bf54b4f31, type: 3}
+  m_Name: Choice
+  m_EditorClassIdentifier: 
+  guid: 884a78b69f4afaa4da9e1288ff408d98
+  choiceMessage: Azul
+  children:
+  - {fileID: 8280699233209630042}
 --- !u!114 &-93474963051940286
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -380,11 +631,12 @@ MonoBehaviour:
   m_Name: DialogNode
   m_EditorClassIdentifier: 
   guid: 5bc12cd9e64d52b4e81c0e4b719f7c21
-  position: {x: 210, y: -41}
+  position: {x: 214.59999, y: -55.19998}
   group: {fileID: 0}
-  children: []
+  children:
+  - {fileID: 5628349384811712993}
   actor: {fileID: -7202288894803428011}
-  message: Buenas 3!
+  message: "Esto es una conversaci\xF3n normal y corriente"
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -401,12 +653,33 @@ MonoBehaviour:
   description: Buenas
   guid: 5668216104d22504f9eb4307013d7334
   conversations:
-  - {fileID: 1445251875078507344}
-  - {fileID: -1511675361508560059}
+  - {fileID: -5471901116755713981}
+  - {fileID: 6660827138663173777}
   actors:
   - {fileID: -7202288894803428011}
   - {fileID: -315341339396191111}
   - {fileID: -7824585118953527511}
+--- !u!114 &27963429755922888
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5dc96d0a450db24792528a4b013cdbe, type: 3}
+  m_Name: ChoiceNode
+  m_EditorClassIdentifier: 
+  guid: 70eaa9555160b6147bcd4f0fa2bef3fb
+  position: {x: 196, y: -107.31999}
+  group: {fileID: 0}
+  actor: {fileID: -7202288894803428011}
+  message: "\xBFCual es tu color favorito?"
+  choices:
+  - {fileID: 6147543173593425840}
+  - {fileID: -116218828020163764}
+  - {fileID: 1729549646159069247}
 --- !u!114 &978566331665916356
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -423,7 +696,7 @@ MonoBehaviour:
   choiceMessage: 2
   children:
   - {fileID: 5801069086791925839}
---- !u!114 &1445251875078507344
+--- !u!114 &1365149785398130771
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -432,23 +705,43 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f8c511dcfa664e438f3056b4c07f2cd, type: 3}
-  m_Name: ConversationTree
+  m_Script: {fileID: 11500000, guid: 2fcdbbda8660e124a86a4a5bf54b4f31, type: 3}
+  m_Name: Choice
   m_EditorClassIdentifier: 
-  rootNode: {fileID: 8692017309082157858}
-  nodes:
-  - {fileID: 8692017309082157858}
-  - {fileID: 6227142754766596748}
-  - {fileID: 5801069086791925839}
-  - {fileID: 7250570733937724484}
-  - {fileID: -3794272653668301776}
-  - {fileID: -5834220192843112223}
-  groups:
-  - {fileID: 9115495699628771785}
-  runningNode: {fileID: 0}
-  title: Choice Example
-  description: First Conversation
-  guid: 6b1eeebe569c7ae4fae915df068a2e10
+  guid: c8ba60c70924fe348ae9c5f8ed4d02d4
+  choiceMessage: Azul
+  children: []
+--- !u!114 &1483587888264482176
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0190e7bf12f2e8342959e5370aac2a9a, type: 3}
+  m_Name: CompleteNode
+  m_EditorClassIdentifier: 
+  guid: 9a023b2d63ea6844ea82d81b1a984574
+  position: {x: 1000, y: 0}
+  group: {fileID: 0}
+--- !u!114 &1729549646159069247
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fcdbbda8660e124a86a4a5bf54b4f31, type: 3}
+  m_Name: Choice
+  m_EditorClassIdentifier: 
+  guid: 818bbb9622d7ff749a9db5906dd3935a
+  choiceMessage: Morado
+  children:
+  - {fileID: -6245666290129599875}
 --- !u!114 &2011183122353839699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -480,6 +773,61 @@ MonoBehaviour:
   position: {x: 0, y: 0}
   group: {fileID: 0}
   children: []
+--- !u!114 &2580431248754397487
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6662badd63604c1409313f1a633a4e14, type: 3}
+  m_Name: RootNode
+  m_EditorClassIdentifier: 
+  guid: e390c3ef20a22cb49a6b37ae813cf30a
+  position: {x: 0, y: 0}
+  group: {fileID: 0}
+  children:
+  - {fileID: -3711034562052487462}
+--- !u!114 &2841104303250638644
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: a617e92afd44dbc428ce4bde9b365a42
+  position: {x: 171.00005, y: -40.99995}
+  group: {fileID: 0}
+  children:
+  - {fileID: 5089567656948897611}
+  actor: {fileID: 0}
+  message: 
+--- !u!114 &3405020705174648712
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: 148d53895b0bdf54c892a0828ebbe279
+  position: {x: 534, y: -148.99998}
+  group: {fileID: 0}
+  children:
+  - {fileID: 4553096028422913869}
+  actor: {fileID: -315341339396191111}
+  message: Doy por culo que flipas
 --- !u!114 &4503970290624035139
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -495,6 +843,25 @@ MonoBehaviour:
   guid: e8001d5e72fdfa64e8188a69edff5637
   choiceMessage: Rojo
   children: []
+--- !u!114 &4553096028422913869
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: 4302f6255795cac46910662a964f26ff
+  position: {x: 858.98804, y: -40.799988}
+  group: {fileID: 0}
+  children:
+  - {fileID: -4227811378593971641}
+  actor: {fileID: -7202288894803428011}
+  message: "Adi\xF3s"
 --- !u!114 &4564591602328167693
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -527,6 +894,39 @@ MonoBehaviour:
   guid: 
   choiceMessage: Verde
   children: []
+--- !u!114 &5089567656948897611
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0190e7bf12f2e8342959e5370aac2a9a, type: 3}
+  m_Name: CompleteNode
+  m_EditorClassIdentifier: 
+  guid: aabd03dca9080da48b5216763bbbe33d
+  position: {x: 500, y: 0}
+  group: {fileID: 0}
+--- !u!114 &5628349384811712993
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: a5c66adb5dc52804c84df6f071261804
+  position: {x: 551.4608, y: -40.80003}
+  group: {fileID: 0}
+  children: []
+  actor: {fileID: -7202288894803428011}
+  message: "Sigo con la conversaci\xF3n"
 --- !u!114 &5751775532171742135
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -557,11 +957,60 @@ MonoBehaviour:
   m_Name: DialogNode
   m_EditorClassIdentifier: 
   guid: fa86d407ff38d434dbd04c8ca947bfd0
-  position: {x: 970.3999, y: 126.39996}
+  position: {x: 922.9179, y: 127.19992}
   group: {fileID: 0}
   children: []
-  actor: {fileID: -7202288894803428011}
-  message: vamoss
+  actor: {fileID: -315341339396191111}
+  message: adios
+--- !u!114 &5833682580383593065
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6662badd63604c1409313f1a633a4e14, type: 3}
+  m_Name: StartNode
+  m_EditorClassIdentifier: 
+  guid: 91a59726879abe8469c53eae08016405
+  position: {x: 0, y: 0}
+  group: {fileID: 0}
+  children:
+  - {fileID: 2841104303250638644}
+--- !u!114 &6039066232926734924
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6662badd63604c1409313f1a633a4e14, type: 3}
+  m_Name: StartNode
+  m_EditorClassIdentifier: 
+  guid: 4ea7dbd35d7dfcf47afa31d22a8b9948
+  position: {x: 0, y: 0}
+  group: {fileID: 0}
+  children: []
+--- !u!114 &6147543173593425840
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fcdbbda8660e124a86a4a5bf54b4f31, type: 3}
+  m_Name: Choice
+  m_EditorClassIdentifier: 
+  guid: dbdf7bacd44e9404ba63402121e9ae96
+  choiceMessage: Rojo
+  children:
+  - {fileID: -2586893916623026644}
 --- !u!114 &6227142754766596748
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -575,12 +1024,35 @@ MonoBehaviour:
   m_Name: DialogNode
   m_EditorClassIdentifier: 
   guid: 622c98869df5c7048bbdf12051d63e51
-  position: {x: 970.28613, y: -37.600056}
+  position: {x: 922.9179, y: -20.00007}
   group: {fileID: 0}
   children:
   - {fileID: 7250570733937724484}
   actor: {fileID: -7202288894803428011}
-  message: funciona
+  message: Hola
+--- !u!114 &6660827138663173777
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f8c511dcfa664e438f3056b4c07f2cd, type: 3}
+  m_Name: ConversationTree
+  m_EditorClassIdentifier: 
+  startNode: {fileID: 5833682580383593065}
+  completeNode: {fileID: 5089567656948897611}
+  nodes:
+  - {fileID: 5833682580383593065}
+  - {fileID: 5089567656948897611}
+  - {fileID: 2841104303250638644}
+  groups: []
+  runningNode: {fileID: 0}
+  title: Normal Dialog
+  description: Default Desc
+  guid: 61db6ef24a0d8474087af4aa3c75c7c9
 --- !u!114 &7045443450395205963
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -628,12 +1100,12 @@ MonoBehaviour:
   m_Name: DialogNode
   m_EditorClassIdentifier: 
   guid: 1f6f9ed883a74c4459d372777455a9b1
-  position: {x: 1330.6783, y: -29.600029}
+  position: {x: 1246.918, y: -20.00007}
   group: {fileID: 0}
   children: []
-  actor: {fileID: -7202288894803428011}
-  message: 
---- !u!114 &8543545460823485800
+  actor: {fileID: -315341339396191111}
+  message: Adios
+--- !u!114 &8280699233209630042
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -642,12 +1114,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fcdbbda8660e124a86a4a5bf54b4f31, type: 3}
-  m_Name: Choice
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
   m_EditorClassIdentifier: 
-  guid: da08a38961d6d2942b763af2219e26e1
-  choiceMessage: Azul
-  children: []
+  guid: f47a1b4723390d542b74d8f0f5b62343
+  position: {x: 550, y: -23.077827}
+  group: {fileID: 0}
+  children:
+  - {fileID: -5311534606950478465}
+  actor: {fileID: -7202288894803428011}
+  message: Vaya gusto de mierda
 --- !u!114 &8692017309082157858
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -661,7 +1137,7 @@ MonoBehaviour:
   m_Name: RootNode
   m_EditorClassIdentifier: 
   guid: 369d24bbdbe763941a2c2e8ef77dee91
-  position: {x: 0.000002999659, y: 128.82338}
+  position: {x: 0.000029392293, y: 126.99999}
   group: {fileID: 0}
   children:
   - {fileID: -3794272653668301776}
@@ -693,5 +1169,5 @@ MonoBehaviour:
   m_Name: Group Box
   m_EditorClassIdentifier: 
   guid: aaee3b668ccac7e4f8ecdc1264dbf580
-  position: {x: 576.7546, y: -35.49779}
+  position: {x: 536.9583, y: -65.889465}
   title: "Decisi\xF3n"

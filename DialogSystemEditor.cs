@@ -215,57 +215,84 @@ public class DialogSystemEditor : EditorWindow
                 OnSelectionChange();
                 break;
             case PlayModeStateChange.EnteredPlayMode:
-                OnSelectionChange();
+                //OnSelectionChange();
                 break;
         }
     }
 
     private void OnSelectionChange()
     {
-        DialogSystemDatabase database = Selection.activeObject as DialogSystemDatabase;
-        
-        if (database)
-        {
-            _dialogSelectorVE.AddToClassList(hiddenContentClassName);
-            _toolbarHeaderVE.RemoveFromClassList(hiddenContentClassName);
-            OnBackToConversationsList();
-            
-            // Set root element
-            _currentDatabase = database;
-            SerializedObject so = new SerializedObject(_currentDatabase);
-            rootVisualElement.Bind(so);
-            
-            _toolbarHeader.SetUpSelector(_currentDatabase);
-            _dialogEditor.SetUpEditor(_currentDatabase);
-            _treeView.SetUpTreeView(_currentDatabase);
-            _actorMultiColumListView.SetupTable(_currentDatabase);
-            _conversationMultiColumListView.SetupTable(_currentDatabase);
-        }
-        else if(_currentDatabase != null)
-        {
-            _toolbarHeaderVE.RemoveFromClassList(hiddenContentClassName);
-            _toolbarHeader.SetUpSelector(_currentDatabase);
-            _dialogEditor.SetUpEditor(_currentDatabase);
-            _treeView.SetUpTreeView(_currentDatabase);
-            _actorMultiColumListView.SetupTable(_currentDatabase);
-            _conversationMultiColumListView.SetupTable(_currentDatabase);
-        }
-        else
-        {
-            OpenDatabaseSelector();
-            ClearView();
-        }
-        /*
-        if (!tree)
+        if (Application.isPlaying)
         {
             if (Selection.activeGameObject)
             {
                 ConversationRunner runner = Selection.activeGameObject.GetComponent<ConversationRunner>();
                 if (runner)
                 {
-                    tree = runner.conversationTree;
+                    //tree = runner.conversationTree;
+                }
+                
+                DialogSystemController controller = Selection.activeGameObject.GetComponent<DialogSystemController>();
+                if (controller)
+                {
+                    _dialogSelectorVE.AddToClassList(hiddenContentClassName);
+                    _toolbarHeaderVE.RemoveFromClassList(hiddenContentClassName);
+                    OnBackToConversationsList();
+            
+                    // Set root element
+                    _currentDatabase = controller.DialogSystemDatabase;
+                    SerializedObject so = new SerializedObject(_currentDatabase);
+                    rootVisualElement.Bind(so);
+            
+                    _toolbarHeader.SetUpSelector(_currentDatabase);
+                    _dialogEditor.SetUpEditor(_currentDatabase);
+                    _treeView.SetUpTreeView(_currentDatabase);
+                    _actorMultiColumListView.SetupTable(_currentDatabase);
+                    _conversationMultiColumListView.SetupTable(_currentDatabase);
                 }
             }
+        }
+        else
+        {
+            DialogSystemDatabase database = Selection.activeObject as DialogSystemDatabase;
+        
+            if (database)
+            {
+                _dialogSelectorVE.AddToClassList(hiddenContentClassName);
+                _toolbarHeaderVE.RemoveFromClassList(hiddenContentClassName);
+                OnBackToConversationsList();
+            
+                // Set root element
+                _currentDatabase = database;
+                SerializedObject so = new SerializedObject(_currentDatabase);
+                rootVisualElement.Bind(so);
+            
+                _toolbarHeader.SetUpSelector(_currentDatabase);
+                _dialogEditor.SetUpEditor(_currentDatabase);
+                _treeView.SetUpTreeView(_currentDatabase);
+                _actorMultiColumListView.SetupTable(_currentDatabase);
+                _conversationMultiColumListView.SetupTable(_currentDatabase);
+            }
+            else if(_currentDatabase != null)
+            {
+                _toolbarHeaderVE.RemoveFromClassList(hiddenContentClassName);
+                _toolbarHeader.SetUpSelector(_currentDatabase);
+                _dialogEditor.SetUpEditor(_currentDatabase);
+                _treeView.SetUpTreeView(_currentDatabase);
+                _actorMultiColumListView.SetupTable(_currentDatabase);
+                _conversationMultiColumListView.SetupTable(_currentDatabase);
+            }
+            else
+            {
+                OpenDatabaseSelector();
+                ClearView();
+            }
+        }
+        
+        /*
+        if (!tree)
+        {
+            
         }*/
         
         /*
@@ -428,11 +455,6 @@ public class DialogSystemEditor : EditorWindow
     {
         _treeView.ClearSelection();
         _inspectorView.ShowConversationInspector(_currentTree);
-    }
-
-    private void OnInspectorUpdate()
-    {
-        _treeView?.UpdateNodeStates();
     }
 
     private void ClearView()

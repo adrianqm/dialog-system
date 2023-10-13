@@ -25,13 +25,15 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
     private Actor _actor;
     private DialogSystemView _graphView;
     private DialogSystemDatabase _currentDatabase;
+    private Action _onClearSelection;
     
         
-    public NodeView(Node node, DialogSystemView graphView): base("Assets/dialog-system/Custom Views/Node View/NodeView.uxml")
+    public NodeView(Node node, DialogSystemView graphView, Action onClearSelection): base("Assets/dialog-system/Custom Views/Node View/NodeView.uxml")
     {
         _graphView = graphView;
         _currentDatabase = graphView.GetDatabase();
         portTranslationMap = new Dictionary<Port, Choice>();
+        _onClearSelection = onClearSelection;
         
         this.node = node;
         this.title = node.name;
@@ -40,15 +42,31 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
         style.left = node.position.x;
         style.top = node.position.y;
         
-        if (node is RootNode)
+        if (node is StartNode)
         {
             capabilities -= Capabilities.Deletable;
             capabilities -= Capabilities.Copiable;
-            AddToClassList("root");
+            AddToClassList("static");
+            Label staticField = this.Q<Label>("static-label");
+            staticField.text = "[START]";
             inputContainer.AddToClassList("singleInputContainer");
             outputContainer.AddToClassList("singleOutputContainer");
+
+            if (Application.isPlaying) node.NodeState = Node.State.Running;
+            else node.NodeState = Node.State.Initial;
             
             CreateSingleOutputPorts();
+        }
+        else if (node is CompleteNode)
+        {
+            capabilities -= Capabilities.Deletable;
+            capabilities -= Capabilities.Copiable;
+            AddToClassList("static");
+            Label staticField = this.Q<Label>("static-label");
+            staticField.text = "[COMPLETE]";
+            inputContainer.AddToClassList("singleInputContainer");
+            outputContainer.AddToClassList("singleOutputContainer");
+            CreateInputPorts();
         }
         else
         {
@@ -62,6 +80,7 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
                     dialogNode.actor = actor;
                     EditorUtility.SetDirty(node);
                     onNodeSelected.Invoke(this);
+                    _onClearSelection.Invoke();
                 });
                 _messageTextField = this.Q<TextField>("message-textfield");
                 BindMessage();
@@ -82,6 +101,7 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
                     choiceNode.actor = actor;
                     EditorUtility.SetDirty(node);
                     onNodeSelected.Invoke(this);
+                    _onClearSelection.Invoke();
                 });
                 _messageTextField = this.Q<TextField>("message-textfield");
                 BindMessage();
@@ -169,6 +189,7 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
         choiceTextField.AddToClassList("choice-textfield");
         choiceTextField.bindingPath = "choiceMessage";
         choiceTextField.Bind(new SerializedObject(choice));
+        choiceTextField.RegisterCallback<FocusEvent>((e) =>{onNodeSelected(this); _onClearSelection.Invoke();});
         ve.Add(choiceTextField);
         
         Port newOutput = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, typeof(bool));
@@ -249,6 +270,8 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
         RemoveFromClassList("running");
         RemoveFromClassList("unreachable");
         RemoveFromClassList("finished");
+        RemoveFromClassList("visited");
+        RemoveFromClassList("visitedUnreachable");
         
         if (!Application.isPlaying) return;
         switch (node.NodeState)
@@ -264,6 +287,12 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
                 break;
             case Node.State.Finished:
                 AddToClassList("finished");
+                break;
+            case Node.State.Visited:
+                AddToClassList("visited");
+                break;
+            case Node.State.VisitedUnreachable:
+                AddToClassList("visitedUnreachable");
                 break;
         }
     }
@@ -333,6 +362,7 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
         
         _messageTextField.bindingPath = "message";
         _messageTextField.Bind(new SerializedObject(node));
+        _messageTextField.RegisterCallback<FocusEvent>((e) =>{onNodeSelected(this); _onClearSelection.Invoke();});
     }
     
     void CheckForWarnings(SerializedObject serializedObject)

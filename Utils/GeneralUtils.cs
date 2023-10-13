@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using AQM.Tools.Serializable;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public static class GeneralUtils
@@ -80,5 +81,37 @@ public static class GeneralUtils
         };
 
         return serializableGroupNode;
+    }
+
+    public static CutCopySerializedData GenerateCutCopyObject(IEnumerable<GraphElement> elements)
+    {
+        CutCopySerializedData cutCopyData = new CutCopySerializedData();
+        foreach (GraphElement n in elements)
+        {
+            NodeView nodeView = n as NodeView;
+            if(nodeView != null) 
+            {
+                DialogNode dialogNode = nodeView.node as DialogNode;
+                if (dialogNode)
+                {
+                    cutCopyData.dialogNodesToCopy.Add(GeneralUtils.ConvertToSerializableDialogNode(dialogNode));
+                    continue;
+                }
+                
+                ChoiceNode choiceNode = nodeView.node as ChoiceNode;
+                if (choiceNode)
+                {
+                    cutCopyData.choiceNodesToCopy.Add(GeneralUtils.ConvertToSerializableChoiceNode(choiceNode));
+                    continue;
+                }
+            }
+            
+            GroupNodeView groupView = n as GroupNodeView;
+            if(groupView != null)
+            {
+                cutCopyData.groupNodesToCopy.Add(GeneralUtils.ConvertToSerializableGroupNode(groupView.group));
+            }
+        }
+        return cutCopyData;
     }
 }

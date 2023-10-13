@@ -115,9 +115,29 @@ public class DialogSystemDatabase : ScriptableObject
     public void DeteleConversation(ConversationTree conversation)
     {
         conversations.Remove(conversation); 
-        _treeView.ClearGraph();
+        _treeView?.ClearGraph();
         Undo.DestroyObjectImmediate(conversation);
         AssetDatabase.SaveAssets();
+    }
+
+    public DialogSystemDatabase Clone()
+    {
+        DialogSystemDatabase tree = Instantiate(this);
+        tree.title = "(Cloned) "+ title;
+        tree.description = description;
+        tree.conversations = new List<ConversationTree>();
+        conversations.ForEach((conversation) =>
+        {
+            ConversationTree clonedConversation = conversation.Clone();
+            tree.conversations.Add(clonedConversation);
+        });
+        tree.actors = new List<Actor>();
+        actors.ForEach((actor) =>
+        {
+            Actor clonedActor = actor.Clone();
+            tree.actors.Add(clonedActor);
+        });
+        return tree;
     }
 #endif
 }

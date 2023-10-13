@@ -8,11 +8,25 @@ public class InspectorView : VisualElement
 {
     public new class UxmlFactory:  UxmlFactory<InspectorView, InspectorView.UxmlTraits> {}
 
+    private NodeView _currentNodeView;
+    private DialogInspectorView _currentContainer;
+    
     internal void ShowDialogInspector(NodeView nodeView,List<Actor> actors)
     {
-        Clear();
-        DialogInspectorView container = new DialogInspectorView(nodeView, actors);
-        Add(container);
+        
+        if (nodeView.node != _currentNodeView?.node)
+        {
+            Clear();
+            DialogInspectorView container = new DialogInspectorView(nodeView, actors);
+            Add(container);
+            _currentNodeView = nodeView;
+            _currentContainer = container;
+        }
+        else
+        {
+            _currentContainer.SoftUpdate(nodeView, actors);
+        }
+        
     }
 
     internal void ShowConversationInspector(ConversationTree conversationTree)
@@ -20,6 +34,14 @@ public class InspectorView : VisualElement
         Clear();
         ConversationInspectorView container = new ConversationInspectorView(conversationTree);
         Add(container);
+        ResetDialogContainerValues();
+
+    }
+
+    private void ResetDialogContainerValues()
+    {
+        _currentNodeView = null;
+        _currentContainer = null;
     }
     
     internal void ClearInspector()

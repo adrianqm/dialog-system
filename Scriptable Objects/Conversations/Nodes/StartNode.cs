@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RootNode : ParentNode
+public class StartNode : ParentNode
 {
     public override void OnRunning()
     {
-        Debug.Log("Root");
+        Debug.Log("Start");
     }
 }

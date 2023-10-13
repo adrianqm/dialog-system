@@ -11,6 +11,5 @@ public class DialogNode : ParentNode
     public override void OnRunning()
     {
         NodeState = State.Running;
-        Debug.Log(message);
     }
 }

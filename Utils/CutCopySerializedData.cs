@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using AQM.Tools.Serializable;
 
 [Serializable]
-class CutCopySerializedData
+public class CutCopySerializedData
 {
     public List<SerializableDialogNode> dialogNodesToCopy = new();
     public List<SerializableChoiceNode> choiceNodesToCopy = new();

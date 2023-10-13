@@ -44,6 +44,12 @@ public class ChoiceNode : Node
     public override void OnRunning()
     {
         NodeState = State.Running;
-        Debug.Log(message);
+    }
+    
+    public override Node Clone()
+    {
+        ChoiceNode node = Instantiate(this);
+        node.choices = choices.ConvertAll(c => c.Clone());
+        return node;
     }
 }

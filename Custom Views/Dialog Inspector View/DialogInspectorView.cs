@@ -11,6 +11,7 @@ public class DialogInspectorView : VisualElement
 {
     private NodeView _nodeView;
     private List<Actor> _actors;
+    
     public DialogInspectorView(NodeView nodeView,List<Actor> actors)
     {
         string uriFile = "Assets/dialog-system/Custom Views/Dialog Inspector View/DialogInspectorView.uxml";
@@ -18,10 +19,9 @@ public class DialogInspectorView : VisualElement
         
         _nodeView = nodeView;
         _actors = actors;
-
-        if (nodeView.node is RootNode)
+        if (nodeView.node is StartNode)
         {
-            
+        
         }
         else if(nodeView.node is DialogNode)
         {
@@ -32,6 +32,31 @@ public class DialogInspectorView : VisualElement
             var node = nodeView.node as ChoiceNode;
             PopulateChoiceInspector(node);
         }
+    }
+
+    public void SoftUpdate(NodeView nodeView,List<Actor> actors)
+    {
+        _nodeView = nodeView;
+        _actors = actors;
+        
+        if(nodeView.node is DialogNode)
+        {
+            var node = nodeView.node as DialogNode;
+            BindActor(node.actor,(actor) =>
+            {
+                node.actor = actor;
+                EditorUtility.SetDirty(node);
+            });
+        }else if (nodeView.node is ChoiceNode)
+        {
+            var node = nodeView.node as ChoiceNode;
+            BindActor(node.actor,(actor) =>
+            {
+                node.actor = actor;
+                EditorUtility.SetDirty(node);
+            });
+        }
+        
     }
 
     private void PopulateDialogInspector(DialogNode node)

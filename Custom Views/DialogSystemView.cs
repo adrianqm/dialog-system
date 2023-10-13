@@ -163,6 +163,7 @@ public class DialogSystemView : GraphView
         serializeGraphElements -= CutCopyOperation;
         unserializeAndPaste -= PasteOperation;
         canPasteSerializedData -= CanPaste;
+        _tree.OnUpdateViewStates -= OnUpdateStates;
         
         DeleteElements(graphElements);
         
@@ -170,10 +171,19 @@ public class DialogSystemView : GraphView
         serializeGraphElements += CutCopyOperation;
         unserializeAndPaste += PasteOperation;
         canPasteSerializedData += CanPaste;
+        _tree.OnUpdateViewStates += OnUpdateStates;
         
-        if (_tree.rootNode == null)
+        
+        if (_tree.startNode == null)
         {
-            _tree.rootNode = _tree.CreateNode(_currentDatabase, typeof(RootNode), Vector2.zero) as RootNode;
+            _tree.startNode = _tree.CreateNode(_currentDatabase, typeof(StartNode), Vector2.zero) as StartNode;
+            EditorUtility.SetDirty(tree);
+            AssetDatabase.SaveAssets();
+        }
+        
+        if (_tree.completeNode == null)
+        {
+            _tree.completeNode = _tree.CreateNode(_currentDatabase, typeof(CompleteNode), new Vector2(1000f,0f)) as CompleteNode;
             EditorUtility.SetDirty(tree);
             AssetDatabase.SaveAssets();
         }
@@ -211,6 +221,8 @@ public class DialogSystemView : GraphView
                 }
             }
         });
+        
+        OnUpdateStates();
     }
 
     private void CreateEdgeView(List<Node> children, Port port)
@@ -233,35 +245,7 @@ public class DialogSystemView : GraphView
 
     private string CutCopyOperation(IEnumerable<GraphElement> elements)
     {
-        CutCopySerializedData cutCopyData = new CutCopySerializedData();
-        
-        foreach (GraphElement n in elements)
-        {
-            NodeView nodeView = n as NodeView;
-            if(nodeView != null) 
-            {
-                DialogNode dialogNode = nodeView.node as DialogNode;
-                if (dialogNode)
-                {
-                    cutCopyData.dialogNodesToCopy.Add(GeneralUtils.ConvertToSerializableDialogNode(dialogNode));
-                    continue;
-                }
-                
-                ChoiceNode choiceNode = nodeView.node as ChoiceNode;
-                if (choiceNode)
-                {
-                    cutCopyData.choiceNodesToCopy.Add(GeneralUtils.ConvertToSerializableChoiceNode(choiceNode));
-                    continue;
-                }
-            }
-            
-            GroupNodeView groupView = n as GroupNodeView;
-            if(groupView != null)
-            {
-                cutCopyData.groupNodesToCopy.Add(GeneralUtils.ConvertToSerializableGroupNode(groupView.group));
-            }
-        }
-        
+        CutCopySerializedData cutCopyData =  GeneralUtils.GenerateCutCopyObject(elements);
         _canPaste = cutCopyData.choiceNodesToCopy.Count > 0 || cutCopyData.dialogNodesToCopy.Count > 0 || 
                     cutCopyData.groupNodesToCopy.Count > 0;
         //string jsonStr = JsonUtility.ToJson(cutCopyData,);
@@ -407,7 +391,8 @@ public class DialogSystemView : GraphView
             {
                 graphViewChange.elementsToRemove.Add(edge);
             }
-            
+
+            bool nodeHasBeenRemoved = false;
             // Delete elements
             foreach (GraphElement element in graphViewChange.elementsToRemove)
             {
@@ -415,6 +400,7 @@ public class DialogSystemView : GraphView
                 if (nodeView != null)
                 {
                     DeleteNode(nodeView.node);
+                    nodeHasBeenRemoved = true;
                     continue;
                 }
 
@@ -433,8 +419,7 @@ public class DialogSystemView : GraphView
                     DeleteGroupNode(groupNodeView.group);
                 }
             }
-            
-            onNodesRemoved?.Invoke();
+            if(nodeHasBeenRemoved) onNodesRemoved?.Invoke();
         }
         
         if (graphViewChange.edgesToCreate != null)
@@ -474,7 +459,7 @@ public class DialogSystemView : GraphView
             var types = TypeCache.GetTypesDerivedFrom<Node>();
             foreach (var type in types)
             {
-                if (type != typeof(RootNode) && type != typeof(ParentNode))
+                if (type != typeof(StartNode) && type != typeof(CompleteNode) && type != typeof(ParentNode))
                 {
                     evt.menu.AppendAction("Create "+type.Name+" Node", (a)=> CreateNode(type,pos));
                 }
@@ -552,7 +537,7 @@ public class DialogSystemView : GraphView
     {
         if (node == null) return null;
         
-        NodeView nodeView = new NodeView(node,this);
+        NodeView nodeView = new NodeView(node,this, ClearSelection);
         nodeView.onNodeSelected = OnNodeSelected;
         AddElement(nodeView);
         
@@ -569,19 +554,51 @@ public class DialogSystemView : GraphView
         _tree.DeteleNode(node);
         
         // In case that suppress button works
-        if (node is RootNode)
+        if (node is StartNode)
         {
-            _tree.rootNode = null;
+            _tree.startNode = null;
         }
     }
 
-    public void UpdateNodeStates()
+    private void OnUpdateStates()
     {
         nodes.ForEach(n =>
         {
             NodeView view = n as NodeView;
             view.UpdateState();
         });
+        
+        if (!Application.isPlaying) return;
+
+        edges.ForEach(e =>
+        {
+            NodeView inputNode = e.input.node as NodeView;
+            NodeView outputNode = e.output.node as NodeView;
+            Color newColor = new Color(255, 253, 0, 50);
+            Color neutralColor = new Color(0.8235294f, 0.8235294f, 0.8235294f, 1);
+            
+            if ((inputNode.node.NodeState == Node.State.Running && outputNode.node.NodeState == Node.State.VisitedUnreachable) ||
+                (inputNode.node.NodeState == Node.State.VisitedUnreachable && outputNode.node.NodeState == Node.State.VisitedUnreachable) ||
+                (inputNode.node.NodeState == Node.State.Finished && outputNode.node.NodeState == Node.State.VisitedUnreachable))
+            {
+
+                if(e.input.connections.Count() == 1) e.input.portColor = newColor;
+                else e.input.portColor = neutralColor;
+                if (e.output.connections.Count() == 1) e.output.portColor = newColor;
+                else e.input.portColor = neutralColor;
+                e.style.color = newColor;
+            }
+
+            if (inputNode.node.NodeState == Node.State.Initial &&
+                (outputNode.node.NodeState == Node.State.Initial || outputNode.node.NodeState == Node.State.Running))
+            {
+                
+                e.input.portColor = neutralColor;
+                e.output.portColor = neutralColor;
+                e.style.color = neutralColor;
+            }
+        });
+        
     }
 
     public void ClearGraph()
