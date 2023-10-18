@@ -232,6 +232,8 @@ public class DialogSystemEditor : EditorWindow
                     DialogSystemDatabase db = runner.ClonedDatabase;
                     if (db)
                     {
+                        _dialogSelectorVE.AddToClassList(hiddenContentClassName);
+                        _toolbarHeaderVE.RemoveFromClassList(hiddenContentClassName);
                         if (_currentDatabase != db)
                         {
                             _currentDatabase = db;
@@ -240,9 +242,11 @@ public class DialogSystemEditor : EditorWindow
                             SetUpComponentsDatabase(_currentDatabase);
                         }
 
-                        OnEditConversation(runner.conversationTree);
+                        ConversationTree conversationCloned = 
+                            _currentDatabase.conversations.Find(c =>
+                            c.guid == runner.conversationTree.guid);
+                        OnEditConversation(conversationCloned);
                     }
-                    
                 }
                 
                 DialogSystemController controller = Selection.activeGameObject.GetComponent<DialogSystemController>();
