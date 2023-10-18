@@ -2,13 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace AQM.Tools
 {
     public class DSUIController : MonoBehaviour
     {
-        [SerializeField] private DialogUIContainer _dialogUIContainer;
-        [SerializeField] private ChoiceUIContainer _choiceUIContainer;
+        [SerializeField] private DialogUIContainer dialogUIContainer;
+        [SerializeField] private ChoiceUIContainer choiceUIContainer;
     
         private void Awake()
         {
@@ -24,10 +25,10 @@ namespace AQM.Tools
         {
             HideChoiceContainer();
             
-            if (_dialogUIContainer)
+            if (dialogUIContainer)
             {
-                _dialogUIContainer.gameObject.SetActive(true);
-                _dialogUIContainer.SetNode(node);
+                dialogUIContainer.gameObject.SetActive(true);
+                dialogUIContainer.SetNode(node);
             }
         }
 
@@ -35,26 +36,27 @@ namespace AQM.Tools
         {
             HideDialogContainer();
             
-            if (_choiceUIContainer)
+            if (choiceUIContainer)
             {
-                _choiceUIContainer.gameObject.SetActive(true);
-                _choiceUIContainer.SetNode(choiceNode);
+                choiceUIContainer.gameObject.SetActive(true);
+                choiceUIContainer.SetNode(choiceNode);
             }
         }
 
         private void HideConversationUI()
         {
             HideDialogContainer();
+            HideChoiceContainer();
         }
 
         private void HideDialogContainer()
         {
-            if(_dialogUIContainer) _dialogUIContainer.gameObject.SetActive(false);
+            if(dialogUIContainer) dialogUIContainer.gameObject.SetActive(false);
         }
 
         private void HideChoiceContainer()
         {
-            if(_choiceUIContainer) _choiceUIContainer.gameObject.SetActive(false);
+            if(choiceUIContainer) choiceUIContainer.gameObject.SetActive(false);
         }
 
         private void OnDestroy()

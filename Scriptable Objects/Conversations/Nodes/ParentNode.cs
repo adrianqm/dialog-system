@@ -15,7 +15,7 @@ public class ParentNode : Node
     public override Node Clone()
     {
         ParentNode node = Instantiate(this);
-        node.children = children.ConvertAll(c => c.Clone());
+        //node.children = children.ConvertAll(c => c.Clone());
         return node;
     }
 }

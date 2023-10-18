@@ -13,6 +13,8 @@ namespace AQM.Tools
 
         private DialogSystemDatabase _clonedDatabase;
 
+        public DialogSystemDatabase ClonedDatabase => _clonedDatabase;
+
         private void Awake()
         {
             DialogSystemController.onDatabaseCloned += OnDatabaseCloned;
@@ -27,7 +29,7 @@ namespace AQM.Tools
         {
             if (_clonedDatabase)
             {
-                conversationTree = _clonedDatabase.conversations[1];
+                conversationTree = _clonedDatabase.conversations.Find(c => c.guid == conversationTree.guid);
                 if (conversationTree)
                 {
                     onStartConversation?.Invoke(conversationTree);

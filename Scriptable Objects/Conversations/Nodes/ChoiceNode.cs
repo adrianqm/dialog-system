@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -9,6 +10,7 @@ public class ChoiceNode : Node
     public Actor actor;
     [TextArea] public string message;
     public List<Choice> choices = new ();
+    public Action<int> onChoiceSelected;
 
     public Choice CreateChoice(DialogSystemDatabase db, string defaultText = "")
     {
@@ -49,7 +51,7 @@ public class ChoiceNode : Node
     public override Node Clone()
     {
         ChoiceNode node = Instantiate(this);
-        node.choices = choices.ConvertAll(c => c.Clone());
+        //node.choices = choices.ConvertAll(c => c.Clone());
         return node;
     }
 }

@@ -1,19 +1,16 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using AQM.Tools.Serializable;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UIElements;
 
-[CreateAssetMenu(fileName = "New Conversation Tree", menuName = "AQM/Tools/Dialog System/Conversation Tree", order = 2)]
 public class ConversationTree : ScriptableObject
 {
     public Action OnEndConversation;
     public Action OnUpdateViewStates;
+    public Action OnNameChanged;
     
     public Node startNode;
     public Node completeNode;
@@ -27,6 +24,13 @@ public class ConversationTree : ScriptableObject
     
     private Node finishedNode;
 
+    public void SetName(string newTitle)
+    {
+        title = newTitle;
+        OnNameChanged?.Invoke();
+        EditorUtility.SetDirty(this);
+    }
+    
     public Node StartConversation()
     {
         if (finishedNode) ResetNodeStates();
@@ -58,15 +62,21 @@ public class ConversationTree : ScriptableObject
         OnEndConversation.Invoke();
     }
     
-    public Node GetNextNode()
+    public Node GetNextNode(int option = -1)
     {
         if (!runningNode) return null;
 
         Node nextNode = null;
-        DialogNode node = runningNode as DialogNode;
-        if (node)
+        DialogNode dialogNode = runningNode as DialogNode;
+        if (dialogNode)
         {
-            nextNode = CheckNextChildMove(node.children);
+            nextNode = CheckNextChildMove(dialogNode.children);
+        }
+        
+        ChoiceNode choiceNode = runningNode as ChoiceNode;
+        if (choiceNode && option != -1)
+        {
+            nextNode = CheckNextChildMove(choiceNode.choices[option].children);
         }
 
         return nextNode;
@@ -353,7 +363,9 @@ public class ConversationTree : ScriptableObject
     public ConversationTree Clone()
     {
         ConversationTree tree = Instantiate(this);
-        tree.startNode = tree.startNode.Clone();
+        
+        NodeCloningManager cloningManager = new NodeCloningManager();
+        tree.startNode= cloningManager.CloneNode(tree.startNode);
         
         tree.groups = groups.ConvertAll(g => g.Clone());
         tree.nodes = new List<Node>();

@@ -10,7 +10,7 @@ public class Choice : ScriptableObject
     public Choice Clone()
     {
         Choice choice = Instantiate(this);
-        choice.children = children.ConvertAll(c => c.Clone());
+        //choice.children = children.ConvertAll(c => c.Clone());
         return choice;
     }
 }
