@@ -40,3 +40,11 @@ GridBackground {
 #toolbar-header {
     background-color: rgb(46, 46, 46);
 }
+
+.unity-toggle__label {
+    display: none;
+}
+
+.disabled-label-text {
+    color: rgba(152, 152, 152, 0.5);
+}

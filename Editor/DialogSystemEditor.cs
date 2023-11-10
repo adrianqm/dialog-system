@@ -21,15 +21,21 @@ public class DialogSystemEditor : EditorWindow
     private ConversationsView _conversationEditView;
     private ConversationListView _conversationListView;
     private VisualElement _toolbarHeaderVE;
+    private VisualElement _localicationInfoVE;
+    private Label _localeLabel;
+    private Label _collectionName;
+    private Toggle _localActivated;
     private ToolbarHeaderView _toolbarHeader;
     private VisualElement _dialogSelectorVE;
     private DatabaseSelectorView _dialogSelector;
     private VisualElement _dialogEditorVE;
+    private VisualElement _dialogLocalizationVE;
     private VisualElement _dialogCreatorVE;
     private DatabaseCreatorView _dialogCreatorView;
     private VisualElement _confirmationModalVE;
     private ConfirmationModalView _confirmationModal;
     private DatabaseEditorView _dialogEditor;
+    private DatabaseLocalizationView _dialogLocalization;
     private const string hiddenContentClassName = "hiddenContent";
     private Label _conversationNameLabel;
     private VisualElement _topConversationBar;
@@ -48,7 +54,7 @@ public class DialogSystemEditor : EditorWindow
     {
         DialogSystemEditor wnd = GetWindow<DialogSystemEditor>();
         wnd.titleContent = new GUIContent("Dialog System Editor");
-        wnd.minSize = new Vector2(500,400);
+        wnd.minSize = new Vector2(600,400);
     }
 
     [OnOpenAsset]
@@ -81,7 +87,7 @@ public class DialogSystemEditor : EditorWindow
         // Tree view
         _treeView = root.Q<DialogSystemView>();
         _treeView.SetUpEditorWindow(this);
-        _treeView.OnNodeSelected = OnNodeSelectionChanged;
+        _treeView.onNodeSelected = OnNodeSelectionChanged;
         _treeView.onNodesRemoved = OnNodesRemoved;
         
         // To remove Hover style
@@ -126,6 +132,12 @@ public class DialogSystemEditor : EditorWindow
         _dialogEditor = _dialogEditorVE.Q<DatabaseEditorView>();
         _dialogEditor.OnCloseModal = OnCloseEditDatabase;
         
+        // DB Localization
+        _dialogLocalizationVE = root.Q<VisualElement>("database-localization");
+        _dialogLocalization = _dialogLocalizationVE.Q<DatabaseLocalizationView>();
+        _dialogLocalization.onCloseModal = OnCloseLocalizeDatabase;
+        _dialogLocalization.onLocalizeCreated = OnLocalizeDatabaseCreated;
+        
         // DB creator
         _dialogCreatorVE = root.Q<VisualElement>("database-creator");
         _dialogCreatorView = _dialogCreatorVE.Q<DatabaseCreatorView>();
@@ -140,10 +152,17 @@ public class DialogSystemEditor : EditorWindow
         //Toolbar DB Selector
         _toolbarHeaderVE = root.Q<VisualElement>("toolbar-header");
         _toolbarHeader = _toolbarHeaderVE.Q<ToolbarHeaderView>();
-        _toolbarHeader.OnDatabaseSelected = OnManualSet;
-        _toolbarHeader.OnCreateDatabase = OnCreateDatabase;
-        _toolbarHeader.OnEditDatabase = OnEditDatabase;
-        _toolbarHeader.OnRemoveDatabase = OnRemoveDatabase;
+        _toolbarHeader.onDatabaseSelected = OnManualSet;
+        _toolbarHeader.onCreateDatabase = OnCreateDatabase;
+        _toolbarHeader.onEditDatabase = OnEditDatabase;
+        _toolbarHeader.onLocalizeDatabase = OnLocalizeDatabase;
+        _toolbarHeader.onRemoveDatabase = OnRemoveDatabase;
+        
+        //Localization Info
+        _localicationInfoVE = root.Q<VisualElement>("localization-info");
+        _localeLabel = root.Q<Label>("locale-desc");
+        _collectionName = root.Q<Label>("string-table-desc");
+        _localActivated = root.Q<Toggle>("local-activated");
 
         // Register Conversation Name Label Query
         _conversationNameLabel = root.Q<Label>(className: "conversation-name-label");
@@ -282,8 +301,6 @@ public class DialogSystemEditor : EditorWindow
                 DSData.instance.database = database;
                 SerializedObject so = new SerializedObject(_currentDatabase);
                 rootVisualElement.Bind(so);
-            
-                
             }
             else if(DSData.instance.database != null)
             {
@@ -303,6 +320,7 @@ public class DialogSystemEditor : EditorWindow
 
     private void SetUpComponentsDatabase(DialogSystemDatabase database)
     {
+        SetUpLocalizationInfo(database);
         _toolbarHeader.SetUpSelector(database);
         _dialogEditor.SetUpEditor(database);
         _treeView.SetUpTreeView(database);
@@ -322,6 +340,46 @@ public class DialogSystemEditor : EditorWindow
         SerializedObject so = new SerializedObject(_currentDatabase);
         rootVisualElement.Bind(so);
         SetUpComponentsDatabase(_currentDatabase);
+    }
+
+    private void SetUpLocalizationInfo(DialogSystemDatabase database)
+    {
+        #if LOCALIZATION_EXIST
+            _dialogLocalization.SetUpDefaultSelectorValues();
+            if (database.tableCollection && database.defaultLocale)
+            {
+                _localicationInfoVE.RemoveFromClassList(hiddenContentClassName);
+                _localeLabel.text = database.defaultLocale.Identifier.CultureInfo.DisplayName;
+                SerializedObject so = new SerializedObject(database.tableCollection);
+                SerializedProperty property = so.FindProperty("m_Name");
+                _collectionName.BindProperty(property);
+                _localActivated.bindingPath = "localizationActivated";
+                _localActivated.Bind(new SerializedObject(database));
+                _localActivated.RegisterValueChangedCallback(HandleLocalActivatedCallback);
+            }
+            else
+            {
+                _localicationInfoVE.AddToClassList(hiddenContentClassName);
+                _localeLabel.text = "not defined";
+                _collectionName.Unbind();
+                _localActivated.Unbind();
+                _localActivated.UnregisterValueChangedCallback(HandleLocalActivatedCallback);
+            }
+        #endif
+    }
+    
+    private void HandleLocalActivatedCallback(ChangeEvent<bool> evt)
+    {
+        if (!evt.newValue)
+        {
+            _collectionName.AddToClassList("disabled-label-text");
+            _localeLabel.AddToClassList("disabled-label-text");
+        }
+        else
+        {
+            _collectionName.RemoveFromClassList("disabled-label-text");
+            _localeLabel.RemoveFromClassList("disabled-label-text");
+        }
     }
 
     private void SetTree(ConversationTree tree)
@@ -407,17 +465,36 @@ public class DialogSystemEditor : EditorWindow
     {
         _dialogEditorVE.RemoveFromClassList(hiddenContentClassName);
     }
+    
+    void OnCloseEditDatabase()
+    {
+        _dialogEditorVE.AddToClassList(hiddenContentClassName);
+    }
+    
+    void OnLocalizeDatabase()
+    {
+        _dialogLocalizationVE.RemoveFromClassList(hiddenContentClassName);
+    }
+
+    void OnCloseLocalizeDatabase()
+    {
+        _dialogLocalizationVE.AddToClassList(hiddenContentClassName);
+    }
+
+    void OnLocalizeDatabaseCreated()
+    {
+        _dialogLocalizationVE.AddToClassList(hiddenContentClassName);
+        #if LOCALIZATION_EXIST
+            _currentDatabase.localizationActivated = true;
+        #endif
+        SetUpLocalizationInfo(_currentDatabase);
+    }
 
     void OnRemoveDatabase()
     {
         _confirmationModal.UpdateModalText("Are you sure you want to remove the database?");
         _confirmationModal.OnConfirmModal = OnRemoveDatabaseConfirm;
         _confirmationModalVE.RemoveFromClassList(hiddenContentClassName);
-    }
-    
-    void OnCloseEditDatabase()
-    {
-        _dialogEditorVE.AddToClassList(hiddenContentClassName);
     }
 
     void OnCloseCreatorDatabase()

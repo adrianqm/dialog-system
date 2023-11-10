@@ -186,6 +186,16 @@ public class ConversationMultiColumListView : MultiColumnListView
         return ve;
     }
 
+    private VisualElement OnMakeStateCell()
+    {
+        var ve = new VisualElement();
+        var label = new Label();
+        label.AddToClassList("conversationsLabelCell--label");
+        ve.Add(label);
+        ve.AddToClassList("conversationsLabelCell");
+        return ve;
+    }
+
     private void OnBindCell(VisualElement ve, int index, int columnIndex)
     {
         if (_currentConversationList[index] == null) return;
@@ -217,12 +227,17 @@ public class ConversationMultiColumListView : MultiColumnListView
                 _unregisterAll += () => descText.Blur();
                 break;
             case 2:
+                Label state = ve.Q<Label>();
+                state.bindingPath = "conversationState";
+                state.Bind(new SerializedObject(_currentConversationList[index]));
+                break;
+            case 3:
                 Button editButton = ve.Q<Button>();
                 editButton.clickable = new Clickable(()=>{
                     onEditConversation?.Invoke(_currentConversationList[index]);
                 });
                 break;
-            case 3: 
+            case 4: 
                 Button deleteButton = ve.Q<Button>();
                 deleteButton.clickable = new Clickable(()=>{
                     bool deleteClicked = EditorUtility.DisplayDialog(
@@ -272,9 +287,20 @@ public class ConversationMultiColumListView : MultiColumnListView
         });
         columns?.Add(new Column
         {
+            name = "stateColumn",
+            title = "State",
+            bindCell = (x, y) => { OnBindCell(x, y, 2); },
+            makeCell = OnMakeStateCell,
+            stretchable = true,
+            maxWidth = 75,
+            minWidth = 75,
+            sortable = true
+        });
+        columns?.Add(new Column
+        {
             name = "edit",
             title = "",
-            bindCell = (x, y) => { OnBindCell(x, y, 2); },
+            bindCell = (x, y) => { OnBindCell(x, y, 3); },
             makeCell = OnMakeEditCell,
             stretchable = false,
             sortable = false,
@@ -285,7 +311,7 @@ public class ConversationMultiColumListView : MultiColumnListView
         {
             name = "delete",
             title = "",
-            bindCell = (x, y) => { OnBindCell(x, y, 3); },
+            bindCell = (x, y) => { OnBindCell(x, y, 4); },
             makeCell = OnMakeDeleteCell,
             stretchable = false,
             sortable = false,

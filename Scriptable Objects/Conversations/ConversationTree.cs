@@ -5,12 +5,24 @@ using AQM.Tools.Serializable;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+#if LOCALIZATION_EXIST
+using UnityEngine.Localization.Settings;
+using UnityEngine.Localization.Tables;
+#endif
 
 public class ConversationTree : ScriptableObject
 {
-    public Action OnEndConversation;
-    public Action OnUpdateViewStates;
-    public Action OnNameChanged;
+    public Action onEndConversation;
+    public Action onUpdateViewStates;
+    public Action onNameChanged;
+
+    public enum State
+    {
+        Editor,
+        Idle,
+        Running, 
+        Completed
+    }
     
     public Node startNode;
     public Node completeNode;
@@ -21,20 +33,22 @@ public class ConversationTree : ScriptableObject
     [TextArea] public string title;
     [TextArea] public string description;
     [HideInInspector] [TextArea] public string guid;
+    public State conversationState = State.Editor;
     
-    private Node finishedNode;
+    private Node _finishedNode;
 
     public void SetName(string newTitle)
     {
         title = newTitle;
-        OnNameChanged?.Invoke();
+        onNameChanged?.Invoke();
         EditorUtility.SetDirty(this);
     }
     
     public Node StartConversation()
     {
-        if (finishedNode) ResetNodeStates();
+        if (_finishedNode) ResetNodeStates();
         
+        conversationState = State.Running;
         runningNode = startNode;
         StartNode node = runningNode as StartNode;
         if (node)
@@ -47,6 +61,7 @@ public class ConversationTree : ScriptableObject
 
     private void ResetNodeStates()
     {
+        conversationState = State.Running;
         // Reset states to initial
         foreach (var n in nodes)
         {
@@ -56,10 +71,11 @@ public class ConversationTree : ScriptableObject
     
     public void EndConversation()
     {
+        conversationState = State.Completed;
         runningNode.NodeState = Node.State.Finished;
-        finishedNode = runningNode;
+        _finishedNode = runningNode;
         runningNode = null;
-        OnEndConversation.Invoke();
+        onEndConversation.Invoke();
     }
     
     public Node GetNextNode(int option = -1)
@@ -81,6 +97,15 @@ public class ConversationTree : ScriptableObject
 
         return nextNode;
     }
+    
+    public Node GetCurrentNode()
+    {
+        Node currentNode = runningNode;
+        #if LOCALIZATION_EXIST
+            currentNode = GetTranslatedNode(currentNode);
+        #endif
+        return currentNode;
+    }
 
     private Node CheckNextChildMove(List<Node> children)
     {
@@ -99,9 +124,56 @@ public class ConversationTree : ScriptableObject
             EndConversation();
         }
         
-        OnUpdateViewStates?.Invoke();
+        #if LOCALIZATION_EXIST
+            childToMove = GetTranslatedNode(childToMove);
+        #endif
+        
+        onUpdateViewStates?.Invoke();
         return childToMove;
     }
+    
+#if LOCALIZATION_EXIST
+
+    private Node GetTranslatedNode(Node childToMove)
+    {
+        if (DSData.instance.database.tableCollection && DSData.instance.database.localizationActivated)
+        {
+            StringTable table = LocalizationSettings.StringDatabase.GetTable(
+                DSData.instance.database.tableCollection.name,
+                LocalizationSettings.SelectedLocale);
+            DialogNode dialogNode = childToMove as DialogNode;
+            if (dialogNode)
+            {
+                var entry = table.GetEntry(dialogNode.guid);
+                if(entry != null)
+                {
+                    dialogNode.message = entry.Value;
+                }
+                return dialogNode;
+            }
+            ChoiceNode choiceNode = childToMove as ChoiceNode;
+            if (choiceNode)
+            {
+                var entry = table.GetEntry(choiceNode.guid);
+                if(entry != null)
+                {
+                    choiceNode.message = entry.Value;
+                }
+            
+                choiceNode.choices.ForEach(c =>
+                {
+                    var choiceEntry = table.GetEntry(c.guid);
+                    if(choiceEntry != null)
+                    {
+                        c.choiceMessage = choiceEntry.Value;
+                    }
+                });
+                return choiceNode;
+            }
+        }
+        return childToMove;
+    }
+#endif
 
     private void SetRunningNode(Node node)
     {
@@ -218,6 +290,9 @@ public class ConversationTree : ScriptableObject
         node.position = position;
 
         AddNodeToList(db,node);
+#if LOCALIZATION_EXIST
+        if(node is not StartNode && node is not CompleteNode) LocalizationUtils.AddDefaultKeyToCollection(node.guid,"");
+#endif
         
         return node;
     }
@@ -232,6 +307,9 @@ public class ConversationTree : ScriptableObject
         node.message = nodeToCopy.message;
 
         AddNodeToList(db,node);
+#if LOCALIZATION_EXIST
+        LocalizationUtils.AddCopyKeyToCollection(node.guid,nodeToCopy.guid);
+#endif
         
         return node;
     }
@@ -253,6 +331,9 @@ public class ConversationTree : ScriptableObject
         }
 
         AddNodeToList(db,node);
+#if LOCALIZATION_EXIST
+        LocalizationUtils.AddCopyKeyToCollection(node.guid,nodeToCopy.guid);
+#endif
         
         return node;
     }
@@ -272,7 +353,7 @@ public class ConversationTree : ScriptableObject
         AssetDatabase.SaveAssets();
     }
 
-    public void DeteleNode(Node node)
+    public void DeleteNode(Node node)
     {
         Undo.RecordObject(this, "Conversation Tree (DeleteNode)");
         nodes.Remove(node);
@@ -366,7 +447,7 @@ public class ConversationTree : ScriptableObject
         
         NodeCloningManager cloningManager = new NodeCloningManager();
         tree.startNode= cloningManager.CloneNode(tree.startNode);
-        
+        tree.conversationState = State.Idle;
         tree.groups = groups.ConvertAll(g => g.Clone());
         tree.nodes = new List<Node>();
         List<string> nonRepeatNodeList = new();

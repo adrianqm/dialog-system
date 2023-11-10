@@ -19,12 +19,12 @@ public abstract class Node : ScriptableObject
         VisitedUnreachable
     }
 
-    private State nodeState = State.Initial;
+    private State _nodeState = State.Initial;
 
     public State NodeState
     {
-        get => nodeState;
-        set => nodeState = value;
+        get => _nodeState;
+        set => _nodeState = value;
     }
 
     public bool CheckConditions()

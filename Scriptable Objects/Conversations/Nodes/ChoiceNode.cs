@@ -23,6 +23,9 @@ public class ChoiceNode : Node
         Undo.RecordObject(this, "Conversation Tree (CreateNode)");
         choices ??= new List<Choice>();
         choices.Add(node);
+#if LOCALIZATION_EXIST
+        LocalizationUtils.AddDefaultKeyToCollection(node.guid,defaultText);
+#endif
         
         if (!Application.isPlaying)
         {
@@ -38,7 +41,9 @@ public class ChoiceNode : Node
         Undo.RecordObject(this, "Choice Node (DeleteChoice)");
         choices.Remove(node);
         
-        //AssetDatabase.RemoveObjectFromAsset(node);
+#if LOCALIZATION_EXIST
+        LocalizationUtils.RemoveKeyFromCollection(node.guid);
+#endif
         Undo.DestroyObjectImmediate(node);
         AssetDatabase.SaveAssets();
     }

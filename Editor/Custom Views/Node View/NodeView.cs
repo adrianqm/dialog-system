@@ -26,6 +26,7 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
     private DialogSystemView _graphView;
     private DialogSystemDatabase _currentDatabase;
     private Action _onClearSelection;
+    private Button _disabledChoiceButton;
     
         
     public NodeView(Node node, DialogSystemView graphView, Action onClearSelection): base("Assets/dialog-system/Editor/Custom Views/Node View/NodeView.uxml")
@@ -89,6 +90,9 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
                     _onClearSelection.Invoke();
                 });
                 _messageTextField = this.Q<TextField>("message-textfield");
+#if LOCALIZATION_EXIST
+                dialogNode.message = LocalizationUtils.GetDefaultLocaleLocalizedString(node.guid);
+#endif
                 BindMessage();
                 
                 AddToClassList("dialog");
@@ -110,6 +114,9 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
                     _onClearSelection.Invoke();
                 });
                 _messageTextField = this.Q<TextField>("message-textfield");
+#if LOCALIZATION_EXIST
+                choiceNode.message = LocalizationUtils.GetDefaultLocaleLocalizedString(node.guid);
+#endif
                 BindMessage();
                 
                 SetUpChoiceNode(choiceNode);
@@ -140,16 +147,11 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
         TextField newChoiceField = new TextField();
         newChoiceField.RegisterCallback<KeyDownEvent>(e =>
         {
-            if (e.keyCode == KeyCode.Return)
-            {
-                CreateNewOutput(choiceNode,newChoiceField.value);
-                newChoiceField.value = "";
-                newChoiceField.Focus();
-            }
-        });
-        newChoiceField.RegisterCallback<FocusOutEvent>((e) =>
-        {
+            if (e.keyCode != KeyCode.Return) return;
+            CreateNewOutput(choiceNode,newChoiceField.value);
             newChoiceField.value = "";
+            newChoiceField.Focus();
+            CheckOutputRemaining();
         });
         newChoiceField.AddToClassList("choiceDataAddText");
         inputContainer.Add(newChoiceField);
@@ -166,8 +168,22 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
         {
             CreateNewOutputView(choiceNode, choice);
         }
+
+        if (choiceNode.choices.Count == 0)
+        {
+            CreateNewOutput(choiceNode, "Choice 1");
+            CreateNewOutput(choiceNode, "Choice 2");
+        }
+        else CheckOutputRemaining();
+        
         // Register New Callback
-        newChoiceButton.clickable = new Clickable(() =>CreateNewOutput(choiceNode));
+        newChoiceButton.clickable = new Clickable(() =>
+        {
+            CreateNewOutput(choiceNode, newChoiceField.value);
+            newChoiceField.value = "";
+            newChoiceField.Focus();
+            CheckOutputRemaining();
+        });
     }
     
     private void CreateNewOutput(ChoiceNode choiceNode, string defaultText = "")
@@ -214,6 +230,7 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
             _graphView.DeleteElements(edges);
             outputContainer.Remove(ve);
             portTranslationMap.Remove(newOutput);
+            CheckOutputRemaining();
         });
     }
 
@@ -308,6 +325,23 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
         BindActor(selectedActor);
     }
 
+#if LOCALIZATION_EXIST
+    public void UpdateLocalizedMessage()
+    {
+        DialogNode dialogNode = node as DialogNode;
+        if (dialogNode)
+        {
+            dialogNode.message = LocalizationUtils.GetDefaultLocaleLocalizedString(node.guid);
+        }
+        
+        ChoiceNode choiceNode = node as ChoiceNode;
+        if (choiceNode)
+        {
+            choiceNode.message = LocalizationUtils.GetDefaultLocaleLocalizedString(node.guid);
+        }
+    }
+#endif
+
     private void GetAndBindActor(Actor actor, Action<Actor> onSelectActor)
     {
         SpritePreviewElement sprite = this.Q<SpritePreviewElement>("actor-sprite");
@@ -362,18 +396,48 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
         BindMessage();
     }
 
-    void BindMessage()
+    private void BindMessage()
     {
         if (_messageTextField == null) return;
         
         _messageTextField.bindingPath = "message";
         _messageTextField.Bind(new SerializedObject(node));
         _messageTextField.RegisterCallback<FocusEvent>((e) =>{onNodeSelected(this); _onClearSelection.Invoke();});
+#if LOCALIZATION_EXIST
+        _messageTextField.RegisterCallback<FocusOutEvent>((e) =>
+        {
+            string valTrimmed = _messageTextField.value.Trim(' ');
+            string previousString = LocalizationUtils.GetDefaultLocaleLocalizedString(node.guid);
+            if (valTrimmed != "" && valTrimmed != previousString)
+            {
+                LocalizationUtils.SetDefaultLocaleEntry(node.guid,valTrimmed);
+            }
+
+            string finalTranslation = LocalizationUtils.GetDefaultLocaleLocalizedString(node.guid);
+            _messageTextField.value = finalTranslation;
+        });
+#endif
     }
     
-    void CheckForWarnings(SerializedObject serializedObject)
+    private void CheckForWarnings(SerializedObject serializedObject)
     {
         _actorSprite.style.backgroundColor = _actor.bgColor;
         _actorLabel.style.backgroundColor = _actor.bgColor;
+    }
+
+    private void CheckOutputRemaining()
+    {
+        if (outputContainer.childCount == 1)
+        {
+            VisualElement choiceElement = outputContainer.ElementAt(0);
+            Button deleteButton = choiceElement.Q<Button>(className:"choiceDataBtn");
+            deleteButton.SetEnabled(false);
+            _disabledChoiceButton = deleteButton;
+        }
+        else if (_disabledChoiceButton != null)
+        {
+            _disabledChoiceButton.SetEnabled(true);
+            _disabledChoiceButton = null;
+        }
     }
 }

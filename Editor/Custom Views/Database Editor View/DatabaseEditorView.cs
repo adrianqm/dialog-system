@@ -26,6 +26,14 @@ public class DatabaseEditorView : VisualElement
             image = texture,
         });
         closeButton.clicked += OnCloseButtonClicked;
+        
+        //Debug Mode
+        Toggle debugActivated = this.Q<Toggle>("debug-activated");
+        debugActivated.value = DSData.instance.debugMode;
+        debugActivated.RegisterValueChangedCallback((e) =>
+        {
+            DSData.instance.debugMode = e.newValue;
+        });
     }
 
     public void SetUpEditor(DialogSystemDatabase db)

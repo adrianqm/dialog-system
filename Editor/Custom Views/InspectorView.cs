@@ -16,7 +16,7 @@ public class InspectorView : VisualElement
         
         if (nodeView.node != _currentNodeView?.node)
         {
-            Clear();
+            ClearInspector();
             DialogInspectorView container = new DialogInspectorView(nodeView, actors);
             Add(container);
             _currentNodeView = nodeView;
@@ -31,7 +31,7 @@ public class InspectorView : VisualElement
 
     internal void ShowConversationInspector(ConversationTree conversationTree)
     {
-        Clear();
+        ClearInspector();
         ConversationInspectorView container = new ConversationInspectorView(conversationTree);
         Add(container);
         ResetDialogContainerValues();
@@ -46,6 +46,10 @@ public class InspectorView : VisualElement
     
     internal void ClearInspector()
     {
+        if (_currentContainer != null)
+        {
+            _currentContainer.ClearViewCallbacks();
+        }
         Clear();
     }
 }

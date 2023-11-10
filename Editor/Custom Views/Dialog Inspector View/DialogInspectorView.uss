@@ -2,7 +2,10 @@
     display: none;
 }
 
-.unity-text-field__input {
+.field {
+}
+
+.field .unity-text-field__input {
     display: flex;
     background-color: rgb(39, 45, 53);
     -unity-text-align: middle-left;
@@ -14,6 +17,10 @@
     flex-direction: row;
     flex-shrink: 1;
     flex-wrap: nowrap;
+}
+
+.unity-base-text-field__input :hover {
+    cursor: text;
 }
 
 .unity-base-text-field__multiline-container {
@@ -30,4 +37,95 @@
     flex-wrap: nowrap;
     white-space: normal;
     text-overflow: clip;
+}
+
+.preview-text {
+    color: rgb(125, 125, 125);
+    text-overflow: ellipsis;
+    font-size: 11px;
+    white-space: nowrap;
+    -unity-text-align: middle-left;
+    max-width: 100px;
+}
+
+.toggle-foldout-text {
+    min-width: 90px;
+    max-width: 100%;
+    margin-right: 3px;
+}
+
+.hidden-class {
+    display: none;
+}
+
+.choiceDataAddText {
+    flex-direction: column;
+    width: 88%;
+    margin-right: 2%;
+}
+
+.choiceDataBtn {
+    width: 9%;
+    height: 19px;
+    padding-top: 1px;
+    padding-right: 0;
+    padding-bottom: 1px;
+    padding-left: 0;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+}
+
+.choiceDeleteBtn {
+    width: 20px;
+    height: 20px;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    margin-left: 0;
+    margin-right: 2px;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.choiceDataContainer {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 7px;
+    min-height: 10px;
+    padding-left: 3px;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.preview-choice-text {
+    color: rgb(125, 125, 125);
+    font-size: 11px;
+    margin-bottom: 4px;
+    padding-top: 5px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    -unity-text-align: middle-left;
+    min-width: 100px;
+    overflow: hidden;
+}
+
+#choices-add {
+    height: 25px;
+}
+
+.messageGuidLabel {
+    color: rgb(125, 125, 125);
+    font-size: 11px;
+    text-overflow: ellipsis;
+    -unity-text-align: upper-center;
+    overflow: hidden;
+    padding-right: 5px;
+    padding-left: 5px;
+    padding-top: 0;
 }

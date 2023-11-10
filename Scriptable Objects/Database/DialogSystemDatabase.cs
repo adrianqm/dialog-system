@@ -2,7 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEditor.Localization;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Tables;
 
 [CreateAssetMenu(fileName = "New Dialog System Database", menuName = "AQM/Tools/Dialog System/Dialog System Database", order = 1)]
 public class DialogSystemDatabase : ScriptableObject
@@ -12,6 +15,13 @@ public class DialogSystemDatabase : ScriptableObject
     [HideInInspector] public string guid;
     public List<ConversationTree> conversations;
     public List<Actor> actors;
+    
+    #if LOCALIZATION_EXIST
+        public StringTableCollection tableCollection;
+        public Locale defaultLocale;
+        public StringTable defaultStringTable;
+        public bool localizationActivated;
+    #endif
 
     private ActorMultiColumListView _actorMultiColumListView;
     private DialogSystemView _treeView;

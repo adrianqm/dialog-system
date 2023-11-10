@@ -75,6 +75,22 @@ MonoBehaviour:
   title: Normal Conver
   description: Default Desc
   guid: a223aa2807906fc4083d744d323a3781
+  conversationState: 0
+--- !u!114 &-8081076407643978230
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fcdbbda8660e124a86a4a5bf54b4f31, type: 3}
+  m_Name: Choice
+  m_EditorClassIdentifier: 
+  guid: e2f768542947575438c0af7db5bb7b8d
+  choiceMessage: wawsdaw
+  children: []
 --- !u!114 &-7849650756820939181
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -228,7 +244,7 @@ MonoBehaviour:
   m_Name: DialogNode
   m_EditorClassIdentifier: 
   guid: 1dd6d5dff6c3fcd4a91004eee15a2be9
-  position: {x: 549.6, y: 86.40001}
+  position: {x: 550, y: 87.99999}
   group: {fileID: 0}
   children:
   - {fileID: -5311534606950478465}
@@ -300,7 +316,7 @@ MonoBehaviour:
   m_Name: ChoiceNode
   m_EditorClassIdentifier: 
   guid: cc8d4721bb9ced44bb36c479cdde74cd
-  position: {x: 548.7999, y: 197.59993}
+  position: {x: 550, y: 196}
   group: {fileID: 0}
   actor: {fileID: -7202288894803428011}
   message: "\xBFEs pedro tonto?"
@@ -308,6 +324,7 @@ MonoBehaviour:
   - {fileID: -7472136732273707846}
   - {fileID: -3899420329280032172}
   - {fileID: -3990425505449502838}
+  - {fileID: -8081076407643978230}
 --- !u!114 &-5478158193426519720
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -351,27 +368,13 @@ MonoBehaviour:
   - {fileID: -3610949465340375345}
   - {fileID: -3691982746697369610}
   - {fileID: 840640560164519628}
-  - {fileID: -5133446795571210198}
+  - {fileID: -1581699087142457394}
   groups: []
   runningNode: {fileID: 0}
   title: Choice Dialog
   description: Default Desc
   guid: 75cbe8ce733843c428157d5a8cf1b19e
---- !u!114 &-5345957203084204005
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fcdbbda8660e124a86a4a5bf54b4f31, type: 3}
-  m_Name: Choice
-  m_EditorClassIdentifier: 
-  guid: 749ce8ca85e9ae64cae3af69400efbea
-  choiceMessage: ccc
-  children: []
+  conversationState: 0
 --- !u!114 &-5311534606950478465
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -385,7 +388,7 @@ MonoBehaviour:
   m_Name: CompleteNode
   m_EditorClassIdentifier: 
   guid: 857f971f616b3774b9cd6fa5c326ab75
-  position: {x: 1245.9999, y: -36.99999}
+  position: {x: 1071.9999, y: 22.000017}
   group: {fileID: 0}
 --- !u!114 &-5180515183100383367
 MonoBehaviour:
@@ -405,26 +408,6 @@ MonoBehaviour:
   actor: {fileID: -315341339396191111}
   message: 
   choices: []
---- !u!114 &-5133446795571210198
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5dc96d0a450db24792528a4b013cdbe, type: 3}
-  m_Name: ChoiceNode
-  m_EditorClassIdentifier: 
-  guid: 6fd5f16deb05d9346978a6874f2a1a87
-  position: {x: 1246.448, y: 183.00002}
-  group: {fileID: 0}
-  actor: {fileID: 0}
-  message: aaa
-  choices:
-  - {fileID: 863975708937696198}
-  - {fileID: -5345957203084204005}
 --- !u!114 &-5090452286623400254
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -503,7 +486,7 @@ MonoBehaviour:
   m_Name: Choice
   m_EditorClassIdentifier: 
   guid: 5a616c66513500d4eb51f0ed19d9aa8c
-  choiceMessage: No
+  choiceMessage: Nos
   children:
   - {fileID: -3691982746697369610}
 --- !u!114 &-3794272653668301776
@@ -560,10 +543,10 @@ MonoBehaviour:
   m_Name: DialogNode
   m_EditorClassIdentifier: 
   guid: 8644088e399f34c41a80e667354d9929
-  position: {x: 884.63293, y: 283.28784}
+  position: {x: 883.9999, y: 283.20004}
   group: {fileID: 0}
   children:
-  - {fileID: -5133446795571210198}
+  - {fileID: -1581699087142457394}
   actor: {fileID: -7202288894803428011}
   message: No ni na
 --- !u!114 &-3610949465340375345
@@ -579,12 +562,12 @@ MonoBehaviour:
   m_Name: DialogNode
   m_EditorClassIdentifier: 
   guid: 0219005729bb10340921fa4a65b395a5
-  position: {x: 884.00006, y: 174.40002}
+  position: {x: 884, y: 174.99997}
   group: {fileID: 0}
   children:
-  - {fileID: -5133446795571210198}
+  - {fileID: -1581699087142457394}
   actor: {fileID: -7202288894803428011}
-  message: Ni que lo digas
+  message: Ni que lo digas ya te digo
 --- !u!114 &-3390251601246957663
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -665,12 +648,27 @@ MonoBehaviour:
   m_Name: DialogNode
   m_EditorClassIdentifier: 
   guid: 97e996ebb6efc6f4688d8ac3df0dd905
-  position: {x: 548.8001, y: -160.00005}
+  position: {x: 549.5998, y: -168.79994}
   group: {fileID: 0}
   children:
   - {fileID: -5311534606950478465}
   actor: {fileID: -7202288894803428011}
   message: Vaya gusto de mierda, rojo sangre..
+--- !u!114 &-2442518291067031729
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fcdbbda8660e124a86a4a5bf54b4f31, type: 3}
+  m_Name: Choice
+  m_EditorClassIdentifier: 
+  guid: 080c62dc92e40a24db2f430fffee6703
+  choiceMessage: Adios
+  children: []
 --- !u!114 &-2236722092604925192
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -708,6 +706,26 @@ MonoBehaviour:
   - {fileID: 8122115995240696305}
   actor: {fileID: -7202288894803428011}
   message: a
+--- !u!114 &-1581699087142457394
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5dc96d0a450db24792528a4b013cdbe, type: 3}
+  m_Name: ChoiceNode
+  m_EditorClassIdentifier: 
+  guid: ecf90e7741aa1a5469b3b132be972b79
+  position: {x: 1222, y: 231.00005}
+  group: {fileID: 0}
+  actor: {fileID: -7202288894803428011}
+  message: si?
+  choices:
+  - {fileID: -931878131831800373}
+  - {fileID: -2442518291067031729}
 --- !u!114 &-1511675361508560059
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -732,6 +750,7 @@ MonoBehaviour:
   title: Conversation 2
   description: Second Conversation
   guid: 14cfe34a053aa774588c28586df9bd78
+  conversationState: 0
 --- !u!114 &-1242048932093627224
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -746,6 +765,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   guid: 8ee023a24d7397547b234a961a63490b
   choiceMessage: Azul
+  children: []
+--- !u!114 &-931878131831800373
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fcdbbda8660e124a86a4a5bf54b4f31, type: 3}
+  m_Name: Choice
+  m_EditorClassIdentifier: 
+  guid: 31e57a88af26765499f54bb64cd5c0c6
+  choiceMessage: Hola
   children: []
 --- !u!114 &-875564993501790223
 MonoBehaviour:
@@ -797,7 +831,7 @@ MonoBehaviour:
   m_Name: Choice
   m_EditorClassIdentifier: 
   guid: 884a78b69f4afaa4da9e1288ff408d98
-  choiceMessage: Azul
+  choiceMessage: Azul pitufo
   children:
   - {fileID: 8280699233209630042}
 --- !u!114 &-93474963051940286
@@ -841,6 +875,10 @@ MonoBehaviour:
   - {fileID: -7202288894803428011}
   - {fileID: -315341339396191111}
   - {fileID: -7824585118953527511}
+  tableCollection: {fileID: 11400000, guid: 43c5f171d732daa468157c2025221dfe, type: 2}
+  defaultLocale: {fileID: 11400000, guid: 9f85adcacfbefea4ba354cbadfe33bd0, type: 2}
+  defaultStringTable: {fileID: 11400000, guid: 16b8bd463f2d2c7499fd16ef547bfdfc, type: 2}
+  localizationActivated: 1
 --- !u!114 &27963429755922888
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -854,10 +892,10 @@ MonoBehaviour:
   m_Name: ChoiceNode
   m_EditorClassIdentifier: 
   guid: 70eaa9555160b6147bcd4f0fa2bef3fb
-  position: {x: 196, y: -107.31999}
+  position: {x: 193.59999, y: -107.20002}
   group: {fileID: 0}
   actor: {fileID: -7202288894803428011}
-  message: "\xBFCual es tu color favorito?"
+  message: "\xBFCual es tu color favorito? Nen"
   choices:
   - {fileID: 6147543173593425840}
   - {fileID: -116218828020163764}
@@ -876,26 +914,11 @@ MonoBehaviour:
   m_Name: DialogNode
   m_EditorClassIdentifier: 
   guid: 52f7a4bbc37c5fb45b8c1577405b7697
-  position: {x: 884.63293, y: 392.0879}
+  position: {x: 884.00006, y: 392.99997}
   group: {fileID: 0}
   children: []
   actor: {fileID: -7202288894803428011}
   message: Te digo yo que si
---- !u!114 &863975708937696198
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fcdbbda8660e124a86a4a5bf54b4f31, type: 3}
-  m_Name: Choice
-  m_EditorClassIdentifier: 
-  guid: 00c1f82c9eb7f1b459b3b0f5d661ecb2
-  choiceMessage: bb
-  children: []
 --- !u!114 &978566331665916356
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1224,7 +1247,7 @@ MonoBehaviour:
   m_Name: Choice
   m_EditorClassIdentifier: 
   guid: dbdf7bacd44e9404ba63402121e9ae96
-  choiceMessage: Rojo
+  choiceMessage: Rojo sangre
   children:
   - {fileID: -2586893916623026644}
 --- !u!114 &6227142754766596748
@@ -1271,6 +1294,7 @@ MonoBehaviour:
   title: Normal Dialog
   description: Default Desc
   guid: 61db6ef24a0d8474087af4aa3c75c7c9
+  conversationState: 0
 --- !u!114 &7045443450395205963
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1355,7 +1379,7 @@ MonoBehaviour:
   m_Name: DialogNode
   m_EditorClassIdentifier: 
   guid: f47a1b4723390d542b74d8f0f5b62343
-  position: {x: 549.6, y: -36.80002}
+  position: {x: 549.99994, y: -33.99998}
   group: {fileID: 0}
   children:
   - {fileID: -5311534606950478465}

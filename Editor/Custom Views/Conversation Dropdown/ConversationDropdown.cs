@@ -70,12 +70,12 @@ public class ConversationDropdown  : VisualElement
     void BindConversation(ConversationTree conversation)
     {
         if(conversationSelected != null)
-            conversationSelected.OnNameChanged -= UpdateButtonText;
+            conversationSelected.onNameChanged -= UpdateButtonText;
         
         conversationSelected = conversation;
 
         if(conversation != null)
-            conversationSelected.OnNameChanged += UpdateButtonText;
+            conversationSelected.onNameChanged += UpdateButtonText;
     }
     
     private void UpdateButtonText()

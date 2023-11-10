@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using AQM.Tools;
 using UnityEngine;
 using UnityEngine.InputSystem;
+#if LOCALIZATION_EXIST
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
+#endif
 using PlayerInputManager = AQM.Tools.PlayerInputManager;
 
 public class DialogSystemController : Singleton<DialogSystemController>
@@ -60,11 +64,38 @@ public class DialogSystemController : Singleton<DialogSystemController>
         
         _currentConversation = conversationTree;
         _currentChoiceNode = null;
-        _currentConversation.OnEndConversation += EndConversation;
+        _currentConversation.onEndConversation += EndConversation;
+        
+        #if LOCALIZATION_EXIST
+            LocalizationSettings.SelectedLocaleChanged += ChangedLocale;
+        #endif
         
         Node nextNode = _currentConversation.StartConversation();
         HandleNextNode(nextNode);
     }
+    
+#if LOCALIZATION_EXIST
+    private void ChangedLocale(Locale locale){
+        print("Changed locale to " + locale.name);
+        if (!_currentConversation) return;
+        Node currentNode = _currentConversation.GetCurrentNode();
+        if (currentNode)
+        {
+            DialogNode dialogNode = currentNode as DialogNode;
+            if (dialogNode)
+            {
+                onShowNewDialog?.Invoke(dialogNode);
+            }
+        
+            ChoiceNode choiceNode = currentNode as ChoiceNode;
+            if (choiceNode)
+            {
+                onShowNewChoice?.Invoke(_currentChoiceNode);
+            }
+        }
+    }
+#endif
+    
 
     private void NextMessage(InputAction.CallbackContext context)
     {
@@ -75,7 +106,6 @@ public class DialogSystemController : Singleton<DialogSystemController>
 
     private void HandleNextNode(Node nextNode)
     {
-        
         DialogNode dialogNode = nextNode as DialogNode;
         if (dialogNode)
         {
@@ -119,8 +149,13 @@ public class DialogSystemController : Singleton<DialogSystemController>
         PlayerGeneralEvents.onPlayerStoppedExit.Invoke();
         _playerInputs.Click.started -= NextMessage;
         _playerInputs.Submit.started -= NextMessage;
-        _currentConversation.OnEndConversation -= EndConversation;
+        _currentConversation.onEndConversation -= EndConversation;
+        _currentConversation = null;
         onConversationEnded?.Invoke();
+        
+        #if LOCALIZATION_EXIST
+            LocalizationSettings.SelectedLocaleChanged -= ChangedLocale;
+        #endif
     }
 
     private void OnDestroy()

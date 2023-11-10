@@ -8,8 +8,8 @@ using UnityEngine.UIElements;
 
 public class ToolbarHeaderView : VisualElement
 {
-    public Action<DialogSystemDatabase> OnDatabaseSelected;
-    public Action OnEditDatabase, OnCreateDatabase, OnRemoveDatabase;
+    public Action<DialogSystemDatabase> onDatabaseSelected;
+    public Action onEditDatabase, onCreateDatabase, onRemoveDatabase, onLocalizeDatabase;
     private readonly Label _databaseTitle;
     public new class UxmlFactory:  UxmlFactory<ToolbarHeaderView, ToolbarHeaderView.UxmlTraits> {}
 
@@ -21,6 +21,7 @@ public class ToolbarHeaderView : VisualElement
         _databaseTitle =this.Q<Label>("database-name");
         SetUpAddNewButton();
         SetUpDeleteButton();
+        SetUpLocalizationButton();
         SetUpEditButton();
         VisualElement fieldContainer = this.Q("db-object-container-field");
         var dbSelector = new ObjectField
@@ -35,7 +36,7 @@ public class ToolbarHeaderView : VisualElement
         {
             if (e.newValue == null) return;
             var db = e.newValue as DialogSystemDatabase;
-            OnDatabaseSelected?.Invoke(db);
+            onDatabaseSelected?.Invoke(db);
         };
         dbSelector.RegisterValueChangedCallback(changeEvent);
     }
@@ -82,19 +83,38 @@ public class ToolbarHeaderView : VisualElement
         button.clicked += OpenEditModal;
     }
 
+    private void SetUpLocalizationButton()
+    {
+        VisualElement localizationButton =this.Q("db-localization-button");
+        var texture = EditorGUIUtility.IconContent("d_SearchQueryAsset Icon").image;
+        var button = new Button();
+        button.AddToClassList("db-button");
+        button.focusable = false;
+        localizationButton.Add(button);
+        button.Add(new Image {
+            image = texture,
+        });
+        button.clicked += OpenLocalizationModal;
+    }
+
     private void OpenEditModal()
     {
-        OnEditDatabase?.Invoke();
+        onEditDatabase?.Invoke();
+    }
+    
+    private void OpenLocalizationModal()
+    {
+        onLocalizeDatabase?.Invoke();
     }
 
     private void OpenNewDatabase()
     {
-        OnCreateDatabase?.Invoke();
+        onCreateDatabase?.Invoke();
     }
 
     private void OpenConfirmationModal()
     {
-        OnRemoveDatabase?.Invoke();
+        onRemoveDatabase?.Invoke();
     }
     
     public void SetUpSelector(DialogSystemDatabase db)

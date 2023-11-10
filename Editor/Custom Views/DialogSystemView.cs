@@ -6,13 +6,18 @@ using Unity.Plastic.Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine.UIElements;
 using UnityEditor.Experimental.GraphView;
-using UnityEditor.Graphs;
 using UnityEngine;
+
+#if LOCALIZATION_EXIST
+    using UnityEditor.Localization;
+    using UnityEngine.Localization.Tables;
+#endif
+
 using Edge = UnityEditor.Experimental.GraphView.Edge;
 using Random = UnityEngine.Random;
 public class DialogSystemView : GraphView
 {
-    public Action<NodeView> OnNodeSelected;
+    public Action<NodeView> onNodeSelected;
     public Action onNodesRemoved;
     public new class UxmlFactory : UxmlFactory<DialogSystemView, GraphView.UxmlTraits> {}
 
@@ -40,6 +45,9 @@ public class DialogSystemView : GraphView
         styleSheets.Add(styleSheet);
 
         Undo.undoRedoPerformed += OnUndoRedo;
+        #if LOCALIZATION_EXIST
+            LocalizationEditorSettings.EditorEvents.TableEntryModified += TableEntryModified;
+        #endif
     }
     
     public void SetUpTreeView(DialogSystemDatabase db)
@@ -165,7 +173,7 @@ public class DialogSystemView : GraphView
         serializeGraphElements -= CutCopyOperation;
         unserializeAndPaste -= PasteOperation;
         canPasteSerializedData -= CanPaste;
-        _tree.OnUpdateViewStates -= OnUpdateStates;
+        _tree.onUpdateViewStates -= OnUpdateStates;
         UnregisterCallback<KeyDownEvent>(DisableRedoAction);
         
         DeleteElements(graphElements);
@@ -174,7 +182,7 @@ public class DialogSystemView : GraphView
         serializeGraphElements += CutCopyOperation;
         unserializeAndPaste += PasteOperation;
         canPasteSerializedData += CanPaste;
-        _tree.OnUpdateViewStates += OnUpdateStates;
+        _tree.onUpdateViewStates += OnUpdateStates;
         RegisterCallback<KeyDownEvent>(DisableRedoAction);
         
         
@@ -319,8 +327,8 @@ public class DialogSystemView : GraphView
                 CreateChoiceNodeCopy(
                     serializableChoiceNode.position.ToVector2() - offset,serializableChoiceNode,choiceTranslationMap);
             nodeTranslationMap.Add(serializableChoiceNode.guid,nodeView);
-
             AddToSelection(nodeView);
+            
 
             if (serializableChoiceNode.group != null)
             {
@@ -332,6 +340,9 @@ public class DialogSystemView : GraphView
                 }
             }
         }
+#if LOCALIZATION_EXIST
+        LocalizationUtils.RefreshStringTableCollection(DSData.instance.database.tableCollection);
+#endif
         
         // Create Dialog Edges
         foreach (SerializableDialogNode serializedDialogNode in cutCopyData.dialogNodesToCopy)
@@ -408,12 +419,18 @@ public class DialogSystemView : GraphView
             }
 
             bool nodeHasBeenRemoved = false;
+#if LOCALIZATION_EXIST
+            List<string> keysDeleted = new List<string>();
+#endif
             // Delete elements
             foreach (GraphElement element in graphViewChange.elementsToRemove)
             {
                 NodeView nodeView = element as NodeView;
                 if (nodeView != null)
                 {
+#if LOCALIZATION_EXIST
+                    keysDeleted.Add(nodeView.node.guid);
+#endif
                     DeleteNode(nodeView.node);
                     nodeHasBeenRemoved = true;
                     continue;
@@ -435,6 +452,9 @@ public class DialogSystemView : GraphView
                 }
             }
             if(nodeHasBeenRemoved) onNodesRemoved?.Invoke();
+#if LOCALIZATION_EXIST
+            if(keysDeleted.Count > 0) LocalizationUtils.RemoveKeysFromCollection(keysDeleted);
+#endif
         }
         
         if (graphViewChange.edgesToCreate != null)
@@ -512,8 +532,9 @@ public class DialogSystemView : GraphView
         
         GroupNodeView groupNodeView = new GroupNodeView(groupNode);
         AddElement(groupNodeView);
-        foreach (GraphElement selectedElement  in selection)
+        foreach (var selectable  in selection)
         {
+            var selectedElement = (GraphElement) selectable;
             if (!(selectedElement is NodeView))
             {
                 continue;
@@ -553,7 +574,7 @@ public class DialogSystemView : GraphView
         if (node == null) return null;
         
         NodeView nodeView = new NodeView(node,this, ClearSelection);
-        nodeView.onNodeSelected = OnNodeSelected;
+        nodeView.onNodeSelected = onNodeSelected;
         AddElement(nodeView);
         
         if (node.group)
@@ -566,7 +587,7 @@ public class DialogSystemView : GraphView
     }
     private void DeleteNode(Node node)
     {
-        _tree.DeteleNode(node);
+        _tree.DeleteNode(node);
         
         // In case that suppress button works
         if (node is StartNode)
@@ -582,6 +603,14 @@ public class DialogSystemView : GraphView
             NodeView view = n as NodeView;
             view.UpdateState();
         });
+    }
+
+    private void TableEntryModified(SharedTableData.SharedTableEntry tableEntry)
+    {
+        if (GetNodeByGuid(tableEntry.Key) is NodeView nodeView)
+        {
+            nodeView.UpdateLocalizedMessage();
+        }
     }
 
     public void ClearGraph()

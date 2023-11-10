@@ -77,13 +77,14 @@
     border-bottom-right-radius: 4px;
 }
 
-.unity-foldout__content {
-    margin-top: 0;
-    margin-right: 0;
-    margin-bottom: 0;
-    margin-left: 0;
-    padding-top: 0;
-    padding-right: 0;
-    padding-bottom: 0;
-    padding-left: 0;
+.unity-base-field__label {
+    display: none;
+}
+
+.field-object-error {
+    background-color: rgba(255, 0, 0, 0.25);
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
 }
