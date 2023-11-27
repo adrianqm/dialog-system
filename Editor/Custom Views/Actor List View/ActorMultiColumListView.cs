@@ -2,14 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Codice.Client.BaseCommands.Merge.Xml;
-using NUnit.Framework;
+using AQM.Tools;
 using UnityEditor;
-using UnityEditor.Search;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Object = System.Object;
 using ObjectField = UnityEditor.UIElements.ObjectField;
 
 public class ActorMultiColumListView : MultiColumnListView
@@ -56,7 +53,7 @@ public class ActorMultiColumListView : MultiColumnListView
     {
         if (_database)
         {
-            _database.CreateActor();
+            DatabaseUtils.CreateActor(_database);
             _currentActorList = _database.actors;
             _searchField?.SetValueWithoutNotify("");
             RefreshTable();
@@ -256,7 +253,7 @@ public class ActorMultiColumListView : MultiColumnListView
 
     private void DeleteActor(Actor actor)
     {
-        _database.DeteleActor(actor);
+        DatabaseUtils.DeleteActor(_database,actor);
         if (_currentActorList.Contains(actor)) _currentActorList.Remove(actor);
         onActorsRemoved?.Invoke();
     }
@@ -368,3 +365,4 @@ public class ActorMultiColumListView : MultiColumnListView
         _unregisterAll = null;
     }
 }
+

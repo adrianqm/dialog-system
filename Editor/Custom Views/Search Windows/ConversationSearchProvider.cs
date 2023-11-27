@@ -3,12 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ConversationSearchProvider : DataSearchProvider<ConversationTree>
+namespace AQM.Tools
 {
-    public override void Init(List<KeyValuePair<ConversationTree, string>> quests, Action<ConversationTree> callback)
+    public class ConversationSearchProvider : DataSearchProvider<ConversationTree>
     {
-        base.Init(quests, callback);
+        public override void Init(List<KeyValuePair<ConversationTree, string>> quests, Action<ConversationTree> callback)
+        {
+            base.Init(quests, callback);
 
-        searchTreeTitle = "Conversations";
+            searchTreeTitle = "Conversations";
+        }
     }
 }

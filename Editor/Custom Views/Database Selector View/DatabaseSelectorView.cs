@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using AQM.Tools;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -12,7 +13,7 @@ public class DatabaseSelectorView : VisualElement
     public Action OnCreateNewDatabaseClicked;
     private ObjectField _dbSelector;
     public new class UxmlFactory:  UxmlFactory<DatabaseSelectorView, DatabaseSelectorView.UxmlTraits> {}
-    
+
     public DatabaseSelectorView()
     {
         string uriFile = "Assets/dialog-system/Editor/Custom Views/Database Selector View/DatabaseSelectorView.uxml";
@@ -26,7 +27,7 @@ public class DatabaseSelectorView : VisualElement
             objectType = typeof(DialogSystemDatabase)
         };
         fieldContainer.Add(_dbSelector);
-        
+    
         RegisterCallbacks();
     }
 
@@ -44,13 +45,14 @@ public class DatabaseSelectorView : VisualElement
                 OnDatabaseSelected?.Invoke(e.newValue as DialogSystemDatabase);
             }
         };
- 
+
         _dbSelector.RegisterValueChangedCallback(changeEvent);
     }
-    
+
 
     private void OnCreateNewButtonClicked()
     {
         OnCreateNewDatabaseClicked?.Invoke();
     }
 }
+

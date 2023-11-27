@@ -2,15 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Codice.Client.BaseCommands.Merge.Xml;
-using NUnit.Framework;
+using AQM.Tools;
 using UnityEditor;
-using UnityEditor.Search;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Object = System.Object;
-using ObjectField = UnityEditor.UIElements.ObjectField;
 
 public class ConversationMultiColumListView : MultiColumnListView
 {
@@ -212,6 +208,7 @@ public class ConversationMultiColumListView : MultiColumnListView
                     if (valTrimmed != "")
                     {
                         _currentConversationList[index].SetName(valTrimmed);
+                        EditorUtility.SetDirty(_currentConversationList[index]);
                     }
                     title.value = _currentConversationList[index].title;
                 });
@@ -370,3 +367,4 @@ public class ConversationMultiColumListView : MultiColumnListView
         _unregisterAll = null;
     }
 }
+

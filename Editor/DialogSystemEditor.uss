@@ -48,3 +48,14 @@ GridBackground {
 .disabled-label-text {
     color: rgba(152, 152, 152, 0.5);
 }
+
+#open-string-collection {
+    height: 20px;
+    width: 20px;
+    padding-top: 2px;
+    padding-right: 2px;
+    padding-bottom: 2px;
+    padding-left: 2px;
+    flex-direction: row;
+    align-self: center;
+}

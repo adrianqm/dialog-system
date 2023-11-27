@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using AQM.Tools;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
@@ -12,6 +13,7 @@ using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.Tables;
 #endif
 using UnityEngine.UIElements;
+using Node = AQM.Tools.Node;
 
 public class DialogInspectorView : VisualElement
 {
@@ -25,14 +27,21 @@ public class DialogInspectorView : VisualElement
     private VisualElement _choicesAddVE;
     private VisualElement _choicesFoldoutVE;
     private Button _disabledChoiceButton;
+    private Button _findActorButton;
+    private VisualElement _actorContainer;
+    private Actor _actor;
 #if LOCALIZATION_EXIST
-    private Dictionary<KeyValuePair<string,Locale>, KeyValuePair<Label, TextField>> _translationMapText = new();
+    private Dictionary<string, KeyValuePair<Label,TextField>> _translationMapText = new();
     private StringTableCollection _collection;
     private Locale _defaultLocale;
+    private SpritePreviewElement _actorSprite;
+    private Label _actorName;
+    private SerializedObject _actorSerialized;
 #endif
+    private Dictionary<string, VisualElement> _choicesMap = new();
     private Action _unregisterAll = null;
     
-    public DialogInspectorView(NodeView nodeView,List<Actor> actors)
+    public DialogInspectorView(NodeView nodeView)
     {
         string uriFile = "Assets/dialog-system/Editor/Custom Views/Dialog Inspector View/DialogInspectorView.uxml";
         (EditorGUIUtility.Load(uriFile) as VisualTreeAsset)?.CloneTree(this);
@@ -40,8 +49,14 @@ public class DialogInspectorView : VisualElement
         _currentDatabase = DSData.instance.database;
         _nodeView = nodeView;
         _node = nodeView.node;
-        _actors = actors;
+        _actors = DSData.instance.database.actors;
         _messageTextField = this.Q<TextField>("message-text-field");
+        SetUp();
+    }
+
+    void SetUp()
+    {
+        _choicesMap = new();
         if (_node is not StartNode && _node is not CompleteNode)
         {
             if(_node is DialogNode)
@@ -56,35 +71,11 @@ public class DialogInspectorView : VisualElement
         }
     }
 
-    public void SoftUpdate(NodeView nodeView,List<Actor> actors)
-    {
-        _nodeView = nodeView;
-        _node = nodeView.node;
-        _actors = actors;
-        
-        if(_node is DialogNode dialogNode)
-        {
-            BindActor(dialogNode.actor,(actor) =>
-            {
-                dialogNode.actor = actor;
-                EditorUtility.SetDirty(dialogNode);
-            });
-        }else if (_node is ChoiceNode choiceNode)
-        {
-            BindActor(choiceNode.actor,(actor) =>
-            {
-                choiceNode.actor = actor;
-                EditorUtility.SetDirty(choiceNode);
-            });
-        }
-        
-    }
-
     private void PopulateDialogInspector(DialogNode node)
     {
         if (node == null) return;
         SetUpDialogClasses();
-        BindActor(node.actor, (actor) =>
+        GetAndBindActor(node.actor, (actor) =>
         {
             node.actor = actor;
             EditorUtility.SetDirty(node);
@@ -100,7 +91,7 @@ public class DialogInspectorView : VisualElement
     {
         if (node == null) return;
         SetUpChoiceClasses();
-        BindActor(node.actor,(actor) =>
+        GetAndBindActor(node.actor,(actor) =>
         {
             node.actor = actor;
             EditorUtility.SetDirty(node);
@@ -116,7 +107,9 @@ public class DialogInspectorView : VisualElement
     private void BindChoices(ChoiceNode node)
     {
         _choicesAddVE = this.Q("choices-add");
+        _choicesAddVE.Clear();
         _choicesFoldoutVE = this.Q("choices-foldout");
+        _choicesFoldoutVE.Clear();
         TextField addField = AddChoiceTextField(node);
         Button addButton = AddChoiceButton(node);
         
@@ -167,8 +160,17 @@ public class DialogInspectorView : VisualElement
 
     private void CreateNewChoice(ChoiceNode choiceNode, string defaultText)
     {
-        Choice choice = choiceNode.CreateChoice(_currentDatabase, defaultText);
+        Choice choice = ChoiceUtils.CreateChoice(_currentDatabase, choiceNode, defaultText);
         CreateNewOutputView(choiceNode, choice);
+        _nodeView.OnChoiceAdded(choiceNode,choice);
+    }
+
+    private void RemoveOutputView(VisualElement ve, Choice choice)
+    {
+        _translationMapText.Remove(choice.guid);
+        _choicesMap.Remove(choice.guid);
+        _choicesFoldoutVE.Remove(ve);
+        CheckOutputRemaining();
     }
 
     private void CreateNewOutputView(ChoiceNode choiceNode, Choice choice)
@@ -181,20 +183,47 @@ public class DialogInspectorView : VisualElement
             image = EditorGUIUtility.IconContent("TreeEditor.Trash").image
         });
         deleteButton.AddToClassList("choiceDeleteBtn");
+        deleteButton.clickable = new Clickable(() =>
+        {
+            ve.Unbind();
+            _nodeView.OnChoiceRemoved(choice);
+            ChoiceUtils.DeleteChoice(choiceNode,choice);
+            RemoveOutputView(ve, choice);
+        });
         ve.Add(deleteButton);
 
 #if LOCALIZATION_EXIST
         VisualElement choiceLocalizationContainer = new VisualElement();
-        
-        Label choiceId = new Label(choice.guid);
-        choiceId.AddToClassList("preview-choice-text");
-        choiceLocalizationContainer.Add(choiceId);
         
         VisualElement choiceLocalization = new VisualElement();
         choiceLocalizationContainer.Add(choiceLocalization);
         
         BindLocalizationElement(choiceLocalization, choiceNode, choice);
         ve.Add(choiceLocalizationContainer);
+        
+        VisualElement idVe = new VisualElement();
+        idVe.AddToClassList("message-guid-choice-container");
+        Label labelId = new Label("ID");
+        labelId.AddToClassList("message-guid-id");
+        idVe.Add(labelId);
+            
+        VisualElement copyButtonVe = new VisualElement();
+        copyButtonVe.AddToClassList("message-guid-copy-container");
+        Button copyButton = new Button();
+        copyButton.Add(new Image {
+            image = EditorGUIUtility.IconContent("d_winbtn_win_restore_a").image
+        });
+        copyButton.AddToClassList("copyBtn");
+        copyButton.clickable = new Clickable(() =>
+        {
+            TextEditor te = new TextEditor();
+            te.text = choice.guid;
+            te.SelectAll();
+            te.Copy();
+        });
+        copyButtonVe.Add(copyButton);
+        idVe.Add(copyButtonVe);
+        ve.Add(idVe);
 #else
         TextField translatedText = new TextField {multiline = true};
         translatedText.style.marginRight = 0;
@@ -203,7 +232,7 @@ public class DialogInspectorView : VisualElement
         translatedText.Bind(new SerializedObject(choice));
         ve.Add(translatedText);
 #endif
-        
+        _choicesMap.Add(choice.guid,ve);
         _choicesFoldoutVE.Add(ve);
     }
 
@@ -212,7 +241,7 @@ public class DialogInspectorView : VisualElement
         if (_choicesFoldoutVE.childCount == 1)
         {
             VisualElement choiceElement = _choicesFoldoutVE.ElementAt(0);
-            Button deleteButton = choiceElement.Q<Button>(className:"choiceDataBtn");
+            Button deleteButton = choiceElement.Q<Button>(className:"choiceDeleteBtn");
             deleteButton.SetEnabled(false);
             _disabledChoiceButton = deleteButton;
         }
@@ -226,115 +255,95 @@ public class DialogInspectorView : VisualElement
 #if LOCALIZATION_EXIST
     private void BindLocalization(Node node)
     {
-        if (!DSData.instance.database.tableCollection || !DSData.instance.database.defaultLocale) return;
+        if (!DSData.instance.tableCollection || !DSData.instance.database.defaultLocale) return;
         
-        _collection = DSData.instance.database.tableCollection;
+        _collection = DSData.instance.tableCollection;
         _defaultLocale = DSData.instance.database.defaultLocale;
         _translationMapText.Clear();
-        LocalizationEditorSettings.EditorEvents.TableEntryModified += TableEntryModified;
-        LocalizationEditorSettings.EditorEvents.LocaleAdded += LocaleAddedRemoved;
-        LocalizationEditorSettings.EditorEvents.LocaleRemoved += LocaleAddedRemoved;
         LocalizationSettings.InitializationOperation.WaitForCompletion();
         
         VisualElement localizationMessageVe = this.Q("localization-message");
         BindLocalizationElement(localizationMessageVe,node);
         
-        Label messageGuidLabel = this.Q<Label>("message-guid-label");
-        messageGuidLabel.RemoveFromClassList("hidden-class");
-        messageGuidLabel.text = node.guid;
+        VisualElement copyVe = this.Q("message-guid-copy-container");
+        copyVe.Clear();
+        Button copyButton = new Button();
+        copyButton.Add(new Image {
+            image = EditorGUIUtility.IconContent("d_winbtn_win_restore_a").image
+        });
+        copyButton.AddToClassList("copyBtn");
+        copyButton.clickable = new Clickable(() =>
+        {
+            TextEditor te = new TextEditor();
+            te.text = node.guid;
+            te.SelectAll();
+            te.Copy();
+        });
+        copyVe.Add(copyButton);
     }
 
     private void BindLocalizationElement(VisualElement localizationContainer, Node node, Choice choice = null)
     {
+        localizationContainer.Unbind();
         localizationContainer.Clear();
         string tableGuid = choice != null ? choice.guid : node.guid;
+        StringTable table = DSData.instance.defaultStringTable;
+        string translation = LocalizationUtils.GetLocalizedString(table, tableGuid);
         
-        int localeIndex = LocalizationSettings.AvailableLocales.Locales.IndexOf(_defaultLocale);
-        List<Locale> locales = LocalizationSettings.AvailableLocales.Locales.MoveItemAtIndexToFront(localeIndex);
-        foreach (var locale in locales)
-        {
-            StringTable table = LocalizationSettings.StringDatabase.GetTable(_collection.name,locale);
-            string translation = LocalizationUtils.GetLocalizedString(table, tableGuid);
+        TextField translatedText = new TextField {multiline = true};
+        Label toggleText = null;
 
-            bool isFoldOpened = _defaultLocale == locale && choice == null;
-            var localeFoldout = new Foldout {text = locale.Identifier.CultureInfo.DisplayName, value = isFoldOpened};
-            localeFoldout.style.marginBottom = 5;
+        if (choice)
+        {
+            translatedText.style.marginRight = 3;
+            translatedText.AddToClassList("choice");
+            var foldOut = new Foldout{text= "-", value = false};
+            foldOut.Add(translatedText);
+            localizationContainer.Add(foldOut);
             
-            TextField translatedText = new TextField {multiline = true};
-            translatedText.style.marginRight = choice == null?0:7;
-            translatedText.AddToClassList("field");
-            
-            if (_defaultLocale == locale)
-            {
-                if (choice == null)
-                {
-                    translatedText.bindingPath = "message";
-                    translatedText.Bind(new SerializedObject(node));
-                }
-                else
-                {
-                    translatedText.bindingPath = "choiceMessage";
-                    translatedText.Bind(new SerializedObject(choice));
-                }
-            }
-            
-            localeFoldout.Add(translatedText);
-            localizationContainer.Add(localeFoldout);
-            
-            VisualElement toggleInputVe = localeFoldout.Q(className: "unity-foldout__input");
-            VisualElement foldoutContentVe = localeFoldout.Q(className: "unity-foldout__content");
+            VisualElement toggleInputVe = foldOut.Q(className: "unity-foldout__input");
+            VisualElement foldoutContentVe = foldOut.Q(className: "unity-foldout__content");
             foldoutContentVe.style.marginLeft = 0;
-            Label toggleText = toggleInputVe.Q<Label>(className: "unity-foldout__text");
+            toggleText = toggleInputVe.Q<Label>(className: "unity-foldout__text");
             toggleText.AddToClassList("toggle-foldout-text");
-                
-            Label translationString = new Label(translation);
-            translationString.AddToClassList("preview-text");
-            toggleInputVe.Add(translationString);
-            translatedText.value = translation;
-            EventCallback<FocusOutEvent> focusOutEvent = (e) =>
-            {
-                string valTrimmed = translatedText.value.Trim(' ');
-                string previousString = LocalizationUtils.GetLocalizedString(table, tableGuid);
-                if (valTrimmed != "" && valTrimmed != previousString)
-                {
-                    table.AddEntry(tableGuid,valTrimmed);
-                    LocalizationUtils.RefreshStringTableCollection(_collection, table);
-                }
-
-                string finalTranslation = LocalizationUtils.GetLocalizedString(table, tableGuid);
-                translatedText.value = finalTranslation;
-                translationString.text = finalTranslation;
-            };
-            translatedText.RegisterCallback(focusOutEvent);
-            _translationMapText.Add(new KeyValuePair<string, Locale>(tableGuid,locale),new KeyValuePair<Label, TextField>(translationString,translatedText));
-            _unregisterAll += () => translatedText.UnregisterCallback(focusOutEvent);
+            toggleText.bindingPath = "choiceMessage";
+            toggleText.Bind(new SerializedObject(choice));
         }
-    }
-
-    private void TableEntryModified(SharedTableData.SharedTableEntry tableEntry)
-    {
-        if (!_node.guid.Equals(tableEntry.Key) && 
-            (_choiceNode && _choiceNode.choices.FindIndex(c => c.guid.Equals(tableEntry.Key)) == -1))  return;
-        foreach(KeyValuePair<KeyValuePair<string, Locale>,KeyValuePair<Label,TextField>> entry in _translationMapText)
+        else
         {
-            if(!entry.Key.Key.Equals(tableEntry.Key)) continue;
-            StringTable table = LocalizationSettings.StringDatabase.GetTable(_collection.name,entry.Key.Value);
-            string translation = LocalizationUtils.GetLocalizedString(table, entry.Key.Key);
-            
-            Label currentLabel = entry.Value.Key;
-            if (currentLabel != null)
-            {
-                currentLabel.text = translation;
-            }
-            TextField currentTexField = entry.Value.Value;
-            currentTexField.value = translation;
+            translatedText.style.marginRight = 0;
+            translatedText.AddToClassList("field");
+            localizationContainer.Add(translatedText);
         }
-    }
-    
-    private void LocaleAddedRemoved(Locale locale)
-    {
-        ClearAllValueChangedCallbacks();
-        BindLocalization(_node);
+        
+        if (choice == null)
+        {
+            translatedText.bindingPath = "message";
+            translatedText.Bind(new SerializedObject(node));
+        }
+        else
+        {
+            translatedText.bindingPath = "choiceMessage";
+            translatedText.Bind(new SerializedObject(choice));
+        }
+        
+        translatedText.value = translation;
+        EventCallback<FocusOutEvent> focusOutEvent = (e) =>
+        {
+            string valTrimmed = translatedText.value.Trim(' ');
+            string previousString = LocalizationUtils.GetLocalizedString(table, tableGuid);
+            if (valTrimmed != "" && valTrimmed != previousString)
+            {
+                table.AddEntry(tableGuid,valTrimmed);
+                LocalizationUtils.RefreshStringTableCollection(_collection, table);
+            }
+
+            string finalTranslation = LocalizationUtils.GetLocalizedString(table, tableGuid);
+            translatedText.value = finalTranslation;
+        };
+        translatedText.RegisterCallback(focusOutEvent);
+        _translationMapText.Add(tableGuid,new KeyValuePair<Label, TextField>(toggleText,translatedText));
+        _unregisterAll += () => translatedText.UnregisterCallback(focusOutEvent);
     }
 #endif
 
@@ -345,33 +354,30 @@ public class DialogInspectorView : VisualElement
         _messageTextField.Bind(new SerializedObject(node));
     }
 
-    private void BindActor(Actor actor, Action<Actor> onSelectActor)
+    private void GetAndBindActor(Actor actor, Action<Actor> onSelectActor)
     {
-        Button findActorButton = this.Q<Button>("find-actor-button");
-        SpritePreviewElement actorSprite = this.Q<SpritePreviewElement>("actor-sprite");
-        Label actorName = this.Q<Label>("actor-name");
-        actorSprite.bindingPath = "actorImage";
-        actorName.bindingPath = "fullName";
+        _actorSprite = this.Q<SpritePreviewElement>("actor-sprite");
+        _actorName = this.Q<Label>("actor-name");
+        _actorSprite.bindingPath = "actorImage";
+        _actorName.bindingPath = "fullName";
             
         if (actor)
         {
-            actorSprite.Bind(new SerializedObject(actor));
-            actorName.Bind(new SerializedObject(actor));
+            BindActor(actor);
         }
         else
         {
-            actorSprite.value = Resources.Load<Sprite>( "unknown-person" );
-            actorName.text = "Unknown Dialog Actor";
+            _actorSprite.value = Resources.Load<Sprite>( "unknown-person" );
+            _actorName.text = "Unknown Dialog Actor";
         }
-        findActorButton.clickable = new Clickable(() =>
+        _findActorButton.clickable = new Clickable(() =>
         {
             ActorsSearchProvider provider =
                 ScriptableObject.CreateInstance<ActorsSearchProvider>();
             provider.SetUp(_actors,
                 (actorSelected) =>
                 {
-                    actorSprite.Bind(new SerializedObject(actorSelected));
-                    actorName.Bind(new SerializedObject(actorSelected));
+                    BindActor(actorSelected);
                     _nodeView.UpdateActorToBind(actorSelected);
                     onSelectActor.Invoke(actorSelected);
                 });
@@ -379,20 +385,38 @@ public class DialogInspectorView : VisualElement
                 provider);
         });
     }
+    
+    private void HandleActorChanges(SerializedObject serializedObject)
+    {
+        _actorContainer.style.backgroundColor = _actor.bgColor;
+    }
 
     public void ClearViewCallbacks()
     {
 #if LOCALIZATION_EXIST
-        LocalizationEditorSettings.EditorEvents.TableEntryModified -= TableEntryModified;
-        LocalizationEditorSettings.EditorEvents.LocaleAdded -= LocaleAddedRemoved;
-        LocalizationEditorSettings.EditorEvents.LocaleRemoved -= LocaleAddedRemoved;
         _translationMapText.Clear();
 #endif
         ClearAllValueChangedCallbacks();
     }
+
+    private void BindActor(Actor selectedActor)
+    {
+        _actorContainer.Unbind();
+        _actor = selectedActor;
+        _actorSerialized = new SerializedObject(selectedActor);
+        _actorContainer.TrackSerializedObjectValue(_actorSerialized, HandleActorChanges);
+        _actorSprite.Bind(_actorSerialized);
+        _actorName.Bind(_actorSerialized);
+        _actorContainer.style.backgroundColor = _actor.bgColor;
+    }
     
     private void SetUpDialogClasses()
     {
+        _findActorButton = this.Q<Button>("find-actor-button");
+        _findActorButton.Add(new Image {
+            image = EditorGUIUtility.IconContent("d_pick_uielements").image
+        });
+        _actorContainer = this.Q("actor-container");
         this.Q("notVisibleContainer").AddToClassList("hidden-class");
         this.Q("actorContainer").RemoveFromClassList("hidden-class");
         this.Q("messageContainer").RemoveFromClassList("hidden-class");
@@ -410,3 +434,4 @@ public class DialogInspectorView : VisualElement
         _unregisterAll = null;
     }
 }
+

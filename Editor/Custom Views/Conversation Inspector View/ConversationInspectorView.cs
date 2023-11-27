@@ -5,34 +5,37 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class ConversationInspectorView : VisualElement
+namespace AQM.Tools
 {
-    private ConversationTree _conversationTree;
-    
-    public ConversationInspectorView(ConversationTree conversationTree)
+    public class ConversationInspectorView : VisualElement
     {
-        string uriFile = "Assets/dialog-system/Editor/Custom Views/Conversation Inspector View/ConversationInspectorView.uxml";
-        (EditorGUIUtility.Load(uriFile) as VisualTreeAsset)?.CloneTree(this);
-
-        _conversationTree = conversationTree;
-        if (_conversationTree != null)
+        private ConversationTree _conversationTree;
+    
+        public ConversationInspectorView(ConversationTree conversationTree)
         {
-            BindTitle();
-            BindDescription();
-        }
-    }
+            string uriFile = "Assets/dialog-system/Editor/Custom Views/Conversation Inspector View/ConversationInspectorView.uxml";
+            (EditorGUIUtility.Load(uriFile) as VisualTreeAsset)?.CloneTree(this);
 
-    private void BindTitle()
-    {
-        TextField titleLabel = this.Q<TextField>("titleTextField");
-        titleLabel.bindingPath = "title";
-        titleLabel.Bind(new SerializedObject(_conversationTree));
-    }
+            _conversationTree = conversationTree;
+            if (_conversationTree != null)
+            {
+                BindTitle();
+                BindDescription();
+            }
+        }
+
+        private void BindTitle()
+        {
+            TextField titleLabel = this.Q<TextField>("titleTextField");
+            titleLabel.bindingPath = "title";
+            titleLabel.Bind(new SerializedObject(_conversationTree));
+        }
     
-    private void BindDescription()
-    {
-        TextField descLabel = this.Q<TextField>("descriptionTextField");
-        descLabel.bindingPath = "description";
-        descLabel.Bind(new SerializedObject(_conversationTree));
+        private void BindDescription()
+        {
+            TextField descLabel = this.Q<TextField>("descriptionTextField");
+            descLabel.bindingPath = "description";
+            descLabel.Bind(new SerializedObject(_conversationTree));
+        }
     }
 }

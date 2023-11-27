@@ -1,8 +1,9 @@
 using System;
-using System.Collections.Generic;
+using AQM.Tools;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+
 public class DatabaseCreatorView : VisualElement
 {
     public Action OnCloseModal;
@@ -56,7 +57,7 @@ public class DatabaseCreatorView : VisualElement
     private void OnCreateDatabase()
     {
         DialogSystemDatabase newDb = ScriptableObject.CreateInstance<DialogSystemDatabase>();
-        newDb.Create(_dbTitle.value, _dbDesc.value);
+        DatabaseUtils.CreateDatabase(_dbTitle.value, _dbDesc.value);
         OnCreatedDatabase?.Invoke(newDb);
     }
 }

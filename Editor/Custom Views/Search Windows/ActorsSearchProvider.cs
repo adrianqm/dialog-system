@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using AQM.Tools;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -13,12 +14,12 @@ public class ActorsSearchProvider : ScriptableObject, ISearchWindowProvider
     {
         _actors = actors;
         _onSetIndexCallback = callback;
-        
+    
         _indentationIcon = new Texture2D(1, 1);
         _indentationIcon.SetPixel(0, 0, Color.clear);
         _indentationIcon.Apply();
     }
-    
+
     public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context)
     {
         List<SearchTreeEntry> searchlist = new List<SearchTreeEntry>();
@@ -40,3 +41,4 @@ public class ActorsSearchProvider : ScriptableObject, ISearchWindowProvider
         return true;
     }
 }
+

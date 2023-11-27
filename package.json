@@ -1,0 +1,28 @@
+{
+    "name": "com.aqm.fpsinteraction",
+    "version": "1.0.1",
+    "displayName": "DDesigner",
+    "description": "Advanced Dialog Designer for Unity with visual graph tool.",
+    "unity": "2019.3",
+    "type": "asset",
+    "dependencies": {
+        "com.unity.inputsystem": "1.4.4"
+    },
+    "samples": [
+        {
+            "displayName": "Demo Scene",
+            "description": "Demo Scene with Unity Localization included",
+            "path": "Samples/Demo Scene"
+        },
+        {
+            "displayName": "Prefabs",
+            "description": "Prefabs of the package",
+            "path": "Runtime/Prefabs"
+        }
+    ],
+    "author": {
+        "name": "Adrian Quiros",
+        "email": "adrianqm97@gmail.com",
+        "url": ""
+    }
+}

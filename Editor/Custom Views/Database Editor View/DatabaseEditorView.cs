@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using AQM.Tools;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -26,7 +27,7 @@ public class DatabaseEditorView : VisualElement
             image = texture,
         });
         closeButton.clicked += OnCloseButtonClicked;
-        
+    
         //Debug Mode
         Toggle debugActivated = this.Q<Toggle>("debug-activated");
         debugActivated.value = DSData.instance.debugMode;
@@ -49,3 +50,4 @@ public class DatabaseEditorView : VisualElement
         OnCloseModal?.Invoke();
     }
 }
+

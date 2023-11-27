@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using AQM.Tools;
 using Codice.CM.Common;
 using UnityEditor;
 using UnityEditor.PackageManager;
@@ -99,9 +100,9 @@ public class DatabaseLocalizationView : VisualElement
     {
 #if LOCALIZATION_EXIST
         _stringTableOf.value = null;
-        if (DSData.instance.database?.tableCollection != null)
+        if (DSData.instance.tableCollection != null)
         {
-            _stringTableOf.value = DSData.instance.database.tableCollection;
+            _stringTableOf.value = DSData.instance.tableCollection;
         }
         _localeOf.value = null;
         if (DSData.instance.database?.defaultLocale != null)
@@ -123,13 +124,14 @@ public class DatabaseLocalizationView : VisualElement
             if (tableCollection != null && defaultLocale)
             {
                 
-                DSData.instance.database.tableCollection = tableCollection;
+                DSData.instance.tableCollection = tableCollection;
                 _stringTableOf.RemoveFromClassList("field-object-error");
                 DSData.instance.database.defaultLocale = defaultLocale;
                 _localeOf.RemoveFromClassList("field-object-error");
                 
                 StringTable table = LocalizationSettings.StringDatabase.GetTable(tableCollection.name,defaultLocale);
-                DSData.instance.database.defaultStringTable = table;
+                DSData.instance.defaultStringTable = table;
+                DSData.instance.database.tableCollectionName = tableCollection.TableCollectionName;
                 
                 while (tableCollection.SharedData.Contains(""))
                 {
@@ -210,3 +212,4 @@ public class DatabaseLocalizationView : VisualElement
         onCloseModal?.Invoke();
     }
 }
+

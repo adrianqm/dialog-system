@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AQM.Tools;
 using AQM.Tools.Serializable;
 using Unity.Plastic.Newtonsoft.Json;
 using UnityEditor;
@@ -14,10 +15,13 @@ using UnityEngine;
 #endif
 
 using Edge = UnityEditor.Experimental.GraphView.Edge;
+using Node = AQM.Tools.Node;
 using Random = UnityEngine.Random;
+
 public class DialogSystemView : GraphView
 {
     public Action<NodeView> onNodeSelected;
+    public Action onRefreshInspector;
     public Action onNodesRemoved;
     public new class UxmlFactory : UxmlFactory<DialogSystemView, GraphView.UxmlTraits> {}
 
@@ -69,7 +73,7 @@ public class DialogSystemView : GraphView
                 GroupNodeView groupView = (GroupNodeView) group;
                 NodeView nodeView = (NodeView) element;
 
-                _tree.AddGroupToNode(nodeView.node, groupView.group);
+                ConversationUtils.AddGroupToNode(nodeView.node, groupView.group);
             }
         };
         
@@ -85,14 +89,14 @@ public class DialogSystemView : GraphView
                 GroupNodeView groupView = (GroupNodeView) group;
                 NodeView nodeView = (NodeView) element;
 
-                _tree.RemoveGroupFromNode(nodeView.node);
+                ConversationUtils.RemoveGroupFromNode(nodeView.node);
             }
         };
         
         groupTitleChanged = (group, name) =>
         {
             GroupNodeView groupNodeView = (GroupNodeView) group;
-            _tree.SetGroupTitle(groupNodeView.group, name);
+            ConversationUtils.SetGroupTitle(groupNodeView.group, name);
         };
     }
 
@@ -146,7 +150,7 @@ public class DialogSystemView : GraphView
         AssetDatabase.SaveAssets();
     }
     
-    NodeView FindNodeView(Node node)
+    public NodeView FindNodeView(Node node)
     {
         return GetNodeByGuid(node.guid) as NodeView;
     }
@@ -178,6 +182,7 @@ public class DialogSystemView : GraphView
         
         DeleteElements(graphElements);
         
+        
         graphViewChanged += OnGraphViewChanged;
         serializeGraphElements += CutCopyOperation;
         unserializeAndPaste += PasteOperation;
@@ -188,14 +193,14 @@ public class DialogSystemView : GraphView
         
         if (_tree.startNode == null)
         {
-            _tree.startNode = _tree.CreateNode(_currentDatabase, typeof(StartNode), Vector2.zero) as StartNode;
+            _tree.startNode = ConversationUtils.CreateNode(_currentDatabase,_tree,typeof(StartNode), Vector2.zero) as StartNode;
             EditorUtility.SetDirty(tree);
             AssetDatabase.SaveAssets();
         }
         
         if (_tree.completeNode == null)
         {
-            _tree.completeNode = _tree.CreateNode(_currentDatabase, typeof(CompleteNode), new Vector2(1000f,0f)) as CompleteNode;
+            _tree.completeNode = ConversationUtils.CreateNode(_currentDatabase,_tree, typeof(CompleteNode), new Vector2(1000f,0f)) as CompleteNode;
             EditorUtility.SetDirty(tree);
             AssetDatabase.SaveAssets();
         }
@@ -235,6 +240,7 @@ public class DialogSystemView : GraphView
         });
         
         OnUpdateStates();
+        onRefreshInspector?.Invoke();
     }
 
     private void CreateEdgeView(List<Node> children, Port port)
@@ -311,7 +317,7 @@ public class DialogSystemView : GraphView
                 GroupNodeView groupNodeView = groupTranslationMap[serializedDialogNode.group.guid];
                 if (groupNodeView != null)
                 {
-                    bool hasBeenAAdded = _tree.AddGroupToNode(nodeView.node, groupNodeView.group);
+                    bool hasBeenAAdded = ConversationUtils.AddGroupToNode(nodeView.node, groupNodeView.group);
                     if (hasBeenAAdded)
                     {
                         groupNodeView.AddElement(nodeView);
@@ -333,7 +339,7 @@ public class DialogSystemView : GraphView
             if (serializableChoiceNode.group != null)
             {
                 if (!groupTranslationMap.TryGetValue(serializableChoiceNode.group.guid, out GroupNodeView groupNodeView)) continue;
-                bool hasBeenAAdded = _tree.AddGroupToNode(nodeView.node, groupNodeView.group);
+                bool hasBeenAAdded = ConversationUtils.AddGroupToNode(nodeView.node, groupNodeView.group);
                 if (hasBeenAAdded)
                 {
                     groupNodeView.AddElement(nodeView);
@@ -341,7 +347,7 @@ public class DialogSystemView : GraphView
             }
         }
 #if LOCALIZATION_EXIST
-        LocalizationUtils.RefreshStringTableCollection(DSData.instance.database.tableCollection);
+        LocalizationUtils.RefreshStringTableCollection(DSData.instance.tableCollection);
 #endif
         
         // Create Dialog Edges
@@ -351,7 +357,7 @@ public class DialogSystemView : GraphView
             foreach (SerializableNodeChild childOriginalNode in serializedDialogNode.children)
             {
                 if (!nodeTranslationMap.TryGetValue(childOriginalNode.guid, out NodeView childView)) continue;
-                bool hasAdded = _tree.AddChild(parentView.node, childView.node);
+                bool hasAdded = ConversationUtils.AddChild(parentView.node, childView.node);
                 if (hasAdded)
                 {
                     Edge edge = parentView.output.ConnectTo(childView.input);
@@ -372,7 +378,7 @@ public class DialogSystemView : GraphView
                     if (!nodeTranslationMap.TryGetValue(childOriginalNode.guid, out NodeView childView)) continue;
                     if (!choiceTranslationMap.TryGetValue(choice.guid, out Choice newChoice)) continue;
                     Port choicePort = parentView.portTranslationMap.FirstOrDefault(x => x.Value.guid == newChoice.guid).Key;
-                    bool hasAdded = _tree.AddChild(parentView.node, childView.node, choicePort);
+                    bool hasAdded = ConversationUtils.AddChild(parentView.node, childView.node, choicePort);
                     if (hasAdded)
                     {
                         Edge edge = choicePort.ConnectTo(childView.input);
@@ -441,7 +447,7 @@ public class DialogSystemView : GraphView
                 {
                     NodeView  parentView = edge.output.node as NodeView;
                     NodeView  childView = edge.input.node as NodeView;
-                    _tree.RemoveChild(parentView?.node, childView?.node, edge.output);
+                    ConversationUtils.RemoveChild(parentView?.node, childView?.node, edge.output);
                     continue;
                 }
                 
@@ -466,7 +472,7 @@ public class DialogSystemView : GraphView
             {
                 NodeView  parentView = edge.output.node as NodeView;
                 NodeView  childView = edge.input.node as NodeView;
-                bool hasAdded = _tree.AddChild(parentView?.node, childView?.node,edge.output);
+                bool hasAdded = ConversationUtils.AddChild(parentView?.node, childView?.node,edge.output);
                 if(!hasAdded) edgesNotAdded.Add(edge);
             }
 
@@ -522,7 +528,7 @@ public class DialogSystemView : GraphView
     
     public GroupNodeView CreateGroupBox(Vector2 pos, string title = "Group Box")
     {
-        GroupNode groupNode = _tree.CreateGroup(_currentDatabase, title, pos);
+        GroupNode groupNode = ConversationUtils.CreateGroup(_currentDatabase, _tree, title, pos);
         return CreateGroupBoxView(groupNode);
     }
     
@@ -549,23 +555,23 @@ public class DialogSystemView : GraphView
     
     private void DeleteGroupNode(GroupNode groupNode)
     {
-        _tree.DeteleGroupNode(groupNode);
+        ConversationUtils.DeleteGroupNode(_tree,groupNode);
     }
 
     public void CreateNode(Type type,Vector2 position)
     {
-        Node node = _tree.CreateNode(_currentDatabase, type,position);
+        Node node = ConversationUtils.CreateNode(_currentDatabase,_tree,type,position);
         CreateNodeView(node);
     }
     private NodeView CreateDialogNodeCopy(Type type,Vector2 position, SerializableDialogNode nodeToCopy)
     {
-        Node node = _tree.CreateDialogNodeCopy(_currentDatabase, type,position,nodeToCopy);
+        Node node = ConversationUtils.CreateDialogNodeCopy(_currentDatabase, _tree, type, position, nodeToCopy);
         return CreateNodeView(node);
     }
     
     private NodeView CreateChoiceNodeCopy(Vector2 position, SerializableChoiceNode nodeToCopy, Dictionary<string, Choice> choiceMap)
     {
-        Node node = _tree.CreateChoiceNodeToCopy(_currentDatabase,position,nodeToCopy, choiceMap);
+        Node node = ConversationUtils.CreateChoiceNodeToCopy(_currentDatabase, _tree, position, nodeToCopy, choiceMap);
         return CreateNodeView(node);
     }
 
@@ -575,6 +581,7 @@ public class DialogSystemView : GraphView
         
         NodeView nodeView = new NodeView(node,this, ClearSelection);
         nodeView.onNodeSelected = onNodeSelected;
+        nodeView.onRefreshInspector = onRefreshInspector;
         AddElement(nodeView);
         
         if (node.group)
@@ -587,7 +594,7 @@ public class DialogSystemView : GraphView
     }
     private void DeleteNode(Node node)
     {
-        _tree.DeleteNode(node);
+        ConversationUtils.DeleteNode(_tree,node);
         
         // In case that suppress button works
         if (node is StartNode)
@@ -607,7 +614,16 @@ public class DialogSystemView : GraphView
 
     private void TableEntryModified(SharedTableData.SharedTableEntry tableEntry)
     {
-        if (GetNodeByGuid(tableEntry.Key) is NodeView nodeView)
+        if(_tree == null) return;
+        string entryGuid = tableEntry.Key;
+        Node node = _tree.nodes.Find(n =>
+        {
+            if (n.guid == entryGuid) return true;
+            if (n is not ChoiceNode choiceNode) return false;
+            return choiceNode.choices.Find(c => c.guid == entryGuid);
+        });
+        if(!node) return;
+        if (GetNodeByGuid(node.guid) is NodeView nodeView)
         {
             nodeView.UpdateLocalizedMessage();
         }
@@ -625,3 +641,4 @@ public class DialogSystemView : GraphView
     }
     
 }
+
