@@ -256,7 +256,11 @@ VisualElement {
     max-width: 222px;
 }
 
-.unity-base-text-field__input :hover {
+#message-textfield .unity-base-text-field__input :hover {
+    cursor: text;
+}
+
+.choice-textfield .unity-base-text-field__input :hover {
     cursor: text;
 }
 
@@ -301,7 +305,7 @@ VisualElement {
     flex-direction: column;
     flex-grow: 0;
     padding-top: 4px;
-    padding-bottom: 2px;
+    padding-bottom: 1px;
     padding-right: 0;
     padding-left: 0;
 }
@@ -332,4 +336,38 @@ VisualElement {
     margin-right: 8px;
     margin-top: 0;
     margin-bottom: 0;
+}
+
+.default-choice-textfield .unity-label {
+}
+
+.default-choice-textfield .unity-base-text-field__input {
+    text-overflow: clip;
+    white-space: normal;
+    display: flex;
+    align-items: stretch;
+    flex-direction: row;
+    min-height: 30px;
+    align-self: center;
+    -unity-text-align: middle-left;
+    flex-shrink: 1;
+    min-width: 222px;
+    padding-left: 6px;
+    padding-right: 6px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    background-color: rgba(39, 45, 53, 0.5);
+    max-width: 222px;
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    margin-left: 22px;
+}
+
+.defaultChoiceDataContainer {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 5px;
+    min-height: 25px;
 }

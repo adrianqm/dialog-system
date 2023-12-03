@@ -498,6 +498,7 @@ using UnityEngine.UIElements;
             _conversationListView.style.display = DisplayStyle.Flex;
             _conversationEditView.style.display = DisplayStyle.None;
             //Reset tree
+            _treeView.ResetTreeData();
         }
 
         void OnEditDatabase()

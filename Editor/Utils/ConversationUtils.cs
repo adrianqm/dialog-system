@@ -191,6 +191,14 @@ namespace AQM.Tools
                     EditorUtility.SetDirty(choice);
                     hasAdded = true;
                 }
+                else
+                {
+                    // Default Choice
+                    Undo.RecordObject(choiceNode, "Conversation Tree (AddDefaultChoice)");
+                    choiceNode.defaultChildren.Add(child);
+                    EditorUtility.SetDirty(choiceNode);
+                    hasAdded = true;
+                }
             }
 
             return hasAdded;
@@ -213,9 +221,15 @@ namespace AQM.Tools
                 Choice choice = choiceView?.FindPortChoice(parentPort);
                 if (choice)
                 {
-                    Undo.RecordObject(choice, "Conversation Tree (RemoveChild)");
+                    Undo.RecordObject(choice, "Conversation Tree (RemoveChoiceChild)");
                     choice.children.Remove(child);
                     EditorUtility.SetDirty(choice);
+                }
+                else
+                {
+                    Undo.RecordObject(choiceNode, "Conversation Tree (RemoveDefaultChoiceChild)");
+                    choiceNode.defaultChildren.Remove(child);
+                    EditorUtility.SetDirty(choiceNode);
                 }
             }
         }

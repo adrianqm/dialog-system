@@ -13,6 +13,7 @@ namespace AQM.Tools
         public string title;
         public string description;
         [HideInInspector] public string guid;
+        public List<ConversationGroup> conversationGroups;
         public List<ConversationTree> conversations;
         public List<Actor> actors;
         

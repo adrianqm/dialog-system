@@ -52,6 +52,12 @@ namespace AQM.Tools
                     }
                     clonedChoiceNode.choices.Add(clonedChoice);
                 }
+                clonedChoiceNode.defaultChildren = new List<Node>();
+                foreach (Node child in choiceNode.defaultChildren)
+                {
+                    Node choiceClonedChild = CloneNode(child);
+                    clonedChoiceNode.defaultChildren.Add(choiceClonedChild);
+                }
             }
             return clonedNode;
         }

@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/dialog-system/Editor/Custom%20Views/Conversation%20List%20Selector/ConversationSelectorView.uss?fileID=7433441132597879392&amp;guid=48716b6491c182e4cb57b84f1c21c532&amp;type=3#ConversationSelectorView" />
+    <ui:VisualElement name="container" style="flex-grow: 1; background-color: rgba(24, 24, 29, 0.25);">
+        <ui:MultiColumnTreeView irtualization-method="DynamicHeight" auto-expand="true" show-border="false" reorderable="true" style="background-color: rgba(24, 24, 29, 0.25);">
+            <ui:Columns>
+                <ui:Column name="groups" title="Conversation Groups" min-width="120" stretchable="true" />
+            </ui:Columns>
+        </ui:MultiColumnTreeView>
+    </ui:VisualElement>
+</ui:UXML>

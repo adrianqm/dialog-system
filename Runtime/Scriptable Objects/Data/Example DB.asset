@@ -113,6 +113,7 @@ MonoBehaviour:
   actor: {fileID: -7202288894803428011}
   message: Cual es tu colos favorito?
   choices: []
+  defaultChildren: []
 --- !u!114 &-7824585118953527511
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -128,7 +129,7 @@ MonoBehaviour:
   guid: 0329ae50c9c99d847b4fa366f2775910
   actorImage: {fileID: 21300000, guid: 3d3b4b1d32565c944b0452176b513899, type: 3}
   fullName: NPC 2
-  description: ddd
+  description: NPC 2 Desc
   bgColor: {r: 0.58431375, g: 0.2901961, b: 0.3157616, a: 0.5019608}
 --- !u!114 &-7472136732273707846
 MonoBehaviour:
@@ -161,7 +162,7 @@ MonoBehaviour:
   guid: 5724e8ff16572c34580e1427e79d7a9a
   actorImage: {fileID: 21300000, guid: deeae33315027e045bf104c3f198179d, type: 3}
   fullName: Player
-  description: Hola
+  description: Player Desc
   bgColor: {r: 0.23810305, g: 0.49056602, b: 0.20085439, a: 0.5019608}
 --- !u!114 &-7140067237811485461
 MonoBehaviour:
@@ -200,6 +201,7 @@ MonoBehaviour:
   actor: {fileID: -315341339396191111}
   message: 
   choices: []
+  defaultChildren: []
 --- !u!114 &-6558176862304912761
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -248,7 +250,7 @@ MonoBehaviour:
   m_Name: DialogNode
   m_EditorClassIdentifier: 
   guid: 1dd6d5dff6c3fcd4a91004eee15a2be9
-  position: {x: 548.28314, y: -37.861534}
+  position: {x: 523.19995, y: 96.00001}
   group: {fileID: 0}
   children:
   - {fileID: -5311534606950478465}
@@ -272,6 +274,7 @@ MonoBehaviour:
   actor: {fileID: -315341339396191111}
   message: 
   choices: []
+  defaultChildren: []
 --- !u!114 &-5834220192843112223
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -292,6 +295,7 @@ MonoBehaviour:
   choices:
   - {fileID: -9024865291932541183}
   - {fileID: 978566331665916356}
+  defaultChildren: []
 --- !u!114 &-5625452598447578024
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -320,13 +324,14 @@ MonoBehaviour:
   m_Name: ChoiceNode
   m_EditorClassIdentifier: 
   guid: cc8d4721bb9ced44bb36c479cdde74cd
-  position: {x: 548, y: 71.20001}
+  position: {x: 523.4609, y: 204.8999}
   group: {fileID: 0}
   actor: {fileID: -315341339396191111}
   message: "\xBFEn serio morado?"
   choices:
   - {fileID: -7472136732273707846}
   - {fileID: -3899420329280032172}
+  defaultChildren: []
 --- !u!114 &-5478158193426519720
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -369,6 +374,7 @@ MonoBehaviour:
   - {fileID: -5482965046254664732}
   - {fileID: -3610949465340375345}
   - {fileID: -3691982746697369610}
+  - {fileID: -1676370715574751776}
   groups: []
   runningNode: {fileID: 0}
   title: Choice Dialog
@@ -388,7 +394,7 @@ MonoBehaviour:
   m_Name: CompleteNode
   m_EditorClassIdentifier: 
   guid: 857f971f616b3774b9cd6fa5c326ab75
-  position: {x: 970.22534, y: -89.199936}
+  position: {x: 941.8608, y: 10.499931}
   group: {fileID: 0}
 --- !u!114 &-5180515183100383367
 MonoBehaviour:
@@ -408,6 +414,7 @@ MonoBehaviour:
   actor: {fileID: -315341339396191111}
   message: 
   choices: []
+  defaultChildren: []
 --- !u!114 &-5090452286623400254
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -519,6 +526,7 @@ MonoBehaviour:
   - {fileID: -6558176862304912761}
   - {fileID: -5056399794056061201}
   - {fileID: 1365149785398130771}
+  defaultChildren: []
 --- !u!114 &-3711034562052487462
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -552,11 +560,11 @@ MonoBehaviour:
   m_Name: DialogNode
   m_EditorClassIdentifier: 
   guid: 8644088e399f34c41a80e667354d9929
-  position: {x: 890.93933, y: 203.20013}
+  position: {x: 866.6609, y: 335.3}
   group: {fileID: 0}
   children: []
   actor: {fileID: -315341339396191111}
-  message: No, no pegues porfi
+  message: No, no pegues por fi
 --- !u!114 &-3610949465340375345
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -570,7 +578,7 @@ MonoBehaviour:
   m_Name: DialogNode
   m_EditorClassIdentifier: 
   guid: 0219005729bb10340921fa4a65b395a5
-  position: {x: 891.19995, y: 95.19999}
+  position: {x: 866.6609, y: 204.8999}
   group: {fileID: 0}
   children: []
   actor: {fileID: -315341339396191111}
@@ -603,7 +611,7 @@ MonoBehaviour:
   m_Name: StartNode
   m_EditorClassIdentifier: 
   guid: 26faec1a8b79fef4a9ca877f60ca3600
-  position: {x: 0, y: 0}
+  position: {x: -17.589437, y: 172.37595}
   group: {fileID: 0}
   children:
   - {fileID: 27963429755922888}
@@ -655,7 +663,7 @@ MonoBehaviour:
   m_Name: DialogNode
   m_EditorClassIdentifier: 
   guid: 97e996ebb6efc6f4688d8ac3df0dd905
-  position: {x: 547.4831, y: -301.86154}
+  position: {x: 522.6608, y: -167.90009}
   group: {fileID: 0}
   children:
   - {fileID: -5311534606950478465}
@@ -713,8 +721,26 @@ MonoBehaviour:
   guid: cece04d5870d4e144b8a3ec4374faa9d
   actorImage: {fileID: 2877471580529523173, guid: c15ba1dcb835b28498cc6239dc893a2e, type: 3}
   fullName: NPC 3
-  description: 3
+  description: NPC 3 Desc
   bgColor: {r: 0.27450982, g: 0.54041237, b: 0.5647059, a: 0.5019608}
+--- !u!114 &-1676370715574751776
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: fc4aeb43aca6c074b96e825983909687
+  position: {x: 522.4, y: 443.99997}
+  group: {fileID: 0}
+  children: []
+  actor: {fileID: -315341339396191111}
+  message: No me contestes si quieres, pero yo no olvido
 --- !u!114 &-1511675361508560059
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -824,7 +850,7 @@ MonoBehaviour:
   guid: 9913379817d3d0c4ea8018cdc9cb8f57
   actorImage: {fileID: 21300000, guid: afe564cd16103044697441a95757b74d, type: 3}
   fullName: NPC 1
-  description: bbb
+  description: NPC 1 Desc
   bgColor: {r: 0.735849, g: 0.661142, b: 0.2873976, a: 0.5019608}
 --- !u!114 &-116218828020163764
 MonoBehaviour:
@@ -876,12 +902,13 @@ MonoBehaviour:
   title: Example DB
   description: Buenas
   guid: 5668216104d22504f9eb4307013d7334
+  conversationGroups: []
   conversations:
   - {fileID: -5471901116755713981}
+  - {fileID: 8582928173828300131}
+  - {fileID: -4979306286566090355}
   - {fileID: 6660827138663173777}
   - {fileID: 6499724637177951249}
-  - {fileID: -4979306286566090355}
-  - {fileID: 8582928173828300131}
   actors:
   - {fileID: -7202288894803428011}
   - {fileID: -315341339396191111}
@@ -903,7 +930,7 @@ MonoBehaviour:
   m_Name: ChoiceNode
   m_EditorClassIdentifier: 
   guid: 70eaa9555160b6147bcd4f0fa2bef3fb
-  position: {x: 188.8, y: -103.19996}
+  position: {x: 175.22273, y: 78.39999}
   group: {fileID: 0}
   actor: {fileID: -315341339396191111}
   message: "\xBFCual es tu color favorito?"
@@ -912,6 +939,8 @@ MonoBehaviour:
   - {fileID: -116218828020163764}
   - {fileID: 1729549646159069247}
   - {fileID: -2623963663333157046}
+  defaultChildren:
+  - {fileID: -1676370715574751776}
 --- !u!114 &812258487484348536
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1534,7 +1563,7 @@ MonoBehaviour:
   m_Name: DialogNode
   m_EditorClassIdentifier: 
   guid: f47a1b4723390d542b74d8f0f5b62343
-  position: {x: 548.28314, y: -178.66154}
+  position: {x: 523.4609, y: -44.70008}
   group: {fileID: 0}
   children:
   - {fileID: -5311534606950478465}

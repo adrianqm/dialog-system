@@ -17,7 +17,7 @@ namespace AQM.Tools
         public Node node;
         public Port input;
         public Port output;
-        public readonly Dictionary<Port, Choice> portTranslationMap; 
+        public readonly Dictionary<Port, Choice> choicePortTranslationMap;
         
         private SpritePreviewElement _actorSprite;
         private TextField _messageTextField;
@@ -36,7 +36,7 @@ namespace AQM.Tools
         {
             _graphView = graphView;
             _currentDatabase = graphView.GetDatabase();
-            portTranslationMap = new Dictionary<Port, Choice>();
+            choicePortTranslationMap = new Dictionary<Port, Choice>();
             _onClearSelection = onClearSelection;
             
             this.node = node;
@@ -192,6 +192,27 @@ namespace AQM.Tools
                 newChoiceField.Focus();
                 CheckOutputRemaining();
             });
+
+            CreateDefaultChoiceView();
+        }
+        
+        private void CreateDefaultChoiceView()
+        {
+            VisualElement ve = new VisualElement();
+            
+            TextField defaultTextfield = new TextField()
+            {
+                value = "Default choice",
+                focusable = false
+            };
+            defaultTextfield.AddToClassList("default-choice-textfield");
+            ve.Add(defaultTextfield);
+            
+            output = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, typeof(bool));
+            output.portName = "";
+            ve.Add(output);
+            ve.AddToClassList("defaultChoiceDataContainer");
+            topContainer.Add(ve);
         }
 
         public void OnChoiceAdded(ChoiceNode choiceNode, Choice choice)
@@ -211,7 +232,7 @@ namespace AQM.Tools
         private void CreateNewOutput(ChoiceNode choiceNode, string defaultText = "Default")
         {
             Choice choice = ChoiceUtils.CreateChoice(_currentDatabase,choiceNode,defaultText);
-            onRefreshInspector();
+            onRefreshInspector?.Invoke();
             CreateNewOutputView(choiceNode, choice);
         }
 
@@ -254,7 +275,7 @@ namespace AQM.Tools
             
             ve.AddToClassList("choiceDataContainer");
             outputContainer.Add(ve);
-            portTranslationMap.Add(newOutput,choice);
+            choicePortTranslationMap.Add(newOutput,choice);
             _choicesMap.Add(choice.guid, new KeyValuePair<VisualElement, Port>(ve,newOutput));
 
             deleteButton.clickable = new Clickable(() =>
@@ -270,14 +291,14 @@ namespace AQM.Tools
             List<Edge> edges = new List<Edge>(outputPort.connections);
             _graphView.DeleteElements(edges);
             outputContainer.Remove(ve);
-            portTranslationMap.Remove(outputPort);
+            choicePortTranslationMap.Remove(outputPort);
             _choicesMap.Remove(choice.guid);
             CheckOutputRemaining();
         }
 
         public Choice FindPortChoice(Port port)
         {
-            return portTranslationMap[port];
+            return choicePortTranslationMap.TryGetValue(port, out var value)? value: null;
         }
 
         public List<Edge> DeleteAndGetAllChoiceEdges()
@@ -285,7 +306,7 @@ namespace AQM.Tools
             List<Edge> edgesToRemove = new List<Edge>();
             if (node is not ChoiceNode) return edgesToRemove;
             ChoiceNode choiceNode = node as ChoiceNode;
-            foreach(KeyValuePair<Port, Choice> entry in portTranslationMap)
+            foreach(KeyValuePair<Port, Choice> entry in choicePortTranslationMap)
             {
                 Port port = entry.Key;
                 if (choiceNode != null)
@@ -294,6 +315,12 @@ namespace AQM.Tools
                 }
                 if (!port.connected) continue;
                 List<Edge> edges = new List<Edge>(port.connections);
+                edgesToRemove = edgesToRemove.Concat(edges).ToList();
+            }
+
+            if (output.connected) // For Default choice
+            {
+                List<Edge> edges = new List<Edge>(output.connections);
                 edgesToRemove = edgesToRemove.Concat(edges).ToList();
             }
             return edgesToRemove;

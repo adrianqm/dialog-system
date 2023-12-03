@@ -2,8 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 #if LOCALIZATION_EXIST
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
@@ -16,28 +16,51 @@ namespace AQM.Tools
         
         public static Action<DSDialog> onShowNewDialog;
         public static Action<DSChoice> onShowNewChoice;
+        public static Action<DSChoice,float> onShowNewChoiceInTime;
         public static Action onConversationEnded;
         public static Action<DialogSystemDatabase> onDatabaseCloned;
         
         [SerializeField] private DialogSystemDatabase dialogSystemDatabase;
+        
+        [Header("Dialog Config")]
+        [SerializeField] private List<InputActionReference> inputKeys;
+        [SerializeField] private bool dialogTimer;
+        [SerializeField] private float dialogTime = 2f;
+        private Coroutine _dialogCo;
+        
+        [Header("Choice Config")]
+        [SerializeField] private bool hasNoResponse;
+        [SerializeField] private float noResponseTime = 2f;
 
         public DialogSystemDatabase DialogSystemDatabase => dialogSystemDatabase;
 
         private ConversationTree _currentConversation;
         private DSChoice _currentChoiceNode;
-        private InputActions.UIActions _playerInputs;
 
         private void Awake()
         {
             DDEvents.onStartConversation += StartConversation;
         }
 
+        #if LOCALIZATION_EXIST
         private IEnumerator Start()
         {
-            yield return LocalizationSettings.InitializationOperation;
+            var d = LocalizationSettings.StringDatabase.GetTableAsync(dialogSystemDatabase.tableCollectionName);
+            if (!d.IsDone)
+                yield return d;
+            string dump = LocalizationSettings.StringDatabase.GetLocalizedString(dialogSystemDatabase.tableCollectionName,"default");
+            
             dialogSystemDatabase = dialogSystemDatabase.Clone();
             onDatabaseCloned?.Invoke(dialogSystemDatabase);
         }
+        #else
+        private void Start()
+        {
+            dialogSystemDatabase = dialogSystemDatabase.Clone();
+            onDatabaseCloned?.Invoke(dialogSystemDatabase);
+        }
+        #endif
+        
         
         public List<KeyValuePair<ConversationTree, string>> GetConversationPairs()
         {
@@ -60,7 +83,6 @@ namespace AQM.Tools
         private void StartConversation(ConversationTree conversationTree)
         {
             InputManager.Instance.ToogleActionMap(InputManager.Instance.playerInputActions.UI);
-            _playerInputs = InputManager.Instance.playerInputActions.UI;
             _currentConversation = conversationTree;
             _currentChoiceNode = null;
             _currentConversation.onEndConversation += EndConversation;
@@ -69,8 +91,8 @@ namespace AQM.Tools
                 LocalizationSettings.SelectedLocaleChanged += ChangedLocale;
             #endif
 
-            //DSNode nextNode = dialogSystemDatabase.StartConversation(_currentConversation);
-            //HandleNextNode(nextNode);
+            DSNode nextNode = dialogSystemDatabase.StartConversation(_currentConversation);
+            HandleNextNode(nextNode);
         }
         
     #if LOCALIZATION_EXIST
@@ -88,18 +110,23 @@ namespace AQM.Tools
                         _currentChoiceNode.onChoiceSelected -= OnChoiceSelected;
                         _currentChoiceNode = choiceNode;
                         _currentChoiceNode.onChoiceSelected += OnChoiceSelected;
-                        onShowNewChoice?.Invoke(choiceNode);
+                        
+                        if(hasNoResponse) onShowNewChoiceInTime?.Invoke(choiceNode,noResponseTime);
+                        else onShowNewChoice?.Invoke(choiceNode);
                         break;
                 }
             }
         }
     #endif
-        
 
-        private void NextMessage(InputAction.CallbackContext context)
+        private void NextMessageCallback(InputAction.CallbackContext context)
         {
-            _playerInputs.Click.started -= NextMessage;
-            _playerInputs.Submit.started -= NextMessage;
+            NextMessage();
+        }
+
+        private void NextMessage()
+        {
+            DisableInputKeys();
             GetNextNode();
         }
 
@@ -112,12 +139,13 @@ namespace AQM.Tools
                 
                 _currentChoiceNode = choiceNode;
                 _currentChoiceNode.onChoiceSelected += OnChoiceSelected;
-                onShowNewChoice?.Invoke(_currentChoiceNode);
+                
+                if (hasNoResponse)onShowNewChoiceInTime?.Invoke(choiceNode,noResponseTime);
+                else onShowNewChoice?.Invoke(choiceNode);
             }
             else if(nextNode is DSDialog dialogNode)
             {
-                _playerInputs.Click.started += NextMessage;
-                _playerInputs.Submit.started += NextMessage;
+                EnableInputKeys();
                 onShowNewDialog?.Invoke(dialogNode);
             }
         }
@@ -133,7 +161,7 @@ namespace AQM.Tools
             }
         }
         
-        private void GetNextNode(int option = -1)
+        private void GetNextNode(int option = -2)
         {
             DSNode nextNode = _currentConversation.GetNextNode(option);
             HandleNextNode(nextNode);
@@ -142,8 +170,7 @@ namespace AQM.Tools
         private void EndConversation()
         {
             InputManager.Instance.ToogleActionMap(InputManager.Instance.playerInputActions.Player);
-            _playerInputs.Click.started -= NextMessage;
-            _playerInputs.Submit.started -= NextMessage;
+            DisableInputKeys();
             _currentConversation.onEndConversation -= EndConversation;
             _currentConversation = null;
             onConversationEnded?.Invoke();
@@ -151,6 +178,51 @@ namespace AQM.Tools
     #if LOCALIZATION_EXIST
             LocalizationSettings.SelectedLocaleChanged -= ChangedLocale;
     #endif
+        }
+
+        private void EnableInputKeys()
+        {
+            foreach (var key in inputKeys)
+            {
+                key.action.started += NextMessageCallback;
+            }
+
+            if (dialogTimer)
+            {
+                _dialogCo = StartCoroutine(NextMessageCoroutine());
+            }
+        }
+        
+        private void DisableInputKeys()
+        {
+            foreach (var key in inputKeys)
+            {
+                key.action.started -= NextMessageCallback;
+            }
+            
+            if(_dialogCo != null) StopCoroutine(_dialogCo);
+        }
+
+        private IEnumerator NextMessageCoroutine()
+        {
+            yield return new WaitForSeconds(dialogTime);
+            NextMessage();
+        }
+
+        private void OnEnable()
+        {
+            foreach (var key in inputKeys)
+            {
+                key.action.Enable();
+            }
+        }
+
+        private void OnDisable()
+        {
+            foreach (var key in inputKeys)
+            {
+                key.action.Disable();
+            }
         }
 
         private void OnDestroy()

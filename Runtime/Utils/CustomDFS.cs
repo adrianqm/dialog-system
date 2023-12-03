@@ -44,6 +44,14 @@ namespace AQM.Tools
                         }
                     }
                 }
+                
+                foreach (var n in choiceNode.defaultChildren)
+                {
+                    if (!visitedNodes.Contains(n))
+                    {
+                        DFSUtil(n, visitedNodes);
+                    }
+                }
             }
         }
     }

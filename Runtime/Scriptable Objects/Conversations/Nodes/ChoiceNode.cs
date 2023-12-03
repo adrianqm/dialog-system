@@ -12,6 +12,7 @@ namespace AQM.Tools
         public Actor actor;
         [TextArea] public string message;
         public List<Choice> choices = new ();
+        public List<Node> defaultChildren = new ();
         
         public override void OnRunning()
         {

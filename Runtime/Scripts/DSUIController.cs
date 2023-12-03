@@ -19,6 +19,7 @@ namespace AQM.Tools
             _choiceCanvasGroup = choiceUIGo.GetComponent<CanvasGroup>();
             DialogSystemController.onShowNewDialog += ShowDialogNode;
             DialogSystemController.onShowNewChoice += ShowChoiceNode;
+            DialogSystemController.onShowNewChoiceInTime += ShowChoiceNodeInTime;
             DialogSystemController.onConversationEnded += HideConversationUI;
             
             HideDialogContainer();
@@ -36,10 +37,20 @@ namespace AQM.Tools
 
         private void ShowChoiceNode (DSChoice choiceNode)
         {
+            SetChoiceNode(choiceNode);
+        }
+
+        private void ShowChoiceNodeInTime(DSChoice choiceNode, float seconds)
+        {
+            SetChoiceNode(choiceNode, seconds);
+        }
+
+        private void SetChoiceNode(DSChoice choiceNode, float seconds = 0f)
+        {
             HideDialogContainer();
 
             if (!_choiceUIContainer) return;
-            _choiceUIContainer.SetNode(choiceNode);
+            _choiceUIContainer.SetNode(choiceNode, seconds);
             _choiceCanvasGroup.alpha = 1f;
             _choiceCanvasGroup.interactable = true;
         }
@@ -69,6 +80,7 @@ namespace AQM.Tools
             DialogSystemController.onShowNewDialog -= ShowDialogNode;
             DialogSystemController.onShowNewChoice -= ShowChoiceNode;
             DialogSystemController.onConversationEnded -= HideConversationUI;
+            DialogSystemController.onShowNewChoiceInTime -= ShowChoiceNodeInTime;
         }
     }
 }

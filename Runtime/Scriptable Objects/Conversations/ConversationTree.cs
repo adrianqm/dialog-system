@@ -46,9 +46,11 @@ namespace AQM.Tools
         
         public DSNode StartConversation(DialogSystemDatabase currentDatabase)
         {
+#if UNITY_EDITOR
             if (_finishedNode) ResetNodeStates();
-            
+
             conversationState = State.Running;
+#endif
             runningNode = startNode;
             _currentDatabase = currentDatabase;
             StartNode node = runningNode as StartNode;
@@ -72,14 +74,16 @@ namespace AQM.Tools
 
         private void EndConversation()
         {
+#if UNITY_EDITOR
             conversationState = State.Completed;
             runningNode.NodeState = Node.State.Finished;
+#endif
             _finishedNode = runningNode;
             runningNode = null;
             onEndConversation.Invoke();
         }
         
-        public DSNode GetNextNode(int option = -1)
+        public DSNode GetNextNode(int option = -2)
         {
             if (!runningNode) return null;
 
@@ -91,9 +95,12 @@ namespace AQM.Tools
             }
             
             ChoiceNode choiceNode = runningNode as ChoiceNode;
-            if (choiceNode && option != -1)
+            if (choiceNode && option >= 0)
             {
                 nextNode = CheckNextChildMove(choiceNode.choices[option].children);
+            }else if (choiceNode && option == -1)
+            {
+                nextNode = CheckNextChildMove(choiceNode.defaultChildren);
             }
 
             return nextNode;
@@ -101,11 +108,11 @@ namespace AQM.Tools
         
         public DSNode GetCurrentNode()
         {
-            #if LOCALIZATION_EXIST
+#if LOCALIZATION_EXIST
                 return GetTranslatedNode(runningNode);
-            #else
+#else
                 return runningNode.GetData();
-            #endif
+#endif
         }
 
         private DSNode CheckNextChildMove(List<Node> children)
@@ -113,8 +120,10 @@ namespace AQM.Tools
             Node childToMove = null;
             foreach (var child in children.Where(child => child.CheckConditions()))
             {
-                runningNode.NodeState = Node.State.Visited;
                 childToMove = child;
+#if UNITY_EDITOR
+                runningNode.NodeState = Node.State.Visited;
+#endif
                 SetRunningNode(child);
                 break;
             }
@@ -123,18 +132,25 @@ namespace AQM.Tools
             {
                 // Conversation finished
                 EndConversation();
-                onUpdateViewStates?.Invoke();
+                UpdateStatesEvent();
                 return null;
             }
-            onUpdateViewStates?.Invoke();
+            UpdateStatesEvent();
 #if LOCALIZATION_EXIST
             return GetTranslatedNode(childToMove);
 #else
             return childToMove.GetData();
 #endif
         }
+
+        private void UpdateStatesEvent()
+        {
+#if UNITY_EDITOR
+            onUpdateViewStates?.Invoke();
+#endif
+        }
         
-    #if LOCALIZATION_EXIST
+#if LOCALIZATION_EXIST
 
         private DSNode GetTranslatedNode(Node childToMove)
         {
@@ -179,8 +195,9 @@ namespace AQM.Tools
 
         private void SetRunningNode(Node node)
         {
-            // Update unreachable status
+#if UNITY_EDITOR
             List<Node> visitedNodes = CustomDFS.StartDFS(node);
+#endif
             foreach (var n in nodes)
             {
                 if (node.guid == n.guid)
@@ -192,17 +209,18 @@ namespace AQM.Tools
                     }
                     else
                     {
+#if UNITY_EDITOR
                         n.NodeState = Node.State.Running;
+#endif
                         runningNode = n;
                     }
                     continue;
                 }
-                
-                if (!visitedNodes.Find(vn => vn.guid == n.guid))
-                {
-                    if (n.NodeState == Node.State.Visited) n.NodeState = Node.State.VisitedUnreachable;
-                    else if(n.NodeState != Node.State.VisitedUnreachable) n.NodeState = Node.State.Unreachable;
-                }
+#if UNITY_EDITOR
+                if (visitedNodes.Find(vn => vn.guid == n.guid)) continue;
+                if (n.NodeState == Node.State.Visited) n.NodeState = Node.State.VisitedUnreachable;
+                else if(n.NodeState != Node.State.VisitedUnreachable) n.NodeState = Node.State.Unreachable;
+#endif
             }
         }
 
@@ -211,15 +229,15 @@ namespace AQM.Tools
             return parent.children;
         }
 
-        private void Traverse(Node node, System.Action<Node> visiter)
+        private void Traverse(Node node, List<string> nonRepeatNodeList ,System.Action<Node> visiter)
         {
-            if (!node) return;
+            if (!node || nonRepeatNodeList.Contains(node.guid)) return;
             visiter.Invoke(node);
             ParentNode parentNode = node as ParentNode;
             if (parentNode)
             {
                 var children = GetChildren(parentNode);
-                children.ForEach((n)=> Traverse(n,visiter));
+                children.ForEach((n)=> Traverse(n,nonRepeatNodeList,visiter));
             }
             
             ChoiceNode choiceNode = node as ChoiceNode;
@@ -227,8 +245,10 @@ namespace AQM.Tools
             {
                 choiceNode.choices.ForEach((choice) =>
                 {
-                    choice.children.ForEach((n)=> Traverse(n,visiter));
+                    choice.children.ForEach((n)=> Traverse(n,nonRepeatNodeList,visiter));
                 });
+                
+                choiceNode.defaultChildren.ForEach((n)=> Traverse(n,nonRepeatNodeList,visiter));
             }
         }
         
@@ -238,13 +258,16 @@ namespace AQM.Tools
             
             NodeCloningManager cloningManager = new NodeCloningManager();
             tree.startNode= cloningManager.CloneNode(tree.startNode);
-            tree.conversationState = State.Idle;
             tree.groups = groups.ConvertAll(g => g.Clone());
             tree.nodes = new List<Node>();
+            
+#if UNITY_EDITOR
+            tree.conversationState = State.Idle;
+#endif
             List<string> nonRepeatNodeList = new();
-            Traverse(tree.startNode, (n) =>
+            Traverse(tree.startNode,nonRepeatNodeList, (n) =>
             {
-                if (nonRepeatNodeList.Contains(n.guid)) return;
+                //if (nonRepeatNodeList.Contains(n.guid)) return;
                 tree.nodes.Add(n);
                 nonRepeatNodeList.Add(n.guid);
             });

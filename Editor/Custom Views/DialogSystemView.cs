@@ -40,7 +40,7 @@ public class DialogSystemView : GraphView
         this.AddManipulator(new ContentDragger());
         this.AddManipulator(new SelectionDragger());
         this.AddManipulator(new RectangleSelector());
-        AddNodeSearchWindow();
+        
         AddMinimap();
         OnGroupsChanged();
         
@@ -116,6 +116,16 @@ public class DialogSystemView : GraphView
         nodeCreationRequest = context =>
             SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), _nodeSearchProvider);
     }
+
+    public void ResetTreeData()
+    {
+        ResetNodeSearchWindow();
+    }
+    
+    private void ResetNodeSearchWindow()
+    {
+        nodeCreationRequest = null;
+    }
     
     private void AddMinimap()
     {
@@ -188,6 +198,7 @@ public class DialogSystemView : GraphView
         unserializeAndPaste += PasteOperation;
         canPasteSerializedData += CanPaste;
         _tree.onUpdateViewStates += OnUpdateStates;
+        AddNodeSearchWindow();
         RegisterCallback<KeyDownEvent>(DisableRedoAction);
         
         
@@ -231,11 +242,13 @@ public class DialogSystemView : GraphView
             if (choiceNode != null)
             {
                 NodeView nodeView = FindNodeView(n);
-                foreach(KeyValuePair<Port, Choice> entry in nodeView.portTranslationMap)
+                foreach(KeyValuePair<Port, Choice> entry in nodeView.choicePortTranslationMap)
                 {
                     Port choicePort = entry.Key;
                     CreateEdgeView(entry.Value.children,choicePort);
                 }
+                // Default Choice Edges
+                CreateEdgeView(choiceNode.defaultChildren, nodeView.output);
             }
         });
         
@@ -377,7 +390,7 @@ public class DialogSystemView : GraphView
                 {
                     if (!nodeTranslationMap.TryGetValue(childOriginalNode.guid, out NodeView childView)) continue;
                     if (!choiceTranslationMap.TryGetValue(choice.guid, out Choice newChoice)) continue;
-                    Port choicePort = parentView.portTranslationMap.FirstOrDefault(x => x.Value.guid == newChoice.guid).Key;
+                    Port choicePort = parentView.choicePortTranslationMap.FirstOrDefault(x => x.Value.guid == newChoice.guid).Key;
                     bool hasAdded = ConversationUtils.AddChild(parentView.node, childView.node, choicePort);
                     if (hasAdded)
                     {

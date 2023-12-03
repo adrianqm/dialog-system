@@ -14,12 +14,16 @@ namespace AQM.Tools
         [SerializeField] private TextMeshProUGUI message;
         [SerializeField] private GameObject choiceContainer;
         [SerializeField] private GameObject buttonPrefab;
+        [SerializeField] private Slider _slider;
 
         private DSChoice _currentChoiceNode;
+        private Coroutine _choiceCo;
+        private bool _stopTimer = false;
         
-        public void SetNode (DSChoice node)
+        public void SetNode (DSChoice node, float choiceSeconds = 0f)
         {
             _currentChoiceNode = node;
+            _slider.enabled = false;
             if (actorImage && showActorImage)
             {
                 actorImage.gameObject.SetActive(true);
@@ -29,6 +33,16 @@ namespace AQM.Tools
             message.text = _currentChoiceNode.Message;
 
             InstantiateChoices();
+
+            if (choiceSeconds > 0)
+            {
+                _slider.enabled = true;
+                _slider.maxValue = choiceSeconds;
+                _slider.value = choiceSeconds;
+                _stopTimer = false;
+                if(_choiceCo != null)  StopCoroutine(_choiceCo);
+                _choiceCo = StartCoroutine(NoResponseCoroutine(choiceSeconds));
+            }
         }
 
         private void InstantiateChoices()
@@ -60,9 +74,23 @@ namespace AQM.Tools
                 StartCoroutine(SetDefaultButton(firstSelectedButton));
             }
         }
+        
+        private IEnumerator NoResponseCoroutine(float choiceTime)
+        {
+            while (_stopTimer == false)
+            {
+                choiceTime -= Time.deltaTime;
+                yield return new WaitForSeconds(0.001f);
+                if (choiceTime <= 0) _stopTimer = true;
+                if (_stopTimer == false) _slider.value = choiceTime;
+            }
+            
+            OnChoiceSelected(_currentChoiceNode, -1);
+        }
 
         private void OnChoiceSelected(DSChoice choiceNode, int index)
         {
+            if(_choiceCo != null) StopCoroutine(_choiceCo);
             choiceNode.onChoiceSelected.Invoke(index);
         }
 

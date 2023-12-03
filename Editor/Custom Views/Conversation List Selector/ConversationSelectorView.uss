@@ -1,0 +1,21 @@
+.group-ve {
+    -unity-text-align: middle-left;
+    flex-direction: row;
+    min-height: 22px;
+}
+
+.group-label {
+    -unity-text-align: middle-left;
+    width: 100%;
+    position: relative;
+}
+
+.hidden {
+    display: none;
+}
+
+.group-textfield {
+    width: 100%;
+    padding-right: 5px;
+    position: relative;
+}
