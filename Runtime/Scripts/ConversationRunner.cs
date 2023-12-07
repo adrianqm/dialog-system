@@ -23,7 +23,7 @@ namespace AQM.Tools
         private void OnDatabaseCloned(DialogSystemDatabase db)
         {
             _clonedDatabase = db;
-            conversationTree = _clonedDatabase.conversations.Find(c => c.guid == conversationTree.guid);
+            //conversationTree = _clonedDatabase.conversations.Find(c => c.guid == conversationTree.guid);
         }
 
         public void Interact()

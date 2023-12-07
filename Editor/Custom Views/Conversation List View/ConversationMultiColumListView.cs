@@ -15,6 +15,7 @@ public class ConversationMultiColumListView : MultiColumnListView
     public Action<ConversationTree> onEditConversation;
     private List<ConversationTree> _filteredList;
     private List<ConversationTree> _currentConversationList;
+    private ConversationGroup _conversationGroup;
     private DialogSystemDatabase _database;
     private Action _unregisterAll;
     private ToolbarSearchField _searchField;
@@ -25,12 +26,13 @@ public class ConversationMultiColumListView : MultiColumnListView
         columnSortingChanged += ColumnSortChange;
     }
 
-    public void SetupTable(DialogSystemDatabase database)
+    public void SetupTable(DialogSystemDatabase database, ConversationGroup conversationGroup)
     {
-        if (database.conversations == null) return;
+        if (conversationGroup.conversations == null) return;
 
         _database = database;
-        _currentConversationList = database.conversations;
+        _conversationGroup = conversationGroup;
+        _currentConversationList = conversationGroup.conversations;
         
         // Create new table
         if(itemsSource == null) AddColumns();
@@ -48,25 +50,26 @@ public class ConversationMultiColumListView : MultiColumnListView
         this.Q<Button>("unity-list-view__remove-button").clickable = new Clickable(RemoveSelectedConversations);
     }
 
-    public void CreateNewConversation()
+    private void CreateNewConversation()
     {
-        if (_database)
+        if (_database && _conversationGroup)
         {
-            _database.CreateConversation();
-            _currentConversationList = _database.conversations;
+            DatabaseUtils.CreateConversation(_database, _conversationGroup);
+            _currentConversationList = _conversationGroup.conversations;
             _searchField?.SetValueWithoutNotify("");
             RefreshTable();
             FocusOnLastElement();
         }
-        else Debug.LogWarning("Conversations Tree does not exist for the current Database");
+        else Debug.LogWarning("Conversations Group does not exist");
     }
 
     private void FocusOnLastElement()
     {
         ScrollToItem(-1); // Seems that will be solved in followed versions
-        int lastIndex = _database.conversations.Count - 1;
-        SetSelection(lastIndex);
         var list = this.Query<VisualElement>(className: "unity-list-view__item").ToList();
+        if (list.Count <= 0) return;
+        int lastIndex = list.Count - 1;
+        SetSelection(lastIndex);
         var itemView = list.ElementAt(lastIndex);
         var nameField = itemView.Q<TextField>(className:"conversationsTextFieldCell--textField");
         nameField.Focus();
@@ -99,12 +102,12 @@ public class ConversationMultiColumListView : MultiColumnListView
     {
         if (value == "")
         {
-            _currentConversationList = _database.conversations;
+            _currentConversationList = _conversationGroup.conversations;
             RefreshTable();
         } else
         {
             _filteredList = new List<ConversationTree>();
-            _database.conversations.ForEach(a =>
+            _conversationGroup.conversations.ForEach(a =>
             {
                 if (a.title.ToLower().Contains(value) || a.description.ToLower().Contains(value))
                 {
@@ -129,7 +132,7 @@ public class ConversationMultiColumListView : MultiColumnListView
 
         if (deleteClicked)
         {
-            List<ConversationTree> auxArray = new List<ConversationTree>(_database.conversations);
+            List<ConversationTree> auxArray = new List<ConversationTree>(_conversationGroup.conversations);
             foreach (var conversation in auxArray)
             {
                 if (selectedItems.Contains(conversation))
@@ -256,7 +259,7 @@ public class ConversationMultiColumListView : MultiColumnListView
 
     private void DeleteConversation(ConversationTree conversation)
     {
-        _database.DeteleConversation(conversation);
+        DatabaseUtils.DeleteConversation(_conversationGroup,conversation);
         if (_currentConversationList.Contains(conversation)) _currentConversationList.Remove(conversation);
     }
 
@@ -345,14 +348,6 @@ public class ConversationMultiColumListView : MultiColumnListView
 
             RefreshTable();
         }
-    }
-
-    public void ClearList()
-    {
-        ClearAllValueChangedCallbacks();
-        itemsSource = null;
-        columns.Clear();
-        RefreshItems();
     }
     private void RefreshTable()
     {

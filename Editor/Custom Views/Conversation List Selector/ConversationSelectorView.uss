@@ -19,3 +19,18 @@
     padding-right: 5px;
     position: relative;
 }
+
+.unity-collection-view__item--selected {
+    background-color: rgb(61, 61, 61);
+}
+
+.header-container {
+    background-color: rgb(60, 60, 60);
+    border-bottom-color: rgba(0, 0, 0, 0.4);
+    border-bottom-width: 1px;
+    height: 21px;
+}
+
+.plusElement {
+    max-width: 17px;
+}

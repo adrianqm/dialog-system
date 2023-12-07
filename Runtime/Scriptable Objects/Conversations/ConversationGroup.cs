@@ -5,15 +5,28 @@ namespace AQM.Tools
 {
     public class ConversationGroup: ScriptableObject
     {
-        public string name;
+        public string guid;
+        public string title;
         public List<ConversationGroup> groups;
         public List<ConversationTree> conversations;
-
-        public ConversationGroup(string name,List<ConversationTree> conversations, List<ConversationGroup> groups)
+        
+        public ConversationGroup Clone()
         {
-            this.name = name;
-            this.groups = groups;
-            this.conversations = conversations;
+            ConversationGroup clone = Instantiate(this);
+
+            foreach (var group in groups)
+            {
+                clone.groups.Add(group.Clone());
+            }
+            
+            clone.conversations = new List<ConversationTree>();
+            conversations.ForEach((conversation) =>
+            {
+                ConversationTree clonedConversation = conversation.Clone();
+                clone.conversations.Add(clonedConversation);
+            });
+
+            return clone;
         }
     }
 }

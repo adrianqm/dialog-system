@@ -14,7 +14,6 @@ namespace AQM.Tools
         public string description;
         [HideInInspector] public string guid;
         public List<ConversationGroup> conversationGroups;
-        public List<ConversationTree> conversations;
         public List<Actor> actors;
         
         #if LOCALIZATION_EXIST
@@ -25,7 +24,7 @@ namespace AQM.Tools
 
         public DSNode StartConversation(ConversationTree conversationTree)
         {
-            return !conversations.Contains(conversationTree) ? null : conversationTree.StartConversation(this);
+            return conversationTree.StartConversation(this);
         }
         
         public DialogSystemDatabase Clone()
@@ -33,12 +32,12 @@ namespace AQM.Tools
             DialogSystemDatabase tree = Instantiate(this);
             tree.title = "(Cloned) "+ title;
             tree.description = description;
-            tree.conversations = new List<ConversationTree>();
-            conversations.ForEach((conversation) =>
+            tree.conversationGroups = new List<ConversationGroup>();
+            conversationGroups.ForEach((group) =>
             {
-                ConversationTree clonedConversation = conversation.Clone();
-                tree.conversations.Add(clonedConversation);
+                tree.conversationGroups.Add(group.Clone());
             });
+            
             tree.actors = new List<Actor>();
             actors.ForEach((actor) =>
             {
@@ -47,40 +46,6 @@ namespace AQM.Tools
             });
             return tree;
         }
-        
-    #if  UNITY_EDITOR
-        
-        public void CreateConversation()
-        {
-            
-            ConversationTree newConversation = ScriptableObject.CreateInstance(typeof(ConversationTree)) as ConversationTree;
-            if (newConversation)
-            {
-                newConversation.name = "ConversationTree";
-                newConversation.guid = GUID.Generate().ToString();
-                newConversation.title = "Default Title";
-                newConversation.description = "Default Desc";
-                newConversation.hideFlags = HideFlags.HideInHierarchy;
-                
-                //Undo.RecordObject(this, "Actors Tree (CreateActor)");
-                conversations.Add(newConversation);
-                
-                if (!Application.isPlaying)
-                {
-                    AssetDatabase.AddObjectToAsset( newConversation,this);
-                }
-                //Undo.RegisterCreatedObjectUndo(newActor, "Actors Tree (CreateActor)");
-                AssetDatabase.SaveAssets();
-            }
-        }
-        
-        public void DeteleConversation(ConversationTree conversation)
-        {
-            conversations.Remove(conversation);
-            Undo.DestroyObjectImmediate(conversation);
-            AssetDatabase.SaveAssets();
-        }
-    #endif
     }
 }
 

@@ -20,6 +20,7 @@ using UnityEngine.UIElements;
         private ConversationMultiColumListView _conversationMultiColumListView;
         private ConversationsView _conversationEditView;
         private ConversationListView _conversationListView;
+        private ConversationSelectorView _conversationGroupSelector;
         private VisualElement _toolbarHeaderVE;
         private VisualElement _localicationInfoVE;
         private Label _localeLabel;
@@ -123,6 +124,8 @@ using UnityEngine.UIElements;
             // Conversations GraphView
             _conversationListView = root.Q<ConversationListView>();
             _conversationEditView = root.Q<ConversationsView>();
+            _conversationGroupSelector = root.Q<ConversationSelectorView>();
+            _conversationGroupSelector.onConversationGroupSelected = OnUpdateConversationTable;
 
             // DB selector
             _dialogSelectorVE = root.Q<VisualElement>("database-selector");
@@ -276,10 +279,10 @@ using UnityEngine.UIElements;
                                 SetUpComponentsDatabase(_currentDatabase);
                             }
 
-                            ConversationTree conversationCloned = 
+                            /*ConversationTree conversationCloned = 
                                 _currentDatabase.conversations.Find(c =>
                                 c.guid == runner.conversationTree.guid);
-                            OnEditConversation(conversationCloned);
+                            OnEditConversation(conversationCloned);*/
                         }
                     }
                     
@@ -341,7 +344,7 @@ using UnityEngine.UIElements;
             _dialogEditor.SetUpEditor(database);
             _treeView.SetUpTreeView(database);
             _actorMultiColumListView.SetupTable(database);
-            _conversationMultiColumListView.SetupTable(database);
+            _conversationGroupSelector.SetupTree(database);
         }
 
         private void OnManualSet(DialogSystemDatabase database)
@@ -470,7 +473,7 @@ using UnityEngine.UIElements;
 
         void OpenDatabaseSelector()
         {
-            _dialogSelector.ClearDatabaseSelection();
+            _dialogSelector?.ClearDatabaseSelection();
             _dialogSelectorVE.RemoveFromClassList(hiddenContentClassName);
         }
 
@@ -484,6 +487,11 @@ using UnityEngine.UIElements;
         {
             _dialogCreatorView.ResetInputs();
             _dialogCreatorVE.RemoveFromClassList(hiddenContentClassName);
+        }
+
+        void OnUpdateConversationTable(ConversationGroup group)
+        {
+            _conversationMultiColumListView.SetupTable(_currentDatabase, group);
         }
 
         void OnEditConversation(ConversationTree conversation)

@@ -139,7 +139,7 @@ public class DatabaseLocalizationView : VisualElement
                 }
                 
                 // Create entries
-                foreach (var conversation in DSData.instance.database.conversations)
+                /*foreach (var conversation in DSData.instance.database.conversations)
                 {
                     foreach (var node in conversation.nodes)
                     {
@@ -159,7 +159,7 @@ public class DatabaseLocalizationView : VisualElement
                             });
                         }
                     }
-                }
+                }*/
                 EditorUtility.SetDirty(tableCollection);
                 EditorUtility.SetDirty(table);
                 EditorUtility.SetDirty(table.SharedData);

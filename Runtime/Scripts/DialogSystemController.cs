@@ -67,10 +67,10 @@ namespace AQM.Tools
             var pairs = new List<KeyValuePair<ConversationTree, string>>();
             if (dialogSystemDatabase != null)
             {
-                foreach (ConversationTree conversation in dialogSystemDatabase.conversations)
+                /*foreach (ConversationTree conversation in dialogSystemDatabase.conversations)
                 {
                     pairs.Add(new KeyValuePair<ConversationTree, string>(conversation, $"{conversation.title}"));
-                }
+                }*/
             }
 
             return pairs;

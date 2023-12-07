@@ -56,8 +56,7 @@ public class DatabaseCreatorView : VisualElement
     
     private void OnCreateDatabase()
     {
-        DialogSystemDatabase newDb = ScriptableObject.CreateInstance<DialogSystemDatabase>();
-        DatabaseUtils.CreateDatabase(_dbTitle.value, _dbDesc.value);
+        DialogSystemDatabase newDb = DatabaseUtils.CreateDatabase(_dbTitle.value, _dbDesc.value);
         OnCreatedDatabase?.Invoke(newDb);
     }
 }

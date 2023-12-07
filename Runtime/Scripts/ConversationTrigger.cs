@@ -21,7 +21,7 @@ public class ConversationTrigger: MonoBehaviour
     private void OnDatabaseCloned(DialogSystemDatabase db)
     {
         _clonedDatabase = db;
-        triggerConversation = _clonedDatabase.conversations.Find(c => c.guid == triggerConversation.guid);
+        //triggerConversation = _clonedDatabase.conversations.Find(c => c.guid == triggerConversation.guid);
     }
 
     private void OnTriggerEnter(Collider other)
