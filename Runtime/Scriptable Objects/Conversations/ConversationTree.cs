@@ -272,7 +272,7 @@ namespace AQM.Tools
                 nonRepeatNodeList.Add(n.guid);
             });
 
-            if (!nonRepeatNodeList.Contains(tree.completeNode.guid))
+            if (tree.completeNode && !nonRepeatNodeList.Contains(tree.completeNode.guid))
             {
                 tree.nodes.Add(tree.completeNode.Clone());
             }

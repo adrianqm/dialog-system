@@ -177,7 +177,7 @@ public class DialogSystemView : GraphView
         //EditorApplication.delayCall += FrameAllNodes;
     }
 
-    internal void PopulateView(ConversationTree tree)
+    private void PopulateView(ConversationTree tree)
     {
         if (tree == null) return;
         
@@ -201,17 +201,16 @@ public class DialogSystemView : GraphView
         AddNodeSearchWindow();
         RegisterCallback<KeyDownEvent>(DisableRedoAction);
         
-        
         if (_tree.startNode == null)
         {
-            _tree.startNode = ConversationUtils.CreateNode(_currentDatabase,_tree,typeof(StartNode), Vector2.zero) as StartNode;
+            _tree.startNode = ConversationUtils.CreateNode(_currentDatabase,_tree,typeof(StartNode),new Vector2(0f,200f)) as StartNode;
             EditorUtility.SetDirty(tree);
             AssetDatabase.SaveAssets();
         }
         
         if (_tree.completeNode == null)
         {
-            _tree.completeNode = ConversationUtils.CreateNode(_currentDatabase,_tree, typeof(CompleteNode), new Vector2(1000f,0f)) as CompleteNode;
+            _tree.completeNode = ConversationUtils.CreateNode(_currentDatabase,_tree, typeof(CompleteNode), new Vector2(1000f,200f)) as CompleteNode;
             EditorUtility.SetDirty(tree);
             AssetDatabase.SaveAssets();
         }

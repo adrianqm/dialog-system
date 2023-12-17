@@ -18,8 +18,10 @@ public class ConversationSelectorView : VisualElement
     private int _selectedIndex = -1;
     private ConversationGroup _selectedGroup;
     private int _currentCreationId;
-    private bool _columnsHandled;
     private Dictionary<string, int> _translationKeyMap = new();
+    private ToolbarSearchField _searchField;
+    private List<TreeViewItemData<ConversationGroup>> _filteredList = new();
+    private List<TreeViewItemData<ConversationGroup>> _rootList = new();
     
     public ConversationSelectorView()
     {
@@ -28,17 +30,58 @@ public class ConversationSelectorView : VisualElement
         
         SetUpToolbar();
         SetUpContextMenu();
+        _treeView = this.Q<TreeView>();
     }
 
     private void SetUpToolbar()
     {
-        ToolbarMenu menuBar = this.Q<ToolbarMenu>();
+        ToolbarMenu menuBar = this.Q<ToolbarMenu>("groupsToolbar");
         VisualElement textElement = menuBar.ElementAt(0);
         textElement.AddToClassList("plusElement");
         textElement.Add(new Image {
             image = EditorGUIUtility.IconContent("Toolbar Plus").image
         });
-        menuBar.menu.AppendAction("Add New Group", a => AddChildToTree());
+        menuBar.menu.AppendAction("Create Group", a => AddGroup());
+        menuBar.menu.AppendAction("Create Group Child", a => AddGroupChild());
+        
+        _searchField = this.Q<ToolbarSearchField>("groupsSearchFilter");
+        _searchField.RegisterValueChangedCallback((evt) =>
+        {
+            FilterTree(evt.newValue.ToLower());
+        });
+    }
+
+    private void FilterTree(string value)
+    {
+        if (value == "")
+        {
+            _treeView.SetRootItems(_rootList);
+            _treeView.RefreshItems();
+            _treeView.reorderable = true;
+        } else
+        {
+            _filteredList = new List<TreeViewItemData<ConversationGroup>>();
+            _filteredList = FilterGroups(_rootList, value.ToLower());
+            _treeView.SetRootItems(_filteredList);
+            _treeView.RefreshItems();
+            _treeView.reorderable = false;
+        }
+    }
+    
+    private List<TreeViewItemData<ConversationGroup>> FilterGroups(List<TreeViewItemData<ConversationGroup>> treeViewData, string searchTerm)
+    {
+        var results = new List<TreeViewItemData<ConversationGroup>>();
+
+        foreach (var node in treeViewData)
+        {
+            if (node.data.title.ToLower().Contains(searchTerm))
+            {
+                results.Add(new TreeViewItemData<ConversationGroup>(node.id, node.data));
+            }
+            
+            results.AddRange(FilterGroups(node.children.ToList(), searchTerm));
+        }
+        return results;
     }
 
     private void SetUpContextMenu()
@@ -46,48 +89,73 @@ public class ConversationSelectorView : VisualElement
         VisualElement scroll = this.Q("unity-content-and-vertical-scroll-container");
         scroll.AddManipulator(new ContextualMenuManipulator(evt =>
         {
-            evt.menu.AppendAction("Add New Group", a => AddChildToTree());
+            evt.menu.AppendAction("Create Group", a => AddGroup());
+            evt.menu.AppendAction("Create Group Child", a => AddGroupChild());
             
             DropdownMenuAction.Status removeStatus = DropdownMenuAction.Status.Disabled;
             string message = "Remove Selected Group";
-            if( _treeView.selectedItem != null) removeStatus = DropdownMenuAction.Status.Normal;
+            if(_treeView.selectedItem != null) removeStatus = DropdownMenuAction.Status.Normal;
             evt.menu.AppendAction(message, a => RemoveSelectedGroup(),removeStatus);
         }));
     }
-
-    private void AddChildToTree()
+    
+    private void AddGroup()
     {
-        if (_database)
+        if (!_database) return;
+
+        ConversationGroup group = null;
+        group = DatabaseUtils.CreateConversationGroup(_database, "Default Group "+ _currentCreationId);
+        AddNewGroupToTree(group,false);
+    }
+
+    private void AddGroupChild()
+    {
+        if (!_database) return;
+        
+        ConversationGroup group = null;
+        if (_selectedGroup)
         {
-            ConversationGroup group = null;
-            if (_selectedGroup)
-            {
-                group = DatabaseUtils.CreateConversationGroup(_database, "Default Group "+ _currentCreationId, _selectedGroup);
-            }
-            else group = DatabaseUtils.CreateConversationGroup(_database, "Default Group"+ _currentCreationId);
-            
-            if (group)
-            {
-                var zeroList = new List<TreeViewItemData<ConversationGroup>>();
-                _translationKeyMap.Add(group.guid, _currentCreationId);
-                int elementId = _currentCreationId;
-                var newTreeList = new TreeViewItemData<ConversationGroup>(_currentCreationId, group, zeroList);
-                _currentCreationId += 1;
-                if(_selectedGroup != null) _treeView.AddItem(newTreeList,_translationKeyMap[_selectedGroup.guid]);
-                else _treeView.AddItem(newTreeList);
+            group = DatabaseUtils.CreateConversationGroup(_database, "Default Group "+ _currentCreationId, _selectedGroup);
+        }
+        else group = DatabaseUtils.CreateConversationGroup(_database, "Default Group "+ _currentCreationId);
+
+        AddNewGroupToTree(group, true);
+    }
+
+    private void AddNewGroupToTree(ConversationGroup group, bool isChild)
+    {
+        if (group)
+        {
+            _searchField?.SetValueWithoutNotify("");
+            _treeView.SetRootItems(_rootList);
+            _treeView.Rebuild();
                 
+            var zeroList = new List<TreeViewItemData<ConversationGroup>>();
+            _translationKeyMap.Add(group.guid, _currentCreationId);
+            int elementId = _currentCreationId;
+            var newTreeList = new TreeViewItemData<ConversationGroup>(_currentCreationId, group, zeroList);
+            _currentCreationId += 1;
+            if (isChild && _selectedGroup)
+            {
+                _treeView.AddItem(newTreeList,_translationKeyMap[_selectedGroup.guid]);
                 _treeView.ExpandItem(_treeView.GetIdForIndex(_selectedIndex));
-                VisualElement ve = _treeView.GetRootElementForId(elementId);
-                var label = ve.Q<Label>(className: "group-label");
-                var textField = ve.Q<TextField>(className: "group-textfield");
-                label.AddToClassList("hidden");
-                textField.RemoveFromClassList("hidden");
-                schedule.Execute(()=>
-                {
-                    textField.BringToFront();
-                    textField.Q(TextInputBaseField<string>.textInputUssName).Focus();
-                });
             }
+            else
+            {
+                _treeView.AddItem(newTreeList);
+                _rootList.Add(newTreeList);
+            }
+            
+            VisualElement ve = _treeView.GetRootElementForId(elementId);
+            var label = ve.Q<Label>(className: "group-label");
+            var textField = ve.Q<TextField>(className: "group-textfield");
+            label.AddToClassList("hidden");
+            textField.RemoveFromClassList("hidden");
+            schedule.Execute(()=>
+            {
+                textField.BringToFront();
+                textField.Q(TextInputBaseField<string>.textInputUssName).Focus();
+            });
         }
     }
 
@@ -101,23 +169,89 @@ public class ConversationSelectorView : VisualElement
 
         if (deleteClicked)
         {
-            int parentId = _treeView.GetParentIdForIndex(_selectedIndex);
-            ConversationGroup parentGroup = _treeView.GetItemDataForId<ConversationGroup>(parentId);
+            _searchField?.SetValueWithoutNotify("");
+            _treeView.SetRootItems(_rootList);
+            _treeView.Rebuild();
+            
             ConversationGroup group = _treeView.selectedItem as ConversationGroup;
-            DatabaseUtils.DeleteConversationGroup(_database, group, parentGroup);
-            if (!_treeView.TryRemoveItem(_translationKeyMap[group.guid])) return;
-            _treeView.RefreshItems();
-            _selectedIndex = -1;
+            int groupIndex = _treeView.GetIdForIndex(_translationKeyMap[group.guid]);
+            int parentId = _treeView.GetParentIdForIndex(groupIndex);
+            ConversationGroup parentGroup = _treeView.GetItemDataForId<ConversationGroup>(parentId);
+            if(!_treeView.TryRemoveItem(_translationKeyMap[group.guid])) return;
+            DatabaseUtils.DeleteConversationGroup(_database, group, parentGroup, _translationKeyMap);
+            if(_rootList.Count > 0) _treeView.SetSelection(0);
+            SetupTree(_database);
         }
     }
 
     public void SetupTree(DialogSystemDatabase database)
     {
         _database = database;
+        _selectedGroup = null;
+        _selectedIndex = -1;
         
+        if (_treeView != null)
+        {
+            _treeView.selectedIndicesChanged -= SelectionChanged;
+            _treeView.ClearSelection();
+        }
+        _treeView.selectedIndicesChanged += SelectionChanged;
+        
+        SetTree();
+
+        _treeView.makeItem = () =>
+        {
+            var ve = new VisualElement();
+            ve.AddToClassList("group-ve");
+            ve.focusable = true;
+        
+            var label = new Label();
+            label.AddToClassList("group-label");
+            ve.Add(label);
+        
+            var textField = new TextField();
+            textField.AddToClassList("group-textfield");
+            textField.AddToClassList("hidden");
+            textField.focusable = true;
+            ve.Add(textField);
+        
+            return ve;
+        };
+        _treeView.bindItem = (ve, index) =>
+        {
+            var label = ve.Q<Label>(className: "group-label");
+            label.bindingPath = "title";
+            label.Bind(new SerializedObject(_treeView.GetItemDataForIndex<ConversationGroup>(index)));
+        
+            var textField = ve.Q<TextField>(className: "group-textfield");
+            textField.bindingPath = "title";
+            textField.Bind(new SerializedObject(_treeView.GetItemDataForIndex<ConversationGroup>(index)));
+            ve.Add(textField);
+        
+            label.RegisterCallback<MouseDownEvent>((evt) =>
+            {
+                if (evt.clickCount == 2)
+                {
+                    label.AddToClassList("hidden");
+                    textField.RemoveFromClassList("hidden");
+                    textField.Focus();
+                }
+            });
+        
+            textField.RegisterCallback<FocusOutEvent>((_) =>
+            {
+                textField.AddToClassList("hidden");
+                label.RemoveFromClassList("hidden");
+            });
+        };
+    }
+
+    private void SetTree()
+    {
         List<TreeViewItemData<ConversationGroup>> treeRoots = new List<TreeViewItemData<ConversationGroup>>();
         _currentCreationId = 0;
         _translationKeyMap.Clear();
+        _rootList.Clear();
         foreach (var group in _database.conversationGroups)
         {
             List<TreeViewItemData<ConversationGroup>> groupsInGroup = AddConversationGroupsToTree(group);
@@ -125,66 +259,14 @@ public class ConversationSelectorView : VisualElement
             treeRoots.Add(new TreeViewItemData<ConversationGroup>(_currentCreationId, group, groupsInGroup));
             _currentCreationId += 1;
         }
-
-        if (_treeView != null)
-        {
-            _treeView.selectedIndicesChanged -= SelectionChanged;
-            _treeView.Clear();
-        }
-        _treeView = this.Q<TreeView>();
-        _treeView.selectedIndicesChanged += SelectionChanged;
+        
+        _rootList = treeRoots;
+        _searchField?.SetValueWithoutNotify("");
         _treeView.SetRootItems(treeRoots);
         _treeView.Rebuild();
-
-        if (!_columnsHandled)
-        {
-            _columnsHandled = true;
-            _treeView.makeItem = () =>
-            {
-                var ve = new VisualElement();
-                ve.AddToClassList("group-ve");
-                ve.focusable = true;
-            
-                var label = new Label();
-                label.AddToClassList("group-label");
-                ve.Add(label);
-            
-                var textField = new TextField();
-                textField.AddToClassList("group-textfield");
-                textField.AddToClassList("hidden");
-                textField.focusable = true;
-                ve.Add(textField);
-            
-                return ve;
-            };
-            _treeView.bindItem = (ve, index) =>
-            {
-                var label = ve.Q<Label>(className: "group-label");
-                label.bindingPath = "title";
-                label.Bind(new SerializedObject(_treeView.GetItemDataForIndex<ConversationGroup>(index)));
-            
-                var textField = ve.Q<TextField>(className: "group-textfield");
-                textField.bindingPath = "title";
-                textField.Bind(new SerializedObject(_treeView.GetItemDataForIndex<ConversationGroup>(index)));
-                ve.Add(textField);
-            
-                label.RegisterCallback<MouseDownEvent>((evt) =>
-                {
-                    if (evt.clickCount == 2)
-                    {
-                        label.AddToClassList("hidden");
-                        textField.RemoveFromClassList("hidden");
-                        textField.Focus();
-                    }
-                });
-            
-                textField.RegisterCallback<FocusOutEvent>((_) =>
-                {
-                    textField.AddToClassList("hidden");
-                    label.RemoveFromClassList("hidden");
-                });
-            };
-        }
+        
+        //Set default
+        if(treeRoots.Count > 0)_treeView.SetSelection(0);
     }
 
     private List<TreeViewItemData<ConversationGroup>> AddConversationGroupsToTree (ConversationGroup group)
@@ -203,6 +285,7 @@ public class ConversationSelectorView : VisualElement
 
     private void SelectionChanged(IEnumerable<int> indexes)
     {
+        if(indexes == null) return;
         _selectedIndex = indexes.ToList()[0];
         _selectedGroup = _treeView.GetItemDataForIndex<ConversationGroup>(_selectedIndex);
         onConversationGroupSelected?.Invoke(_selectedGroup);

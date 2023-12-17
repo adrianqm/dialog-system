@@ -81,7 +81,14 @@ public class DialogInspectorView : VisualElement
             EditorUtility.SetDirty(node);
         });
 #if LOCALIZATION_EXIST
-        BindLocalization(node);
+        if (!DSData.instance.tableCollection || !DSData.instance.database.defaultLocale)
+        {
+            BindMessage(node);
+        }
+        else
+        {
+            BindLocalization(node);
+        }
 #else
         BindMessage(node);
 #endif
@@ -97,7 +104,14 @@ public class DialogInspectorView : VisualElement
             EditorUtility.SetDirty(node);
         });
 #if LOCALIZATION_EXIST
-        BindLocalization(node);
+        if (!DSData.instance.tableCollection || !DSData.instance.database.defaultLocale)
+        {
+            BindMessage(node);
+        }
+        else
+        {
+            BindLocalization(node);
+        }
 #else
         BindMessage(node);
 #endif
@@ -191,46 +205,41 @@ public class DialogInspectorView : VisualElement
             RemoveOutputView(ve, choice);
         });
         ve.Add(deleteButton);
-
-#if LOCALIZATION_EXIST
         VisualElement choiceLocalizationContainer = new VisualElement();
-        
+    
         VisualElement choiceLocalization = new VisualElement();
         choiceLocalizationContainer.Add(choiceLocalization);
-        
-        BindLocalizationElement(choiceLocalization, choiceNode, choice);
+    
+        BindElementText(choiceLocalization, choiceNode, choice);
         ve.Add(choiceLocalizationContainer);
         
-        VisualElement idVe = new VisualElement();
-        idVe.AddToClassList("message-guid-choice-container");
-        Label labelId = new Label("ID");
-        labelId.AddToClassList("message-guid-id");
-        idVe.Add(labelId);
-            
-        VisualElement copyButtonVe = new VisualElement();
-        copyButtonVe.AddToClassList("message-guid-copy-container");
-        Button copyButton = new Button();
-        copyButton.Add(new Image {
-            image = EditorGUIUtility.IconContent("d_winbtn_win_restore_a").image
-        });
-        copyButton.AddToClassList("copyBtn");
-        copyButton.clickable = new Clickable(() =>
+#if LOCALIZATION_EXIST
+        if (DSData.instance.tableCollection && DSData.instance.database.defaultLocale)
         {
-            TextEditor te = new TextEditor();
-            te.text = choice.guid;
-            te.SelectAll();
-            te.Copy();
-        });
-        copyButtonVe.Add(copyButton);
-        idVe.Add(copyButtonVe);
-        ve.Add(idVe);
-#else
-        TextField translatedText = new TextField {multiline = true};
-        translatedText.style.marginRight = 0;
-        translatedText.AddToClassList("field");
-        translatedText.bindingPath = "choiceMessage";
-        translatedText.Bind(new SerializedObject(choice));
-        ve.Add(translatedText);
+            VisualElement idVe = new VisualElement();
+            idVe.AddToClassList("message-guid-choice-container");
+            Label labelId = new Label("ID");
+            labelId.AddToClassList("message-guid-id");
+            idVe.Add(labelId);
+            
+            VisualElement copyButtonVe = new VisualElement();
+            copyButtonVe.AddToClassList("message-guid-copy-container");
+            Button copyButton = new Button();
+            copyButton.Add(new Image {
+                image = EditorGUIUtility.IconContent("d_winbtn_win_restore_a").image
+            });
+            copyButton.AddToClassList("copyBtn");
+            copyButton.clickable = new Clickable(() =>
+            {
+                TextEditor te = new TextEditor();
+                te.text = choice.guid;
+                te.SelectAll();
+                te.Copy();
+            });
+            copyButtonVe.Add(copyButton);
+            idVe.Add(copyButtonVe);
+            ve.Add(idVe);
+        }
 #endif
         _choicesMap.Add(choice.guid,ve);
         _choicesFoldoutVE.Add(ve);
@@ -255,17 +264,16 @@ public class DialogInspectorView : VisualElement
 #if LOCALIZATION_EXIST
     private void BindLocalization(Node node)
     {
-        if (!DSData.instance.tableCollection || !DSData.instance.database.defaultLocale) return;
-        
         _collection = DSData.instance.tableCollection;
         _defaultLocale = DSData.instance.database.defaultLocale;
         _translationMapText.Clear();
         LocalizationSettings.InitializationOperation.WaitForCompletion();
         
-        VisualElement localizationMessageVe = this.Q("localization-message");
-        BindLocalizationElement(localizationMessageVe,node);
+        VisualElement localizationMessageVe = this.Q("message-container-text");
+        BindElementText(localizationMessageVe,node);
         
         VisualElement copyVe = this.Q("message-guid-copy-container");
+        copyVe.parent.RemoveFromClassList("hidden-class");
         copyVe.Clear();
         Button copyButton = new Button();
         copyButton.Add(new Image {
@@ -281,14 +289,24 @@ public class DialogInspectorView : VisualElement
         });
         copyVe.Add(copyButton);
     }
-
-    private void BindLocalizationElement(VisualElement localizationContainer, Node node, Choice choice = null)
+    
+#endif
+    
+    private void BindElementText(VisualElement localizationContainer, Node node, Choice choice = null)
     {
         localizationContainer.Unbind();
         localizationContainer.Clear();
         string tableGuid = choice != null ? choice.guid : node.guid;
-        StringTable table = DSData.instance.defaultStringTable;
-        string translation = LocalizationUtils.GetLocalizedString(table, tableGuid);
+        
+#if LOCALIZATION_EXIST
+        StringTable table = null;
+        string translation = "";
+        if (DSData.instance.tableCollection && DSData.instance.database.defaultLocale)
+        {
+            table = DSData.instance.defaultStringTable;
+            translation = LocalizationUtils.GetLocalizedString(table, tableGuid);
+        }
+#endif
         
         TextField translatedText = new TextField {multiline = true};
         Label toggleText = null;
@@ -326,7 +344,8 @@ public class DialogInspectorView : VisualElement
             translatedText.bindingPath = "choiceMessage";
             translatedText.Bind(new SerializedObject(choice));
         }
-        
+#if LOCALIZATION_EXIST
+        if (table == null) return;
         translatedText.value = translation;
         EventCallback<FocusOutEvent> focusOutEvent = (e) =>
         {
@@ -344,14 +363,13 @@ public class DialogInspectorView : VisualElement
         translatedText.RegisterCallback(focusOutEvent);
         _translationMapText.Add(tableGuid,new KeyValuePair<Label, TextField>(toggleText,translatedText));
         _unregisterAll += () => translatedText.UnregisterCallback(focusOutEvent);
-    }
 #endif
-
+    }
+    
     private void BindMessage(Node node)
     {
-        _messageTextField.RemoveFromClassList("hidden-class");
-        _messageTextField.bindingPath = "message";
-        _messageTextField.Bind(new SerializedObject(node));
+        VisualElement localizationMessageVe = this.Q("message-container-text");
+        BindElementText(localizationMessageVe,node);
     }
 
     private void GetAndBindActor(Actor actor, Action<Actor> onSelectActor)

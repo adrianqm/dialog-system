@@ -16,12 +16,12 @@
             </ui:VisualElement>
             <ui:VisualElement name="messageContainer" class="hidden-class" style="flex-grow: 0; background-color: rgb(24, 24, 29); padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; margin-bottom: 10px;">
                 <ui:Label tabindex="-1" text="Message" display-tooltip-when-elided="true" name="message-label" style="-unity-text-align: upper-center; margin-right: 0; padding-right: 1px;" />
-                <ui:VisualElement name="message-guid-container" class="message-guid-container" style="top: 3px; right: 5px;">
+                <ui:VisualElement name="message-guid-container" class="message-guid-container hidden-class" style="top: 3px; right: 5px;">
                     <ui:Label tabindex="-1" text="ID" parse-escape-sequences="true" display-tooltip-when-elided="true" name="message-guid-id" focusable="false" class="message-guid-id" />
                     <ui:VisualElement name="message-guid-copy-container" class="message-guid-copy-container" />
                 </ui:VisualElement>
                 <ui:TextField picking-mode="Ignore" label="Message" readonly="false" password="false" multiline="true" name="message-text-field" class="hidden-class field" style="opacity: 1; overflow: hidden; align-items: auto; flex-direction: column; height: auto; justify-content: flex-start; align-self: auto; min-height: 40px; flex-shrink: 1;" />
-                <ui:VisualElement name="localization-message" style="flex-grow: 1; margin-top: 5px; margin-bottom: 4px; margin-right: 3px;" />
+                <ui:VisualElement name="message-container-text" style="flex-grow: 1; margin-top: 5px; margin-bottom: 4px; margin-right: 3px;" />
             </ui:VisualElement>
             <ui:VisualElement name="choicesContainer" class="hidden-class" style="flex-grow: 0; background-color: rgb(24, 24, 29); padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; margin-bottom: 10px;">
                 <ui:Label tabindex="-1" text="Choices" display-tooltip-when-elided="true" name="choices-label" style="-unity-text-align: upper-center; flex-direction: row; padding-right: 1px;" />

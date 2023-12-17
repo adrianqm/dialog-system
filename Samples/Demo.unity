@@ -871,7 +871,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bf2125a32da03648984598fda2c64ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  triggerConversation: {fileID: -4979306286566090355, guid: 5668216104d22504f9eb4307013d7334, type: 2}
+  triggerConversation: {fileID: -5858927436893824494, guid: e5f62a0d00014ca4883096c2118488c8, type: 2}
   lookAtPoint: {fileID: 1435192075}
 --- !u!135 &762904881
 SphereCollider:
@@ -1579,14 +1579,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9dd38c908c5460d4ab42cdf10f44bf3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogSystemDatabase: {fileID: 11400000, guid: 5668216104d22504f9eb4307013d7334, type: 2}
+  dialogSystemDatabase: {fileID: 11400000, guid: e5f62a0d00014ca4883096c2118488c8, type: 2}
   inputKeys:
   - {fileID: -1215368942516958011, guid: f3e6b50850206464287b158c92e4cb08, type: 3}
   - {fileID: 5697762415176839361, guid: f3e6b50850206464287b158c92e4cb08, type: 3}
   dialogTimer: 0
   dialogTime: 2
   hasNoResponse: 1
-  noResponseTime: 4
+  noResponseTime: 10
 --- !u!1 &1001991423
 GameObject:
   m_ObjectHideFlags: 0
@@ -2121,7 +2121,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 536963a12b43a1341811c20656f01c01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  conversationTree: {fileID: 6660827138663173777, guid: 5668216104d22504f9eb4307013d7334, type: 2}
+  conversationTree: {fileID: 7331253529948778493, guid: e5f62a0d00014ca4883096c2118488c8, type: 2}
   lookAtPoint: {fileID: 819760954}
 --- !u!1 &1122216686
 GameObject:
@@ -2244,7 +2244,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 536963a12b43a1341811c20656f01c01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  conversationTree: {fileID: -5471901116755713981, guid: 5668216104d22504f9eb4307013d7334, type: 2}
+  conversationTree: {fileID: -884569730197283174, guid: e5f62a0d00014ca4883096c2118488c8, type: 2}
   lookAtPoint: {fileID: 816227855}
 --- !u!1 &1129794669
 GameObject:
@@ -2761,7 +2761,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 536963a12b43a1341811c20656f01c01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  conversationTree: {fileID: 6499724637177951249, guid: 5668216104d22504f9eb4307013d7334, type: 2}
+  conversationTree: {fileID: 6180324817185036842, guid: e5f62a0d00014ca4883096c2118488c8, type: 2}
   lookAtPoint: {fileID: 2144201928}
 --- !u!1 &1572393226
 GameObject:

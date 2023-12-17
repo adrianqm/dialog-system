@@ -33,6 +33,7 @@ public class ConversationMultiColumListView : MultiColumnListView
         _database = database;
         _conversationGroup = conversationGroup;
         _currentConversationList = conversationGroup.conversations;
+        _searchField?.SetValueWithoutNotify("");
         
         // Create new table
         if(itemsSource == null) AddColumns();
@@ -44,13 +45,13 @@ public class ConversationMultiColumListView : MultiColumnListView
         sortingEnabled = true;
         reorderMode = ListViewReorderMode.Animated;
         selectionType = SelectionType.Multiple;
-        showAddRemoveFooter = true;
+        //showAddRemoveFooter = true;
         
-        this.Q<Button>("unity-list-view__add-button").clickable = new Clickable(CreateNewConversation);
-        this.Q<Button>("unity-list-view__remove-button").clickable = new Clickable(RemoveSelectedConversations);
+        //this.Q<Button>("unity-list-view__add-button").clickable = new Clickable(CreateNewConversation);
+        //this.Q<Button>("unity-list-view__remove-button").clickable = new Clickable(RemoveSelectedConversations);
     }
 
-    private void CreateNewConversation()
+    public void CreateNewConversation()
     {
         if (_database && _conversationGroup)
         {
@@ -205,7 +206,8 @@ public class ConversationMultiColumListView : MultiColumnListView
                 //title.bindingPath = "title";
                 //title.Bind(new SerializedObject(_currentConversationList[index]));
                 title.value = _currentConversationList[index].title;
-                title.RegisterCallback<FocusOutEvent>((e) =>
+                
+                EventCallback<FocusOutEvent> focusOutEvent = (e) =>
                 {
                     string valTrimmed = title.value.Trim(' ');
                     if (valTrimmed != "")
@@ -214,9 +216,11 @@ public class ConversationMultiColumListView : MultiColumnListView
                         EditorUtility.SetDirty(_currentConversationList[index]);
                     }
                     title.value = _currentConversationList[index].title;
-                });
+                };
+                title.RegisterCallback(focusOutEvent);
                 _unregisterAll += () =>
                 {
+                    title.UnregisterCallback(focusOutEvent);
                     title.Blur();
                 };
                 break;

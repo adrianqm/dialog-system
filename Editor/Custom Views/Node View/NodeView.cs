@@ -94,7 +94,10 @@ namespace AQM.Tools
                     });
                     _messageTextField = this.Q<TextField>("message-textfield");
     #if LOCALIZATION_EXIST
-                    dialogNode.message = LocalizationUtils.GetDefaultLocaleLocalizedString(node.guid);
+                    if (DSData.instance.tableCollection && DSData.instance.database.defaultLocale)
+                    {
+                        dialogNode.message = LocalizationUtils.GetDefaultLocaleLocalizedString(node.guid);
+                    }
     #endif
                     BindMessage();
                     
@@ -119,7 +122,10 @@ namespace AQM.Tools
                     });
                     _messageTextField = this.Q<TextField>("message-textfield");
     #if LOCALIZATION_EXIST
-                    choiceNode.message = LocalizationUtils.GetDefaultLocaleLocalizedString(node.guid);
+                    if (DSData.instance.tableCollection && DSData.instance.database.defaultLocale)
+                    {
+                        choiceNode.message = LocalizationUtils.GetDefaultLocaleLocalizedString(node.guid);
+                    }
     #endif
                     BindMessage();
                     
@@ -256,17 +262,22 @@ namespace AQM.Tools
             choiceTextField.bindingPath = "choiceMessage";
             choiceTextField.Bind(new SerializedObject(choice));
             choiceTextField.RegisterCallback<FocusEvent>((e) =>{_onClearSelection.Invoke();onNodeSelected(this);});
-            choiceTextField.RegisterCallback<FocusOutEvent>((e) =>
+#if LOCALIZATION_EXIST
+            if (DSData.instance.tableCollection && DSData.instance.database.defaultLocale)
             {
-                string valTrimmed = choiceTextField.value.Trim(' ');
-                string previousString = LocalizationUtils.GetDefaultLocaleLocalizedString(choice.guid);
-                if (valTrimmed != "" && valTrimmed != previousString)
+                choiceTextField.RegisterCallback<FocusOutEvent>((e) =>
                 {
-                    LocalizationUtils.SetDefaultLocaleEntry(choice.guid, valTrimmed);
-                }
-                string finalTranslation = LocalizationUtils.GetDefaultLocaleLocalizedString(choice.guid);
-                choiceTextField.value = finalTranslation;
-            });
+                    string valTrimmed = choiceTextField.value.Trim(' ');
+                    string previousString = LocalizationUtils.GetDefaultLocaleLocalizedString(choice.guid);
+                    if (valTrimmed != "" && valTrimmed != previousString)
+                    {
+                        LocalizationUtils.SetDefaultLocaleEntry(choice.guid, valTrimmed);
+                    }
+                    string finalTranslation = LocalizationUtils.GetDefaultLocaleLocalizedString(choice.guid);
+                    choiceTextField.value = finalTranslation;
+                });
+            }
+#endif
             ve.Add(choiceTextField);
             
             Port newOutput = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, typeof(bool));
@@ -481,18 +492,21 @@ namespace AQM.Tools
             _messageTextField.Bind(new SerializedObject(node));
             _messageTextField.RegisterCallback<FocusEvent>((e) =>{onNodeSelected(this); _onClearSelection.Invoke();});
     #if LOCALIZATION_EXIST
-            _messageTextField.RegisterCallback<FocusOutEvent>((e) =>
+            if (DSData.instance.tableCollection && DSData.instance.database.defaultLocale)
             {
-                string valTrimmed = _messageTextField.value.Trim(' ');
-                string previousString = LocalizationUtils.GetDefaultLocaleLocalizedString(node.guid);
-                if (valTrimmed != "" && valTrimmed != previousString)
+                _messageTextField.RegisterCallback<FocusOutEvent>((e) =>
                 {
-                    LocalizationUtils.SetDefaultLocaleEntry(node.guid,valTrimmed);
-                }
+                    string valTrimmed = _messageTextField.value.Trim(' ');
+                    string previousString = LocalizationUtils.GetDefaultLocaleLocalizedString(node.guid);
+                    if (valTrimmed != "" && valTrimmed != previousString)
+                    {
+                        LocalizationUtils.SetDefaultLocaleEntry(node.guid,valTrimmed);
+                    }
 
-                string finalTranslation = LocalizationUtils.GetDefaultLocaleLocalizedString(node.guid);
-                _messageTextField.value = finalTranslation;
-            });
+                    string finalTranslation = LocalizationUtils.GetDefaultLocaleLocalizedString(node.guid);
+                    _messageTextField.value = finalTranslation;
+                });
+            }
     #endif
         }
         

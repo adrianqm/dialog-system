@@ -10,20 +10,19 @@ namespace AQM.Tools
     {
         public ConversationTree conversationTree;
         public Transform lookAtPoint;
-
         private DialogSystemDatabase _clonedDatabase;
 
         public DialogSystemDatabase ClonedDatabase => _clonedDatabase;
 
         private void Awake()
         {
-            DialogSystemController.onDatabaseCloned += OnDatabaseCloned;
+            if(conversationTree != null) DialogSystemController.onDatabaseCloned += OnDatabaseCloned;
         }
 
         private void OnDatabaseCloned(DialogSystemDatabase db)
         {
             _clonedDatabase = db;
-            //conversationTree = _clonedDatabase.conversations.Find(c => c.guid == conversationTree.guid);
+            conversationTree = _clonedDatabase.FindConversation(conversationTree.guid);
         }
 
         public void Interact()

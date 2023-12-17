@@ -109,7 +109,7 @@ using UnityEngine.UIElements;
             _actorMultiColumListView = root.Q<ActorMultiColumListView>();
             VisualElement scrollContainer = _actorMultiColumListView.Q("unity-content-and-vertical-scroll-container");
             _actorMultiColumListView.SetUpScrollContainerManipulator(scrollContainer);
-            ToolbarSearchField searchField = root.Q<ToolbarSearchField>(className: "actorsSearchFilter");
+            ToolbarSearchField searchField = root.Q<ToolbarSearchField>("actorsSearchFilter");
             _actorMultiColumListView.SetUpSearchFieldFilterCallback(searchField);
             _actorMultiColumListView.onActorsRemoved = OnActorsRemoved;
             
@@ -117,8 +117,8 @@ using UnityEngine.UIElements;
             _conversationMultiColumListView = root.Q<ConversationMultiColumListView>();
             VisualElement conversationScrollContainer = _conversationMultiColumListView.Q("unity-content-and-vertical-scroll-container");
             _conversationMultiColumListView.SetUpScrollContainerManipulator(conversationScrollContainer);
-            ToolbarSearchField conversationSearchField = root.Q<ToolbarSearchField>(className: "conversationsSearchFilter");
-            _conversationMultiColumListView.SetUpSearchFieldFilterCallback(conversationSearchField);
+            ToolbarSearchField conversationsSearchField = root.Q<ToolbarSearchField>("conversationsSearchFilter");
+            _conversationMultiColumListView.SetUpSearchFieldFilterCallback(conversationsSearchField);
             _conversationMultiColumListView.onEditConversation = OnEditConversation;
             
             // Conversations GraphView
@@ -279,10 +279,9 @@ using UnityEngine.UIElements;
                                 SetUpComponentsDatabase(_currentDatabase);
                             }
 
-                            /*ConversationTree conversationCloned = 
-                                _currentDatabase.conversations.Find(c =>
-                                c.guid == runner.conversationTree.guid);
-                            OnEditConversation(conversationCloned);*/
+                            ConversationTree conversationCloned =
+                                _currentDatabase.FindConversation(runner.conversationTree.guid);
+                            OnEditConversation(conversationCloned);
                         }
                     }
                     

@@ -18,6 +18,7 @@ public class PlayerInteraction : MonoBehaviour
     private void Awake()
     {
         DialogSystemController.onConversationEnded += ResetActivate;
+        DDEvents.onStartConversation += StopInteract;
     }
 
     void Update()
@@ -31,16 +32,20 @@ public class PlayerInteraction : MonoBehaviour
             {
                 if (hitInfo.collider.gameObject.TryGetComponent(out IInteractable interactable))
                 {
-                    _canInteract = false;
                     interactable.Interact();
                 }
             }
         }
     }
 
-    public void ResetActivate()
+    private void ResetActivate()
     {
         StartCoroutine(ResetInteraction());
+    }
+
+    private void StopInteract(ConversationTree tree)
+    {
+        _canInteract = false;
     }
 
     IEnumerator ResetInteraction()
@@ -62,5 +67,6 @@ public class PlayerInteraction : MonoBehaviour
     private void OnDestroy()
     {
         DialogSystemController.onConversationEnded -= ResetActivate;
+        DDEvents.onStartConversation -= StopInteract;
     }
 }

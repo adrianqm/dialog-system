@@ -1,0 +1,818 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8806563379270767836
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fcdbbda8660e124a86a4a5bf54b4f31, type: 3}
+  m_Name: Choice
+  m_EditorClassIdentifier: 
+  guid: 825df5ccf6108474fabfe377f5f70eb4
+  choiceMessage: Tortilla
+  children:
+  - {fileID: -6349565147761951046}
+--- !u!114 &-8509121087529784102
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 755900283b136124d8ad835b2dc923bc, type: 3}
+  m_Name: Actor
+  m_EditorClassIdentifier: 
+  guid: bb65650cb7be0a841afabc0c753ec8e4
+  actorImage: {fileID: 2877471580529523173, guid: c15ba1dcb835b28498cc6239dc893a2e, type: 3}
+  fullName: NPC 1
+  description: defaultDesc
+  bgColor: {r: 0.3044286, g: 0.49417144, b: 0.5396226, a: 0.46666667}
+--- !u!114 &-8400717268124023196
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0190e7bf12f2e8342959e5370aac2a9a, type: 3}
+  m_Name: CompleteNode
+  m_EditorClassIdentifier: 
+  guid: 2dbb451ba41c32045a5968c88120e707
+  position: {x: 1403.4984, y: -20.83342}
+  group: {fileID: 0}
+--- !u!114 &-8354739976711114536
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: 3233252ac2e386a40b4cb13fea3e9b2d
+  position: {x: 275.4915, y: -40.79994}
+  group: {fileID: 0}
+  children:
+  - {fileID: 2670713282054902757}
+  actor: {fileID: -8509121087529784102}
+  message: Buenas
+--- !u!114 &-7991121993750774037
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6662badd63604c1409313f1a633a4e14, type: 3}
+  m_Name: StartNode
+  m_EditorClassIdentifier: 
+  guid: 07a7651f4c5887a49810f5905fcad8a3
+  position: {x: 0, y: 0}
+  group: {fileID: 0}
+  children:
+  - {fileID: -8354739976711114536}
+--- !u!114 &-7474543271563311594
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0190e7bf12f2e8342959e5370aac2a9a, type: 3}
+  m_Name: CompleteNode
+  m_EditorClassIdentifier: 
+  guid: 598ee8d2c5d01274ab57b871292da3b5
+  position: {x: 1000, y: 0}
+  group: {fileID: 0}
+--- !u!114 &-6938329417380447974
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0190e7bf12f2e8342959e5370aac2a9a, type: 3}
+  m_Name: CompleteNode
+  m_EditorClassIdentifier: 
+  guid: ddc458961e1ff704b9b21bf3924c5614
+  position: {x: 695.0341, y: 0.00000333786}
+  group: {fileID: 0}
+--- !u!114 &-6605197044084819864
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fcdbbda8660e124a86a4a5bf54b4f31, type: 3}
+  m_Name: Choice
+  m_EditorClassIdentifier: 
+  guid: 72fa1b35aa5c7344bbb91b7e47ef9dfb
+  choiceMessage: "Lasa\xF1a"
+  children:
+  - {fileID: -5013576542238882591}
+--- !u!114 &-6570899391458988931
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: 1a893fdae1c66634cb79a3b4b525d6ba
+  position: {x: 1020.00006, y: 263.47754}
+  group: {fileID: 0}
+  children:
+  - {fileID: 1206378491455919486}
+  actor: {fileID: -8509121087529784102}
+  message: No tengo todo el dia sabes
+--- !u!114 &-6349565147761951046
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: 5c4cb4a84ae04fc4cab8b7dce3dbd33e
+  position: {x: 1020.7999, y: -7.2000113}
+  group: {fileID: 0}
+  children:
+  - {fileID: -8400717268124023196}
+  actor: {fileID: -8509121087529784102}
+  message: Marchando una de tortilla
+--- !u!114 &-5858927436893824494
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f8c511dcfa664e438f3056b4c07f2cd, type: 3}
+  m_Name: ConversationTree
+  m_EditorClassIdentifier: 
+  startNode: {fileID: 3122623835315108190}
+  completeNode: {fileID: 139179558846418446}
+  nodes:
+  - {fileID: 3122623835315108190}
+  - {fileID: 139179558846418446}
+  - {fileID: -173615139270414557}
+  groups: []
+  runningNode: {fileID: 0}
+  title: Trigger
+  description: Default Desc
+  guid: 03ed0be6ce404ac45b49f2558ca93a1b
+  conversationState: 3
+--- !u!114 &-5013576542238882591
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: cb13152223bdc614fa91fe0dcd743d0d
+  position: {x: 1020.79987, y: 125.98326}
+  group: {fileID: 0}
+  children:
+  - {fileID: -8400717268124023196}
+  actor: {fileID: -8509121087529784102}
+  message: "Marchando una de lasa\xF1a"
+--- !u!114 &-4161097326304173564
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fcdbbda8660e124a86a4a5bf54b4f31, type: 3}
+  m_Name: Choice
+  m_EditorClassIdentifier: 
+  guid: 19f1271dc4498f547a180d557a9489a6
+  choiceMessage: Yoquese, solo he entrado a mear
+  children:
+  - {fileID: 2227922881297626359}
+--- !u!114 &-4116361945866634799
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26c6165cde26446d86ed60ce369929c3, type: 3}
+  m_Name: ConversationGroup
+  m_EditorClassIdentifier: 
+  guid: e7b340b55f416dc42b27fbf677180f66
+  title: Level 1-1
+  groups:
+  - {fileID: 6332119728299801921}
+  conversations:
+  - {fileID: -3173349694788016599}
+--- !u!114 &-4106830081379878852
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26c6165cde26446d86ed60ce369929c3, type: 3}
+  m_Name: ConversationGroup
+  m_EditorClassIdentifier: 
+  guid: 972a75e98e5438042bdcf4ddd89641a0
+  title: Conversaciones de Jaime
+  groups: []
+  conversations:
+  - {fileID: 6180324817185036842}
+--- !u!114 &-3694988927378533236
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0190e7bf12f2e8342959e5370aac2a9a, type: 3}
+  m_Name: CompleteNode
+  m_EditorClassIdentifier: 
+  guid: ed310a8122cf87d4b932c0c2d708dd22
+  position: {x: 1000, y: 500}
+  group: {fileID: 0}
+--- !u!114 &-3623603382964053984
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26c6165cde26446d86ed60ce369929c3, type: 3}
+  m_Name: ConversationGroup
+  m_EditorClassIdentifier: 
+  guid: c1324b76b7b285c46bfa1ae6fa40c44b
+  title: Level 1
+  groups:
+  - {fileID: -4116361945866634799}
+  conversations:
+  - {fileID: 7331253529948778493}
+  - {fileID: -5858927436893824494}
+--- !u!114 &-3332120962139561214
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6662badd63604c1409313f1a633a4e14, type: 3}
+  m_Name: StartNode
+  m_EditorClassIdentifier: 
+  guid: 165458a2a33cfa745838a30616fb4ad8
+  position: {x: 9.600037, y: 199.2}
+  group: {fileID: 0}
+  children:
+  - {fileID: 2545837935291294978}
+--- !u!114 &-3173349694788016599
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f8c511dcfa664e438f3056b4c07f2cd, type: 3}
+  m_Name: ConversationTree
+  m_EditorClassIdentifier: 
+  startNode: {fileID: 184712053621281973}
+  completeNode: {fileID: -7474543271563311594}
+  nodes:
+  - {fileID: 184712053621281973}
+  - {fileID: -7474543271563311594}
+  - {fileID: 1641782425491955913}
+  groups: []
+  runningNode: {fileID: 0}
+  title: 5
+  description: Default Desc
+  guid: 6f7296a2ed901f547a3d2139885a6ef3
+  conversationState: 0
+--- !u!114 &-2980008741220223350
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6662badd63604c1409313f1a633a4e14, type: 3}
+  m_Name: StartNode
+  m_EditorClassIdentifier: 
+  guid: 7f0cc537c41c2f148833419979fc631f
+  position: {x: 0, y: 500}
+  group: {fileID: 0}
+  children: []
+--- !u!114 &-2596020596989532334
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: 6dacd79a31430f34caf9ded021dbeef7
+  position: {x: 990.39996, y: 90.399994}
+  group: {fileID: 0}
+  children:
+  - {fileID: 8249097047399171293}
+  actor: {fileID: -1202303328307900944}
+  message: Vale, pues me pido unas gambas al ajillo.
+--- !u!114 &-1202303328307900944
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 755900283b136124d8ad835b2dc923bc, type: 3}
+  m_Name: Actor
+  m_EditorClassIdentifier: 
+  guid: a7b0a053e2ceb28469995554ad87816d
+  actorImage: {fileID: 21300000, guid: 7ae9d2c635ae1274091b08b9b24d09cb, type: 3}
+  fullName: Jaime
+  description: Cliente misterioso
+  bgColor: {r: 0.5245282, g: 0.26820213, b: 0.26820213, a: 0.47058824}
+--- !u!114 &-1181840343548849687
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5dc96d0a450db24792528a4b013cdbe, type: 3}
+  m_Name: ChoiceNode
+  m_EditorClassIdentifier: 
+  guid: 4f296bd3c7ca4764e955316fd028563c
+  position: {x: 667.19995, y: 108.80005}
+  group: {fileID: 0}
+  actor: {fileID: -1202303328307900944}
+  message: "\xBFQue me recomiendas pedir?"
+  choices:
+  - {fileID: -481222919105160803}
+  - {fileID: -4161097326304173564}
+  defaultChildren: []
+--- !u!114 &-884569730197283174
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f8c511dcfa664e438f3056b4c07f2cd, type: 3}
+  m_Name: ConversationTree
+  m_EditorClassIdentifier: 
+  startNode: {fileID: 7740774724479350141}
+  completeNode: {fileID: -6938329417380447974}
+  nodes:
+  - {fileID: 7740774724479350141}
+  - {fileID: -6938329417380447974}
+  - {fileID: 3870227448558968234}
+  groups: []
+  runningNode: {fileID: 0}
+  title: 1-1-1 Conversation
+  description: Default Desc
+  guid: 93f0c902d386bec4abdd07a318f4006c
+  conversationState: 0
+--- !u!114 &-481222919105160803
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fcdbbda8660e124a86a4a5bf54b4f31, type: 3}
+  m_Name: Choice
+  m_EditorClassIdentifier: 
+  guid: 674de3c008e4f3b4e90467017d677495
+  choiceMessage: "Est\xE1 todo muy rico, pide lo que quieras."
+  children:
+  - {fileID: -2596020596989532334}
+--- !u!114 &-173615139270414557
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: 85a864e72e6363e409d942b853dd38e0
+  position: {x: 319.53357, y: 159.20001}
+  group: {fileID: 0}
+  children:
+  - {fileID: 139179558846418446}
+  actor: {fileID: -8509121087529784102}
+  message: Dejame solo
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3ef0f06c2a058d419d6338f3fa5b08b, type: 3}
+  m_Name: Default Title
+  m_EditorClassIdentifier: 
+  title: Default Title
+  description: Default Description
+  guid: e5f62a0d00014ca4883096c2118488c8
+  conversationGroups:
+  - {fileID: -3623603382964053984}
+  - {fileID: -4106830081379878852}
+  actors:
+  - {fileID: 153604068941250697}
+  - {fileID: -8509121087529784102}
+  - {fileID: -1202303328307900944}
+  tableCollectionName: Groups Example
+  defaultLocale: {fileID: 11400000, guid: 9f85adcacfbefea4ba354cbadfe33bd0, type: 2}
+  localizationActivated: 1
+--- !u!114 &139179558846418446
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0190e7bf12f2e8342959e5370aac2a9a, type: 3}
+  m_Name: CompleteNode
+  m_EditorClassIdentifier: 
+  guid: 1f1705e90b239a04984ea97a3f0ddd6e
+  position: {x: 761.2923, y: 200.00002}
+  group: {fileID: 0}
+--- !u!114 &153604068941250697
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 755900283b136124d8ad835b2dc923bc, type: 3}
+  m_Name: Actor
+  m_EditorClassIdentifier: 
+  guid: fe57ae6e53f00ea48b836246afc6cb12
+  actorImage: {fileID: 21300000, guid: deeae33315027e045bf104c3f198179d, type: 3}
+  fullName: Player
+  description: Player Desc
+  bgColor: {r: 0.31598213, g: 0.5686275, b: 0.28235298, a: 0.39215687}
+--- !u!114 &184712053621281973
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6662badd63604c1409313f1a633a4e14, type: 3}
+  m_Name: StartNode
+  m_EditorClassIdentifier: 
+  guid: 19380fc20c0c8c44db3388d10275aca2
+  position: {x: 0, y: 0}
+  group: {fileID: 0}
+  children: []
+--- !u!114 &1206378491455919486
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: 8dc000881b220f74786ec218ea9af4fe
+  position: {x: 1342.191, y: 264}
+  group: {fileID: 0}
+  children: []
+  actor: {fileID: -8509121087529784102}
+  message: Avisame cuando lo tengas claro
+--- !u!114 &1641782425491955913
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: 857f5ddc668bae5409e01c198c54fa84
+  position: {x: 195.04045, y: -23.28086}
+  group: {fileID: 0}
+  children: []
+  actor: {fileID: 0}
+  message: 
+--- !u!114 &1943774399960064443
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fcdbbda8660e124a86a4a5bf54b4f31, type: 3}
+  m_Name: Choice
+  m_EditorClassIdentifier: 
+  guid: aa21267fe26055149af7a0e03cfa258d
+  choiceMessage: Macarrones
+  children:
+  - {fileID: 8864216658894284963}
+--- !u!114 &2227922881297626359
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: 4fff93b6d69755b40b18a0834449a7dc
+  position: {x: 990.39996, y: 239.99994}
+  group: {fileID: 0}
+  children:
+  - {fileID: 8249097047399171293}
+  actor: {fileID: -1202303328307900944}
+  message: Yo tambien, te preguntaba por disimular
+--- !u!114 &2545837935291294978
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: cbc290da34fccba4d923ef2cc95935d7
+  position: {x: 316.8, y: 144}
+  group: {fileID: 0}
+  children:
+  - {fileID: -1181840343548849687}
+  actor: {fileID: -1202303328307900944}
+  message: Hola, nunca he venido a este restaurante.
+--- !u!114 &2670713282054902757
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5dc96d0a450db24792528a4b013cdbe, type: 3}
+  m_Name: ChoiceNode
+  m_EditorClassIdentifier: 
+  guid: edba8b6b3dfe8b641ad58a09380ae743
+  position: {x: 652.5274, y: -87.27324}
+  group: {fileID: 0}
+  actor: {fileID: -8509121087529784102}
+  message: "\xBFQue comida prefieres?"
+  choices:
+  - {fileID: 1943774399960064443}
+  - {fileID: -8806563379270767836}
+  - {fileID: -6605197044084819864}
+  defaultChildren:
+  - {fileID: -6570899391458988931}
+--- !u!114 &3122623835315108190
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6662badd63604c1409313f1a633a4e14, type: 3}
+  m_Name: StartNode
+  m_EditorClassIdentifier: 
+  guid: 3ca1b7fc4a38fc9459b0b851a98e266e
+  position: {x: -20.354897, y: 200.00002}
+  group: {fileID: 0}
+  children:
+  - {fileID: -173615139270414557}
+--- !u!114 &3870227448558968234
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: 3373b636544469547a61c9beaa31f692
+  position: {x: 267.87967, y: -40.799976}
+  group: {fileID: 0}
+  children:
+  - {fileID: -6938329417380447974}
+  actor: {fileID: 153604068941250697}
+  message: Muy buenas
+--- !u!114 &6180324817185036842
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f8c511dcfa664e438f3056b4c07f2cd, type: 3}
+  m_Name: ConversationTree
+  m_EditorClassIdentifier: 
+  startNode: {fileID: -3332120962139561214}
+  completeNode: {fileID: 8249097047399171293}
+  nodes:
+  - {fileID: -3332120962139561214}
+  - {fileID: 8249097047399171293}
+  - {fileID: 2545837935291294978}
+  - {fileID: -1181840343548849687}
+  - {fileID: -2596020596989532334}
+  - {fileID: 2227922881297626359}
+  groups: []
+  runningNode: {fileID: 0}
+  title: Restaurante
+  description: Default Desc
+  guid: 229a89d261cd8524db0defafaeb8d6fb
+  conversationState: 0
+--- !u!114 &6332119728299801921
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26c6165cde26446d86ed60ce369929c3, type: 3}
+  m_Name: ConversationGroup
+  m_EditorClassIdentifier: 
+  guid: 55bfd943cb1a9c94d85a533043518597
+  title: Level 1-1-1
+  groups: []
+  conversations:
+  - {fileID: -884569730197283174}
+--- !u!114 &7331253529948778493
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f8c511dcfa664e438f3056b4c07f2cd, type: 3}
+  m_Name: ConversationTree
+  m_EditorClassIdentifier: 
+  startNode: {fileID: -7991121993750774037}
+  completeNode: {fileID: -8400717268124023196}
+  nodes:
+  - {fileID: -7991121993750774037}
+  - {fileID: -8400717268124023196}
+  - {fileID: -8354739976711114536}
+  - {fileID: 2670713282054902757}
+  - {fileID: -6570899391458988931}
+  - {fileID: 1206378491455919486}
+  - {fileID: 8864216658894284963}
+  - {fileID: -6349565147761951046}
+  - {fileID: -5013576542238882591}
+  groups: []
+  runningNode: {fileID: 2670713282054902757}
+  title: Conversation 1
+  description: Default Desc
+  guid: b0bce3e01ec466542a02f487eddf8a1f
+  conversationState: 2
+--- !u!114 &7740774724479350141
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6662badd63604c1409313f1a633a4e14, type: 3}
+  m_Name: StartNode
+  m_EditorClassIdentifier: 
+  guid: e5c9782556deeb941ab8ad85412a04a9
+  position: {x: 0, y: 0}
+  group: {fileID: 0}
+  children:
+  - {fileID: 3870227448558968234}
+--- !u!114 &8249097047399171293
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0190e7bf12f2e8342959e5370aac2a9a, type: 3}
+  m_Name: CompleteNode
+  m_EditorClassIdentifier: 
+  guid: 70d0b6cbfa456844eb987ede6750614f
+  position: {x: 1397.5999, y: 199.20001}
+  group: {fileID: 0}
+--- !u!114 &8864216658894284963
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07d3627ea25a1f45b600d8a90624fce, type: 3}
+  m_Name: DialogNode
+  m_EditorClassIdentifier: 
+  guid: 6bc1bf7ff63865845ba54e6f400a3dea
+  position: {x: 1020.7999, y: -161.6}
+  group: {fileID: 0}
+  children:
+  - {fileID: -8400717268124023196}
+  actor: {fileID: -8509121087529784102}
+  message: Marchando una de macarrones

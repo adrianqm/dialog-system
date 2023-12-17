@@ -43,10 +43,9 @@ public class ActorMultiColumListView : MultiColumnListView
         sortingEnabled = true;
         reorderMode = ListViewReorderMode.Animated;
         selectionType = SelectionType.Multiple;
-        showAddRemoveFooter = true;
-        
-        this.Q<Button>("unity-list-view__add-button").clickable = new Clickable(CreateNewActor);
-        this.Q<Button>("unity-list-view__remove-button").clickable = new Clickable(RemoveSelectedActors);
+        //showAddRemoveFooter = true;
+        //this.Q<Button>("unity-list-view__add-button").clickable = new Clickable(CreateNewActor);
+        //this.Q<Button>("unity-list-view__remove-button").clickable = new Clickable(RemoveSelectedActors);
     }
 
     public void CreateNewActor()

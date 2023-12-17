@@ -138,28 +138,12 @@ public class DatabaseLocalizationView : VisualElement
                     tableCollection.SharedData.RemoveKey("");
                 }
                 
-                // Create entries
-                /*foreach (var conversation in DSData.instance.database.conversations)
+                // Add entries
+                foreach (var group in DSData.instance.database.conversationGroups)
                 {
-                    foreach (var node in conversation.nodes)
-                    {
-                        DialogNode dialogNode = node as DialogNode;
-                        if (dialogNode)
-                        {
-                            table.AddEntry(dialogNode.guid, dialogNode.message);
-                        }
-                    
-                        ChoiceNode choiceNode = node as ChoiceNode;
-                        if (choiceNode)
-                        {
-                            table.AddEntry(choiceNode.guid, choiceNode.message);
-                            choiceNode.choices.ForEach(c =>
-                            {
-                                table.AddEntry(c.guid, c.choiceMessage);
-                            });
-                        }
-                    }
-                }*/
+                    AddTableEntries(table, group);
+                }
+                
                 EditorUtility.SetDirty(tableCollection);
                 EditorUtility.SetDirty(table);
                 EditorUtility.SetDirty(table.SharedData);
@@ -177,6 +161,41 @@ public class DatabaseLocalizationView : VisualElement
         });
 #endif
     }
+    
+#if LOCALIZATION_EXIST
+    private void AddTableEntries(StringTable table, ConversationGroup group)
+    {
+        // Create entries
+        foreach (var conversation in group.conversations)
+        {
+            foreach (var node in conversation.nodes) AddEntry(table, node);
+        }
+        
+        foreach (var inGroup in group.groups)
+        {
+            AddTableEntries(table, inGroup);
+        }
+    }
+
+    private void AddEntry(StringTable table, Node node)
+    {
+        DialogNode dialogNode = node as DialogNode;
+        if (dialogNode)
+        {
+            table.AddEntry(dialogNode.guid, dialogNode.message);
+        }
+
+        ChoiceNode choiceNode = node as ChoiceNode;
+        if (choiceNode)
+        {
+            table.AddEntry(choiceNode.guid, choiceNode.message);
+            choiceNode.choices.ForEach(c =>
+            {
+                table.AddEntry(c.guid, c.choiceMessage);
+            });
+        }
+    }
+#endif
 
     private void InstallProgress()
     {

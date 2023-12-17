@@ -45,11 +45,13 @@ namespace AQM.Tools
         #if LOCALIZATION_EXIST
         private IEnumerator Start()
         {
-            var d = LocalizationSettings.StringDatabase.GetTableAsync(dialogSystemDatabase.tableCollectionName);
-            if (!d.IsDone)
-                yield return d;
-            string dump = LocalizationSettings.StringDatabase.GetLocalizedString(dialogSystemDatabase.tableCollectionName,"default");
-            
+            if (dialogSystemDatabase.tableCollectionName != "" && dialogSystemDatabase.defaultLocale)
+            {
+                var d = LocalizationSettings.StringDatabase.GetTableAsync(dialogSystemDatabase.tableCollectionName);
+                if (!d.IsDone)
+                    yield return d;
+                string dump = LocalizationSettings.StringDatabase.GetLocalizedString(dialogSystemDatabase.tableCollectionName,"default");
+            }
             dialogSystemDatabase = dialogSystemDatabase.Clone();
             onDatabaseCloned?.Invoke(dialogSystemDatabase);
         }
@@ -67,14 +69,31 @@ namespace AQM.Tools
             var pairs = new List<KeyValuePair<ConversationTree, string>>();
             if (dialogSystemDatabase != null)
             {
-                /*foreach (ConversationTree conversation in dialogSystemDatabase.conversations)
+                foreach (ConversationGroup group in dialogSystemDatabase.conversationGroups)
                 {
-                    pairs.Add(new KeyValuePair<ConversationTree, string>(conversation, $"{conversation.title}"));
-                }*/
+                    pairs.AddRange(GetPairInGroup(group, ""));
+                }
             }
 
             return pairs;
         }
+
+        private List<KeyValuePair<ConversationTree, string>> GetPairInGroup(ConversationGroup group, string path)
+        {
+            var pairs = new List<KeyValuePair<ConversationTree, string>>();
+            path += group.title + '/';
+            foreach (ConversationTree conversation in group.conversations)
+            {
+                pairs.Add(new KeyValuePair<ConversationTree, string>(conversation, $"{ path + conversation.title}"));
+            }
+            
+            foreach (ConversationGroup inGroup in group.groups)
+            {
+                pairs.AddRange(GetPairInGroup(inGroup,path));
+            }
+            return pairs;
+        }
+        
         public string GetConversationPath(ConversationTree tree)
         {
             return tree.title;

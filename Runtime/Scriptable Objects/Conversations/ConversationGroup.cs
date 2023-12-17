@@ -10,10 +10,32 @@ namespace AQM.Tools
         public List<ConversationGroup> groups;
         public List<ConversationTree> conversations;
         
+        public ConversationTree FindConversation(string conversationGuid)
+        {
+            ConversationTree conversation = conversations.Find(c => c.guid == conversationGuid);
+            if (conversation != null)
+            {
+                return conversation;
+            }
+            if (groups != null)
+            {
+                foreach (var group in groups)
+                {
+                    conversation = group.FindConversation(conversationGuid);
+                    if (conversation != null)
+                    {
+                        return conversation;
+                    }
+                }
+            }
+            return null;
+        }
+        
         public ConversationGroup Clone()
         {
             ConversationGroup clone = Instantiate(this);
-
+            
+            clone.groups = new List<ConversationGroup>();
             foreach (var group in groups)
             {
                 clone.groups.Add(group.Clone());

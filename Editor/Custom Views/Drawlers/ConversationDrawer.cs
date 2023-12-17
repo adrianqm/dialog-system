@@ -9,6 +9,7 @@ namespace AQM.Tools
     public class ConversationDrawer : PropertyDrawer
     {
         private SerializedProperty _conversationProperty;
+        private ConversationTree _currentConversation;
     
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
@@ -21,6 +22,7 @@ namespace AQM.Tools
                 conversationDropdown.SetConversation((ConversationTree)_conversationProperty.objectReferenceValue);
         
             conversationDropdown.onConversationSelected += SetConversation;
+            //DialogSystemController.onDatabaseCloned += OnDatabaseCloned;
         
             conversationDropdown.style.marginTop = 5;
             conversationDropdown.style.marginBottom = 5;
@@ -29,7 +31,15 @@ namespace AQM.Tools
         }
         private void SetConversation(ConversationTree conversation)
         {
-            _conversationProperty.objectReferenceValue = conversation;
+            _currentConversation = conversation;
+            _conversationProperty.objectReferenceValue = _currentConversation;
+            _conversationProperty.serializedObject.ApplyModifiedProperties();
+        }
+
+        private void OnDatabaseCloned(DialogSystemDatabase db)
+        {
+            if(!_currentConversation) return;
+            _conversationProperty.objectReferenceValue = db.FindConversation(_currentConversation.guid);
             _conversationProperty.serializedObject.ApplyModifiedProperties();
         }
     } 

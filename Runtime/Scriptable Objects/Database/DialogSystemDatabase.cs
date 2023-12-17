@@ -27,6 +27,19 @@ namespace AQM.Tools
             return conversationTree.StartConversation(this);
         }
         
+        public ConversationTree FindConversation(string conversationGuid)
+        {
+            foreach (var group in conversationGroups)
+            {
+                ConversationTree conversation = group.FindConversation(conversationGuid);
+                if (conversation != null)
+                {
+                    return conversation;
+                }
+            }
+            return null;
+        }
+        
         public DialogSystemDatabase Clone()
         {
             DialogSystemDatabase tree = Instantiate(this);

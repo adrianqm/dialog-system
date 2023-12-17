@@ -131,28 +131,31 @@ namespace AQM.Tools
             return newGroup;
         }
         
-        public static void DeleteConversationGroup(DialogSystemDatabase db,  ConversationGroup group, ConversationGroup fromGroup = null)
+        public static void DeleteConversationGroup(DialogSystemDatabase db,  
+            ConversationGroup group, ConversationGroup fromGroup = null, Dictionary<string,int> keyMap = null)
         {
-            RemoveConversationGroups(db,group, fromGroup);
+            RemoveConversationGroups(db,group, fromGroup, keyMap);
             AssetDatabase.SaveAssets();
         }
 
-        private static void RemoveConversationGroups
-            (DialogSystemDatabase db, ConversationGroup group, ConversationGroup fromGroup = null)
+        private static void RemoveConversationGroups(DialogSystemDatabase db, 
+            ConversationGroup group, ConversationGroup fromGroup = null, Dictionary<string,int> keyMap = null)
         {
-            RemoveConversationGroupsInGroup(group);
+            RemoveConversationGroupsInGroup(group, keyMap);
             RemoveConversationsInGroup(group);
 
             if (fromGroup == null) db.conversationGroups.Remove(group);
             else fromGroup.groups.Remove(group);
+            if (keyMap != null) keyMap.Remove(group.guid);
             Undo.DestroyObjectImmediate(group);
         }
 
-        private static void RemoveConversationGroupsInGroup(ConversationGroup group)
+        private static void RemoveConversationGroupsInGroup(ConversationGroup group,Dictionary<string,int> keyMap = null)
         {
             foreach (var conversationGroup in group.groups)
             {
                 RemoveConversationGroupsInGroup(conversationGroup);
+                if (keyMap != null) keyMap.Remove(conversationGroup.guid);
                 Undo.DestroyObjectImmediate(conversationGroup);
             }
             group.groups.Clear();
