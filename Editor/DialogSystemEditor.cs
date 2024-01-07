@@ -13,6 +13,9 @@ using UnityEngine.UIElements;
 
     public class DialogSystemEditor : EditorWindow
     {
+        public static string RelativePath => AssetDataBaseExtensions.GetDirectoryOfScript<DialogSystemEditor>();
+        private readonly string assetName = "DialogSystemEditor";
+        
         private ToolbarMenu _fileMenu;
         private DialogSystemView _treeView;
         private InspectorView _inspectorView;
@@ -38,23 +41,22 @@ using UnityEngine.UIElements;
         private DatabaseEditorView _dialogEditor;
         private DatabaseLocalizationView _dialogLocalization;
         private const string hiddenContentClassName = "hiddenContent";
-        private Label _conversationNameLabel;
+        
         private VisualElement _topConversationBar;
         private TabbedMenuController _tabbedMenuController;
         private Button _createNewActorButton;
         private Action _unregisterAll;
         private DialogSystemDatabase _currentDatabase;
-        private ConversationTree _currentTree;
 
         [SerializeField] private VisualTreeAsset visualTreeAsset = default;
 
         [SerializeField] private StyleSheet styleSheet = default;
 
-        [MenuItem("AQM Tools/Dialog System Editor ...")]
+        [MenuItem("Tools/Dialog Designer Editor")]
         public static void OpenWindow()
         {
             DialogSystemEditor wnd = GetWindow<DialogSystemEditor>();
-            wnd.titleContent = new GUIContent("Dialog System Editor");
+            wnd.titleContent = new GUIContent("Dialog Designer");
             wnd.minSize = new Vector2(600,400);
         }
 
@@ -76,11 +78,11 @@ using UnityEngine.UIElements;
             VisualElement root = rootVisualElement;
 
             // Instantiate UXML
-            visualTreeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/dialog-system/Editor/DialogSystemEditor.uxml");
+            visualTreeAsset = UIToolkitLoader.LoadUXML(RelativePath, assetName);
             visualTreeAsset.CloneTree(root);
 
             // Import StyleSheets
-            styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/dialog-system/Editor/DialogSystemEditor.uss");
+            styleSheet = UIToolkitLoader.LoadStyleSheet(RelativePath, assetName);
             root.styleSheets.Add(styleSheet);
             
             // Instantiate Tab Controller
@@ -93,14 +95,6 @@ using UnityEngine.UIElements;
             _treeView.onNodeSelected = OnNodeSelectionChanged;
             _treeView.onRefreshInspector = OnRefreshInspector;
             _treeView.onNodesRemoved = OnNodesRemoved;
-            
-            // To remove Hover style
-            _treeView.RegisterCallback<ClickEvent>((evt) =>
-            {
-                if (_conversationNameLabel == null) return;
-                _conversationNameLabel.RemoveFromClassList("conversation-name-label--selected");
-                _conversationNameLabel.AddToClassList("conversation-name-label");
-            });
             
             // Inspector view
             _inspectorView = root.Q<InspectorView>();
@@ -126,6 +120,7 @@ using UnityEngine.UIElements;
             _conversationEditView = root.Q<ConversationsView>();
             _conversationGroupSelector = root.Q<ConversationSelectorView>();
             _conversationGroupSelector.onConversationGroupSelected = OnUpdateConversationTable;
+            _conversationEditView.SetUpBackButton(OnBackToConversationsList);
 
             // DB selector
             _dialogSelectorVE = root.Q<VisualElement>("database-selector");
@@ -180,42 +175,8 @@ using UnityEngine.UIElements;
                 LocalizationTablesWindow.ShowWindow(DSData.instance.tableCollection);
             });
     #endif
-
-            // Register Conversation Name Label Query
-            _conversationNameLabel = root.Q<Label>(className: "conversation-name-label");
-            _topConversationBar = rootVisualElement.Q("top-conversation-bar");
-            
-            RegisterConversationHeaderButton("show-minimap", "d_AnimatorController On Icon", () =>
-            {
-                _treeView.ChangeMinimapDisplay();
-            });
-            
-            
-            RegisterConversationHeaderButton("frame-nodes", "d_GridLayoutGroup Icon", () =>
-            {
-                _treeView.FrameAllNodes();
-            });
-
-            RegisterConversationHeaderButton("conversation-list", "ListView@8x", OnBackToConversationsList);
-            
             SetDefaultIconForDatabase();
-            OnSelectionChange();
-        }
-
-        private void RegisterConversationHeaderButton(string buttonName,string iconTextureName, System.Action callback)
-        {
-            VisualElement buttonConversationList= rootVisualElement.Q(buttonName);
-            Button conversationListButton = new Button();
-            var conversationListTexture = EditorGUIUtility.IconContent(iconTextureName).image;
-            conversationListButton.AddToClassList("conversation-bar--button");
-            buttonConversationList.Add(conversationListButton);
-            conversationListButton.Add(new Image {
-                image = conversationListTexture,
-            });
-            conversationListButton.clickable = new Clickable(()=>
-            {
-                callback.Invoke();
-            });
+            SetDefaultDatabase();
         }
 
         private void SetDefaultIconForDatabase()
@@ -230,6 +191,23 @@ using UnityEngine.UIElements;
                 AssetDatabase.ImportAsset(assetPath);
             }
             AssetDatabase.Refresh();
+        }
+
+        private void SetDefaultDatabase()
+        {
+            if(DSData.instance.database != null)
+            {
+                ClearView();
+                OnBackToConversationsList();
+                _currentDatabase = DSData.instance.database;
+                _toolbarHeaderVE.RemoveFromClassList(hiddenContentClassName);
+                SetUpComponentsDatabase(_currentDatabase);
+            }
+            else
+            {
+                OpenDatabaseSelector();
+                ClearView();
+            }
         }
 
         private void OnEnable()
@@ -248,68 +226,35 @@ using UnityEngine.UIElements;
             switch (obj)
             {
                 case PlayModeStateChange.EnteredEditMode:
-                    OnSelectionChange();
-                    break;
-                case PlayModeStateChange.EnteredPlayMode:
                     //OnSelectionChange();
                     break;
+                case PlayModeStateChange.EnteredPlayMode: break;
             }
         }
 
         private void OnSelectionChange()
         {
-            if (Application.isPlaying)
+            if (Application.isPlaying && _currentDatabase != null)
             {
                 if (Selection.activeGameObject)
                 {
                     ConversationRunner runner = Selection.activeGameObject.GetComponent<ConversationRunner>();
                     if (runner != null)
                     {
-                        DialogSystemDatabase db = runner.ClonedDatabase;
-                        if (db)
-                        {
-                            _dialogSelectorVE.AddToClassList(hiddenContentClassName);
-                            _toolbarHeaderVE.RemoveFromClassList(hiddenContentClassName);
-                            if (_currentDatabase != db)
-                            {
-                                _currentDatabase = db;
-                                DSData.instance.database = _currentDatabase;
-                                SerializedObject so = new SerializedObject(_currentDatabase);
-                                rootVisualElement.Bind(so);
-                                SetUpComponentsDatabase(_currentDatabase);
-                            }
-
-                            ConversationTree conversationCloned =
-                                _currentDatabase.FindConversation(runner.conversationTree.guid);
-                            OnEditConversation(conversationCloned);
-                        }
-                    }
-                    
-                    DialogSystemController controller = Selection.activeGameObject.GetComponent<DialogSystemController>();
-                    if (controller)
-                    {
-                        _dialogSelectorVE.AddToClassList(hiddenContentClassName);
-                        _toolbarHeaderVE.RemoveFromClassList(hiddenContentClassName);
-                        OnBackToConversationsList();
-                
-                        // Set root element
-                        if (_currentDatabase != controller.DialogSystemDatabase)
-                        {
-                            _currentDatabase = controller.DialogSystemDatabase;
-                            DSData.instance.database = _currentDatabase;
-                            SerializedObject so = new SerializedObject(_currentDatabase);
-                            rootVisualElement.Bind(so);
-                            SetUpComponentsDatabase(_currentDatabase);
-                        }
+                        OnEditConversation(runner.conversation);
                     }
                 }
-            }
-            else
+            }else if (!Application.isPlaying)
             {
-                DialogSystemDatabase database = Selection.activeObject as DialogSystemDatabase;
-            
-                if (database)
+                if(DSData.instance.database == null)
                 {
+                    OpenDatabaseSelector();
+                    ClearView();
+                }else
+                {
+                    DialogSystemDatabase database = Selection.activeObject as DialogSystemDatabase;
+                    if(!database) return;
+                    
                     _dialogSelectorVE.AddToClassList(hiddenContentClassName);
                     _toolbarHeaderVE.RemoveFromClassList(hiddenContentClassName);
                     OnBackToConversationsList();
@@ -319,19 +264,7 @@ using UnityEngine.UIElements;
                     DSData.instance.database = database;
                     SerializedObject so = new SerializedObject(_currentDatabase);
                     rootVisualElement.Bind(so);
-                }
-                else if(DSData.instance.database != null)
-                {
-                    ClearView();
-                    OnBackToConversationsList();
-                    _currentDatabase = DSData.instance.database;
-                    _toolbarHeaderVE.RemoveFromClassList(hiddenContentClassName);
                     SetUpComponentsDatabase(_currentDatabase);
-                }
-                else
-                {
-                    OpenDatabaseSelector();
-                    ClearView();
                 }
             }
         }
@@ -362,7 +295,7 @@ using UnityEngine.UIElements;
 
         private void SetUpLocalizationInfo(DialogSystemDatabase database)
         {
-            #if LOCALIZATION_EXIST
+#if LOCALIZATION_EXIST
                 _dialogLocalization.SetUpDefaultSelectorValues();
                 var collection = LocalizationEditorSettings.GetStringTableCollection(database.tableCollectionName);
                 if (collection && database.defaultLocale)
@@ -392,7 +325,7 @@ using UnityEngine.UIElements;
                     _localActivated.Unbind();
                     _localActivated.UnregisterValueChangedCallback(HandleLocalActivatedCallback);
                 }
-            #endif
+#endif
         }
         
         private void HandleLocalActivatedCallback(ChangeEvent<bool> evt)
@@ -416,33 +349,7 @@ using UnityEngine.UIElements;
 
         private void SetTree(ConversationTree tree)
         {
-            _currentTree = tree;
-            
-            // Show conversation inspector
-            _inspectorView.ShowConversationInspector(tree);
-            
-            if (_conversationNameLabel == null)
-            {
-                _conversationNameLabel = rootVisualElement.Q<Label>("conversation-name-label");
-            }
-
-            if (_conversationNameLabel != null)
-            {
-                ClearAllValueCallbacks();
-                _topConversationBar.style.display = DisplayStyle.Flex;
-                _conversationNameLabel.bindingPath = "title";
-                _conversationNameLabel.Bind(new SerializedObject(tree));
-                EventCallback<ClickEvent> clickEvent = (e) =>
-                {
-                    _conversationNameLabel.AddToClassList("conversation-name-label--selected");
-                    _conversationNameLabel.RemoveFromClassList("conversation-name-label");
-                    SetConversationNameSelected();
-                };
-
-                _conversationNameLabel.RegisterCallback(clickEvent);
-                _unregisterAll += () => _conversationNameLabel.UnregisterCallback(clickEvent);
-            }
-            _treeView?.PopulateViewAndFrameNodes(tree); 
+            _conversationEditView.SetUpTree(tree);
         }
 
         void OnNodeSelectionChanged(NodeView node)
@@ -452,7 +359,7 @@ using UnityEngine.UIElements;
 
         void OnRefreshInspector()
         {
-            Node currentNode = _inspectorView.GetCurrentNode();
+            NodeSO currentNode = _inspectorView.GetCurrentNode();
             if (currentNode != null)
             {
                 _inspectorView.ShowDialogInspector(_treeView.FindNodeView(currentNode));
@@ -461,13 +368,12 @@ using UnityEngine.UIElements;
 
         void OnNodesRemoved()
         {
-            SetConversationNameSelected();
+            _conversationEditView.SetConversationNameSelected();
         }
 
         void OnActorsRemoved()
         {
-            SetConversationNameSelected();
-            _treeView?.PopulateViewAndFrameNodes(_currentTree);
+            _conversationEditView.SetConversationNameAndRefresh();
         }
 
         void OpenDatabaseSelector()
@@ -566,34 +472,20 @@ using UnityEngine.UIElements;
         
         void OnRemoveDatabaseConfirm()
         {
-            DatabaseUtils.DeleteDatabase(_currentDatabase);
+            _currentDatabase.DeleteDatabase();
             DSData.instance.database = null;
             _confirmationModalVE.AddToClassList(hiddenContentClassName);
             OpenDatabaseSelector();
             ClearView();
         }
 
-        private void SetConversationNameSelected()
-        {
-            _treeView.ClearSelection();
-            _inspectorView.ShowConversationInspector(_currentTree);
-        }
-
         private void ClearView()
         {
             _currentDatabase = null;
-            _toolbarHeaderVE.AddToClassList(hiddenContentClassName);
+            _toolbarHeaderVE?.AddToClassList(hiddenContentClassName);
             _actorMultiColumListView.ClearList();
-            _inspectorView.ClearInspector();
-            _treeView.ClearGraph();
-            
+            _conversationEditView.ClearConversationView();
             ClearAllValueCallbacks();
-            if (_conversationNameLabel != null)
-            {
-                _conversationNameLabel.RemoveFromClassList("conversation-name-label--selected");
-                _conversationNameLabel.AddToClassList("conversation-name-label");
-            }
-            _topConversationBar.style.display = DisplayStyle.None;
         }
         
         private void ClearAllValueCallbacks()

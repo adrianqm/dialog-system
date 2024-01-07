@@ -18,7 +18,6 @@ namespace AQM.Tools
         public static Action<DSChoice> onShowNewChoice;
         public static Action<DSChoice,float> onShowNewChoiceInTime;
         public static Action onConversationEnded;
-        public static Action<DialogSystemDatabase> onDatabaseCloned;
         
         [SerializeField] private DialogSystemDatabase dialogSystemDatabase;
         
@@ -45,21 +44,13 @@ namespace AQM.Tools
         #if LOCALIZATION_EXIST
         private IEnumerator Start()
         {
-            if (dialogSystemDatabase.tableCollectionName != "" && dialogSystemDatabase.defaultLocale)
+            if (dialogSystemDatabase && dialogSystemDatabase.tableCollectionName != "" && dialogSystemDatabase.defaultLocale)
             {
                 var d = LocalizationSettings.StringDatabase.GetTableAsync(dialogSystemDatabase.tableCollectionName);
                 if (!d.IsDone)
                     yield return d;
                 string dump = LocalizationSettings.StringDatabase.GetLocalizedString(dialogSystemDatabase.tableCollectionName,"default");
             }
-            dialogSystemDatabase = dialogSystemDatabase.Clone();
-            onDatabaseCloned?.Invoke(dialogSystemDatabase);
-        }
-        #else
-        private void Start()
-        {
-            dialogSystemDatabase = dialogSystemDatabase.Clone();
-            onDatabaseCloned?.Invoke(dialogSystemDatabase);
         }
         #endif
         

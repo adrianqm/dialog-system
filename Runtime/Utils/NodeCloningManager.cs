@@ -6,9 +6,9 @@ namespace AQM.Tools
 {
     public class NodeCloningManager
     {
-        private Dictionary<Node, Node> clonedNodes = new Dictionary<Node, Node>();
+        private Dictionary<NodeSO, NodeSO> clonedNodes = new Dictionary<NodeSO, NodeSO>();
     
-        public Node CloneNode(Node originalNode)
+        public NodeSO CloneNode(NodeSO originalNode)
         {
             if (originalNode == null)
             {
@@ -20,43 +20,55 @@ namespace AQM.Tools
                 return node;
             }
     
-            Node clonedNode = originalNode.Clone();
+            NodeSO clonedNode = originalNode.Clone();
             clonedNodes.Add(originalNode, clonedNode);
             
-            ParentNode parentNode = originalNode as ParentNode;
-            if (parentNode && parentNode.children != null)
+            StartNodeSO startNode = originalNode as StartNodeSO;
+            if (startNode && startNode.outputPorts[0].targetNodes != null)
             {
-                ParentNode parentClonedNode = clonedNode as ParentNode;
-                parentClonedNode.children = new List<Node>();
-                foreach (Node child in parentNode.children)
+                StartNodeSO parentClonedNode = clonedNode as StartNodeSO;
+                parentClonedNode.outputPorts[0].targetNodes = new List<NodeSO>();
+                foreach (NodeSO child in startNode.outputPorts[0].targetNodes)
                 {
-                    Node clonedChild = CloneNode(child);
-                    parentClonedNode.children.Add(clonedChild);
+                    NodeSO clonedChild = CloneNode(child);
+                    parentClonedNode.outputPorts[0].targetNodes.Add(clonedChild);
                 }
             }
             
-            ChoiceNode choiceNode = originalNode as ChoiceNode;
-            if (choiceNode && choiceNode.choices != null)
+            DialogNodeSO dialogNodeSo = originalNode as DialogNodeSO;
+            if (startNode && startNode.outputPorts[0].targetNodes != null)
             {
-                ChoiceNode clonedChoiceNode = clonedNode as ChoiceNode;
+                DialogNodeSO parentClonedNode = clonedNode as DialogNodeSO;
+                parentClonedNode.outputPorts[0].targetNodes = new List<NodeSO>();
+                foreach (NodeSO child in dialogNodeSo.outputPorts[0].targetNodes )
+                {
+                    NodeSO clonedChild = CloneNode(child);
+                    parentClonedNode.outputPorts[0].targetNodes.Add(clonedChild);
+                }
+            }
+            
+            ChoiceNodeSO choiceNodeSo = originalNode as ChoiceNodeSO;
+            if (choiceNodeSo && choiceNodeSo.choices != null)
+            {
+                ChoiceNodeSO clonedChoiceNode = clonedNode as ChoiceNodeSO;
                 clonedChoiceNode.choices = new List<Choice>();
-                foreach (Choice choice in choiceNode.choices)
+                foreach (Choice choice in choiceNodeSo.choices)
                 {
                     Choice clonedChoice = choice.Clone();
-                    clonedChoice.children = new List<Node>();
+                    clonedChoice.port.targetNodes = new List<NodeSO>();
                     
-                    foreach (Node child in choice.children)
+                    foreach (NodeSO child in choice.port.targetNodes)
                     {
-                        Node choiceClonedChild = CloneNode(child);
-                        clonedChoice.children.Add(choiceClonedChild);
+                        NodeSO choiceClonedChild = CloneNode(child);
+                        clonedChoice.port.targetNodes.Add(choiceClonedChild);
                     }
                     clonedChoiceNode.choices.Add(clonedChoice);
                 }
-                clonedChoiceNode.defaultChildren = new List<Node>();
-                foreach (Node child in choiceNode.defaultChildren)
+                clonedChoiceNode.defaultPort.targetNodes = new List<NodeSO>();
+                foreach (NodeSO child in choiceNodeSo.defaultPort.targetNodes)
                 {
-                    Node choiceClonedChild = CloneNode(child);
-                    clonedChoiceNode.defaultChildren.Add(choiceClonedChild);
+                    NodeSO choiceClonedChild = CloneNode(child);
+                    clonedChoiceNode.defaultPort.targetNodes.Add(choiceClonedChild);
                 }
             }
             return clonedNode;

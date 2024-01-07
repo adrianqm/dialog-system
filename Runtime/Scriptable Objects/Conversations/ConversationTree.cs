@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
 #if LOCALIZATION_EXIST
 using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.Tables;
@@ -24,19 +25,20 @@ namespace AQM.Tools
             Completed
         }
         
-        public Node startNode;
-        public Node completeNode;
-        public List<Node> nodes = new ();
+        public NodeSO startNode;
+        public NodeSO completeNode;
+        public List<NodeSO> nodes = new ();
         public List<GroupNode> groups = new ();
-        [HideInInspector] public Node runningNode;
+        [FormerlySerializedAs("runningNodeSo")] [HideInInspector] public NodeSO runningNode;
         
         [TextArea] public string title;
         [TextArea] public string description;
         [HideInInspector] [TextArea] public string guid;
         public State conversationState = State.Editor;
         
-        private Node _finishedNode;
+        private NodeSO _finishedNode;
         private DialogSystemDatabase _currentDatabase;
+        private NodeSO _nodeToDestroy;
 
         public void SetName(string newTitle)
         {
@@ -52,14 +54,42 @@ namespace AQM.Tools
             conversationState = State.Running;
 #endif
             runningNode = startNode;
+            startNode.OnRunning();
             _currentDatabase = currentDatabase;
-            StartNode node = runningNode as StartNode;
-            if (node)
+            StartNodeSO nodeSo = runningNode as StartNodeSO;
+            if (nodeSo)
             {
-                return CheckNextChildMove(node.children);
+                return CheckNextChildMove(nodeSo.outputPorts[0].targetNodes);
             }
 
             return null;
+        }
+        
+#if UNITY_EDITOR
+        private void OnEnable()
+        {
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+        }
+
+        private void OnDisable()
+        {
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+        }
+        
+        private void OnPlayModeStateChanged(PlayModeStateChange obj)
+        {
+            switch (obj)
+            {
+                case PlayModeStateChange.EnteredEditMode:
+                    conversationState = State.Editor;
+                    onUpdateViewStates?.Invoke();
+                    break;
+                case PlayModeStateChange.EnteredPlayMode:
+                    conversationState = State.Idle;
+                    onUpdateViewStates?.Invoke();
+                    break;
+            }
         }
 
         private void ResetNodeStates()
@@ -68,15 +98,52 @@ namespace AQM.Tools
             // Reset states to initial
             foreach (var n in nodes)
             {
-                n.NodeState = Node.State.Initial;
+                n.NodeState = NodeSO.State.Initial;
             }
         }
+        
+        public NodeSO CreateNode(DialogSystemDatabase db, NodeFactory.NodeType type, Vector2 position)
+        {
+            NodeSO node = NodeFactory.CreateNode(type, position);
+            
+            Undo.RecordObject(this, "Conversation Tree (CreateNode)");
+            nodes ??= new List<NodeSO>();
+            nodes.Add(node);
+            
+            if (!Application.isPlaying)
+             node.SaveAs(db);
+            
+            Undo.RegisterCreatedObjectUndo(node, "Conversation Tree (CreateNode)");
+            AssetDatabase.SaveAssets();
+            return node;
+        }
+
+        public void DeleteNode(NodeSO node)
+        {
+            Undo.RecordObject(this, "Conversation Tree (DeleteNode)");
+            nodes.Remove(node);
+            _nodeToDestroy = node;
+            EditorApplication.delayCall += () =>
+            {
+                Undo.DestroyObjectImmediate(node);
+                AssetDatabase.SaveAssets();
+            };
+        }
+
+        private void Remove()
+        {
+            if (_nodeToDestroy == null) return;
+            Undo.DestroyObjectImmediate(_nodeToDestroy);
+            AssetDatabase.SaveAssets();
+            EditorApplication.delayCall -= Remove;
+        }
+#endif
 
         private void EndConversation()
         {
 #if UNITY_EDITOR
             conversationState = State.Completed;
-            runningNode.NodeState = Node.State.Finished;
+            runningNode.NodeState = NodeSO.State.Finished;
 #endif
             _finishedNode = runningNode;
             runningNode = null;
@@ -88,19 +155,19 @@ namespace AQM.Tools
             if (!runningNode) return null;
 
             DSNode nextNode = null;
-            DialogNode dialogNode = runningNode as DialogNode;
-            if (dialogNode)
+            DialogNodeSO dialogNodeSo = runningNode as DialogNodeSO;
+            if (dialogNodeSo)
             {
-                nextNode = CheckNextChildMove(dialogNode.children);
+                nextNode = CheckNextChildMove(dialogNodeSo.outputPorts[0].targetNodes);
             }
             
-            ChoiceNode choiceNode = runningNode as ChoiceNode;
-            if (choiceNode && option >= 0)
+            ChoiceNodeSO choiceNodeSo = runningNode as ChoiceNodeSO;
+            if (choiceNodeSo && option >= 0)
             {
-                nextNode = CheckNextChildMove(choiceNode.choices[option].children);
-            }else if (choiceNode && option == -1)
+                nextNode = CheckNextChildMove(choiceNodeSo.choices[option].port.targetNodes);
+            }else if (choiceNodeSo && option == -1)
             {
-                nextNode = CheckNextChildMove(choiceNode.defaultChildren);
+                nextNode = CheckNextChildMove(choiceNodeSo.defaultPort.targetNodes);
             }
 
             return nextNode;
@@ -115,14 +182,14 @@ namespace AQM.Tools
 #endif
         }
 
-        private DSNode CheckNextChildMove(List<Node> children)
+        private DSNode CheckNextChildMove(List<NodeSO> children)
         {
-            Node childToMove = null;
+            NodeSO childToMove = null;
             foreach (var child in children.Where(child => child.CheckConditions()))
             {
                 childToMove = child;
 #if UNITY_EDITOR
-                runningNode.NodeState = Node.State.Visited;
+                runningNode.NodeState = NodeSO.State.Visited;
 #endif
                 SetRunningNode(child);
                 break;
@@ -152,34 +219,34 @@ namespace AQM.Tools
         
 #if LOCALIZATION_EXIST
 
-        private DSNode GetTranslatedNode(Node childToMove)
+        private DSNode GetTranslatedNode(NodeSO childToMove)
         {
             if (!_currentDatabase.localizationActivated) return childToMove.GetData();
-            DialogNode dialogNode = childToMove as DialogNode;
-            if (dialogNode)
+            DialogNodeSO dialogNodeSo = childToMove as DialogNodeSO;
+            if (dialogNodeSo)
             {
                 DSDialog dsDialog = null;
                 var translatedValue =
-                    LocalizationSettings.StringDatabase.GetLocalizedString(_currentDatabase.tableCollectionName, dialogNode.guid);
+                    LocalizationSettings.StringDatabase.GetLocalizedString(_currentDatabase.tableCollectionName, dialogNodeSo.guid);
                 if(translatedValue != null)
                 {
-                    dsDialog = new DSDialog(dialogNode.actor, translatedValue);
+                    dsDialog = new DSDialog(dialogNodeSo.actor, translatedValue);
                 }
                 return dsDialog;
             }
-            ChoiceNode choiceNode = childToMove as ChoiceNode;
-            if (choiceNode)
+            ChoiceNodeSO choiceNodeSo = childToMove as ChoiceNodeSO;
+            if (choiceNodeSo)
             {
                 string message = "";
                 List<string> choices = new List<string>();
                 var translatedValue =
-                    LocalizationSettings.StringDatabase.GetLocalizedString(_currentDatabase.tableCollectionName, choiceNode.guid);
+                    LocalizationSettings.StringDatabase.GetLocalizedString(_currentDatabase.tableCollectionName, choiceNodeSo.guid);
                 if(translatedValue != null)
                 {
                     message = translatedValue;
                 }
                 
-                choiceNode.choices.ForEach(c =>
+                choiceNodeSo.choices.ForEach(c =>
                 {
                     var choiceEntry = LocalizationSettings.StringDatabase.GetLocalizedString(_currentDatabase.tableCollectionName, c.guid);
                     if(choiceEntry != null)
@@ -187,22 +254,22 @@ namespace AQM.Tools
                         choices.Add(choiceEntry);
                     }
                 });
-                return new DSChoice(choiceNode.actor,message,choices);
+                return new DSChoice(choiceNodeSo.actor,message,choices);
             }
             return null;
         }
     #endif
 
-        private void SetRunningNode(Node node)
+        private void SetRunningNode(NodeSO nodeSo)
         {
 #if UNITY_EDITOR
-            List<Node> visitedNodes = CustomDFS.StartDFS(node);
+            List<NodeSO> visitedNodes = CustomDFS.StartDFS(nodeSo);
 #endif
             foreach (var n in nodes)
             {
-                if (node.guid == n.guid)
+                if (nodeSo.guid == n.guid)
                 {
-                    if (n is CompleteNode)
+                    if (n is CompleteNodeSO)
                     {
                         runningNode = n;
                         EndConversation();
@@ -210,7 +277,7 @@ namespace AQM.Tools
                     else
                     {
 #if UNITY_EDITOR
-                        n.NodeState = Node.State.Running;
+                        n.NodeState = NodeSO.State.Running;
 #endif
                         runningNode = n;
                     }
@@ -218,29 +285,24 @@ namespace AQM.Tools
                 }
 #if UNITY_EDITOR
                 if (visitedNodes.Find(vn => vn.guid == n.guid)) continue;
-                if (n.NodeState == Node.State.Visited) n.NodeState = Node.State.VisitedUnreachable;
-                else if(n.NodeState != Node.State.VisitedUnreachable) n.NodeState = Node.State.Unreachable;
+                if (n.NodeState == NodeSO.State.Visited) n.NodeState = NodeSO.State.VisitedUnreachable;
+                else if(n.NodeState != NodeSO.State.VisitedUnreachable) n.NodeState = NodeSO.State.Unreachable;
 #endif
             }
         }
 
-        public List<Node> GetChildren(ParentNode parent)
+        private void Traverse(NodeSO nodeSo, List<string> nonRepeatNodeList ,System.Action<NodeSO> visiter)
         {
-            return parent.children;
-        }
-
-        private void Traverse(Node node, List<string> nonRepeatNodeList ,System.Action<Node> visiter)
-        {
-            if (!node || nonRepeatNodeList.Contains(node.guid)) return;
-            visiter.Invoke(node);
-            ParentNode parentNode = node as ParentNode;
+            /*if (!nodeSo || nonRepeatNodeList.Contains(nodeSo.guid)) return;
+            visiter.Invoke(nodeSo);
+            ParentNode parentNode = nodeSo as ParentNode;
             if (parentNode)
             {
                 var children = GetChildren(parentNode);
                 children.ForEach((n)=> Traverse(n,nonRepeatNodeList,visiter));
             }
             
-            ChoiceNode choiceNode = node as ChoiceNode;
+            ChoiceNode choiceNode = nodeSo as ChoiceNode;
             if (choiceNode)
             {
                 choiceNode.choices.ForEach((choice) =>
@@ -249,7 +311,7 @@ namespace AQM.Tools
                 });
                 
                 choiceNode.defaultChildren.ForEach((n)=> Traverse(n,nonRepeatNodeList,visiter));
-            }
+            }*/
         }
         
         public ConversationTree Clone()
@@ -259,7 +321,7 @@ namespace AQM.Tools
             NodeCloningManager cloningManager = new NodeCloningManager();
             tree.startNode= cloningManager.CloneNode(tree.startNode);
             tree.groups = groups.ConvertAll(g => g.Clone());
-            tree.nodes = new List<Node>();
+            tree.nodes = new List<NodeSO>();
             
 #if UNITY_EDITOR
             tree.conversationState = State.Idle;
@@ -277,6 +339,14 @@ namespace AQM.Tools
                 tree.nodes.Add(tree.completeNode.Clone());
             }
             return tree;
+        }
+
+        private void OnDestroy()
+        {
+            foreach (var node in nodes.ToList())
+            {
+                Undo.DestroyObjectImmediate(node);
+            }
         }
     }
 }

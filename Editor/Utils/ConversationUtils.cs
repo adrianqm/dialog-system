@@ -10,20 +10,6 @@ namespace AQM.Tools
 {
     public static class ConversationUtils
     {
-        public static ConversationTree CreateConversation(DialogSystemDatabase db, string title, string description)
-        {
-            ConversationTree tree = ScriptableObject.CreateInstance(typeof(ConversationTree)) as ConversationTree;
-            if (!tree) return null;
-            tree.title = title;
-            tree.description = description;
-            tree.guid = GUID.Generate().ToString();
-            tree.name = title;
-            tree.hideFlags = HideFlags.HideInHierarchy;
-            
-            AssetDatabase.AddObjectToAsset(tree,db);
-            return tree;
-        }
-        
         public static GroupNode CreateGroup (DialogSystemDatabase db, ConversationTree tree, string groupTitle, Vector2 position)
         {
             GroupNode groupNode = ScriptableObject.CreateInstance(typeof(GroupNode)) as GroupNode;
@@ -56,7 +42,7 @@ namespace AQM.Tools
             AssetDatabase.SaveAssets();
         }
         
-        public static bool AddGroupToNode(Node node,GroupNode group)
+        public static bool AddGroupToNode(NodeSO node,GroupNode group)
         {
             bool hasBeenAdded = false;
             if(node  && group)
@@ -69,7 +55,7 @@ namespace AQM.Tools
 
             return hasBeenAdded;
         }
-        public static void RemoveGroupFromNode(Node node)
+        public static void RemoveGroupFromNode(NodeSO node)
         {
             if (!node) return;
             Undo.RecordObject(node, "Conversation Tree (RemoveGroupFromNode)");
@@ -77,48 +63,15 @@ namespace AQM.Tools
             EditorUtility.SetDirty(node);
         }
         
-        public static void SetGroupTitle(GroupNode group, string newTitle)
-        {
-            if (!group) return;
-            Undo.RecordObject(group, "Conversation Tree (SetGroupTitle)");
-            group.title = newTitle;
-            EditorUtility.SetDirty(group);
-        }
         
-        public static Node CreateNode(DialogSystemDatabase db,ConversationTree tree, System.Type type, Vector2 position)
+        private static void AddNodeToList(DialogSystemDatabase db,ConversationTree tree, NodeSO node)
         {
-            Node node = ScriptableObject.CreateInstance(type) as Node;
-            if (!node) return null;
             
-            node.name = type.Name;
-            node.guid = GUID.Generate().ToString();
-            node.position = position;
-
-            AddNodeToList(db,tree,node);
-#if LOCALIZATION_EXIST
-            if(node is not StartNode && node is not CompleteNode) LocalizationUtils.SetDefaultLocaleEntry(node.guid,"");
-#endif
-            return node;
         }
         
-        private static void AddNodeToList(DialogSystemDatabase db,ConversationTree tree, Node node)
+        public static DialogNodeSO CreateDialogNodeCopy(DialogSystemDatabase db,ConversationTree tree,  System.Type type, Vector2 position, SerializableDialogNode nodeToCopy)
         {
-            node.hideFlags = HideFlags.HideInHierarchy;
-            Undo.RecordObject(tree, "Conversation Tree (CreateNode)");
-            tree.nodes ??= new List<Node>();
-            tree.nodes.Add(node);
-            
-            if (!Application.isPlaying)
-            {
-                AssetDatabase.AddObjectToAsset(node,db);
-            }
-            Undo.RegisterCreatedObjectUndo(node, "Conversation Tree (CreateNode)");
-            AssetDatabase.SaveAssets();
-        }
-        
-        public static DialogNode CreateDialogNodeCopy(DialogSystemDatabase db,ConversationTree tree,  System.Type type, Vector2 position, SerializableDialogNode nodeToCopy)
-        {
-            DialogNode node = ScriptableObject.CreateInstance(type) as DialogNode;
+            DialogNodeSO node = ScriptableObject.CreateInstance(type) as DialogNodeSO;
             if (!node) return null;
             
             node.name = type.Name;
@@ -134,10 +87,10 @@ namespace AQM.Tools
             return node;
         }
         
-        public static ChoiceNode CreateChoiceNodeToCopy(DialogSystemDatabase db,ConversationTree tree, Vector2 position, SerializableChoiceNode nodeToCopy, Dictionary<string, Choice> choiceMap)
+        public static ChoiceNodeSO CreateChoiceNodeToCopy(DialogSystemDatabase db,ConversationTree tree, Vector2 position, SerializableChoiceNode nodeToCopy, Dictionary<string, Choice> choiceMap)
         {
-            Type type = typeof(ChoiceNode);
-            ChoiceNode node = ScriptableObject.CreateInstance(type) as ChoiceNode;
+            Type type = typeof(ChoiceNodeSO);
+            ChoiceNodeSO node = ScriptableObject.CreateInstance(type) as ChoiceNodeSO;
             if (!node) return null;
             
             node.name = type.Name;
@@ -148,8 +101,8 @@ namespace AQM.Tools
             node.choices = new List<Choice>();
             foreach (var serializableChoice in nodeToCopy.choices)
             {
-                Choice choice = ChoiceUtils.CreateChoice(db, node, serializableChoice.choiceMessage);
-                choiceMap.Add(serializableChoice.guid, choice);
+                //Choice choice = ChoiceUtils.CreateChoice(db, node, serializableChoice.choiceMessage);
+                //choiceMap.Add(serializableChoice.guid, choice);
             }
 
             AddNodeToList(db,tree,node);
@@ -157,81 +110,6 @@ namespace AQM.Tools
             LocalizationUtils.AddCopyKeyToCollection(node.guid,nodeToCopy.guid);
 #endif
             return node;
-        }
-        
-        public static void DeleteNode(ConversationTree tree, Node node)
-        {
-            Undo.RecordObject(tree, "Conversation Tree (DeleteNode)");
-            tree.nodes.Remove(node);
-            Undo.DestroyObjectImmediate(node);
-            AssetDatabase.SaveAssets();
-        }
-        
-        public static bool AddChild (Node parent, Node child, Port parentPort = null)
-        {
-            bool hasAdded = false;
-            ParentNode parentNode = parent as ParentNode;
-            if(parentNode && !parentNode.children.Contains(child) )
-            {
-                Undo.RecordObject(parentNode, "Conversation Tree (AddChild)");
-                parentNode.children.Add(child);
-                EditorUtility.SetDirty(parentNode);
-                hasAdded = true;
-            }
-            
-            ChoiceNode choiceNode = parent as ChoiceNode;
-            if(choiceNode && parentPort != null)
-            {
-                NodeView  choiceView = parentPort.node as NodeView;
-                Choice choice = choiceView?.FindPortChoice(parentPort);
-                if (choice)
-                {
-                    Undo.RecordObject(choice, "Conversation Tree (AddChoice)");
-                    choice.children.Add(child);
-                    EditorUtility.SetDirty(choice);
-                    hasAdded = true;
-                }
-                else
-                {
-                    // Default Choice
-                    Undo.RecordObject(choiceNode, "Conversation Tree (AddDefaultChoice)");
-                    choiceNode.defaultChildren.Add(child);
-                    EditorUtility.SetDirty(choiceNode);
-                    hasAdded = true;
-                }
-            }
-
-            return hasAdded;
-        }
-        
-        public static void RemoveChild(Node parent, Node child, Port parentPort = null)
-        {
-            ParentNode parentNode = parent as ParentNode;
-            if(parentNode)
-            {
-                Undo.RecordObject(parentNode, "Conversation Tree (RemoveChild)");
-                parentNode.children.Remove(child);
-                EditorUtility.SetDirty(parentNode);
-            }
-            
-            ChoiceNode choiceNode = parent as ChoiceNode;
-            if(choiceNode && parentPort != null)
-            {
-                NodeView  choiceView = parentPort.node as NodeView;
-                Choice choice = choiceView?.FindPortChoice(parentPort);
-                if (choice)
-                {
-                    Undo.RecordObject(choice, "Conversation Tree (RemoveChoiceChild)");
-                    choice.children.Remove(child);
-                    EditorUtility.SetDirty(choice);
-                }
-                else
-                {
-                    Undo.RecordObject(choiceNode, "Conversation Tree (RemoveDefaultChoiceChild)");
-                    choiceNode.defaultChildren.Remove(child);
-                    EditorUtility.SetDirty(choiceNode);
-                }
-            }
         }
         
     }

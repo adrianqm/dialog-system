@@ -1,72 +1,73 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using AQM.Tools;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerInteraction : MonoBehaviour
+namespace AQM.Tools
 {
-    public Transform cameraTransform;
-    public float rayDistance;
+    public class PlayerInteraction : MonoBehaviour
+    {
+        public Transform cameraTransform;
+        public float rayDistance;
+        
+        [Header("Interact")]
+        [SerializeField] private InputActionReference interact;
     
-    [Header("Interact")]
-    [SerializeField] private InputActionReference interact;
-
-    private bool _canInteract = true;
-
-    private void Awake()
-    {
-        DialogSystemController.onConversationEnded += ResetActivate;
-        DDEvents.onStartConversation += StopInteract;
-    }
-
-    void Update()
-    {
-        if (_canInteract && interact.action.WasPressedThisFrame())
+        private bool _canInteract = true;
+    
+        private void Awake()
         {
-            var camPos = cameraTransform.position;
-            var camForward = cameraTransform.forward;
-            Ray r = new Ray(camPos, camForward);
-            if (Physics.Raycast(r, out var hitInfo, rayDistance))
+            DialogSystemController.onConversationEnded += ResetActivate;
+            DDEvents.onStartConversation += StopInteract;
+        }
+    
+        void Update()
+        {
+            if (_canInteract && interact.action.WasPressedThisFrame())
             {
-                if (hitInfo.collider.gameObject.TryGetComponent(out IInteractable interactable))
+                var camPos = cameraTransform.position;
+                var camForward = cameraTransform.forward;
+                Ray r = new Ray(camPos, camForward);
+                if (Physics.Raycast(r, out var hitInfo, rayDistance))
                 {
-                    interactable.Interact();
+                    if (hitInfo.collider.gameObject.TryGetComponent(out IInteractable interactable))
+                    {
+                        interactable.Interact();
+                    }
                 }
             }
         }
-    }
-
-    private void ResetActivate()
-    {
-        StartCoroutine(ResetInteraction());
-    }
-
-    private void StopInteract(ConversationTree tree)
-    {
-        _canInteract = false;
-    }
-
-    IEnumerator ResetInteraction()
-    {
-        yield return new WaitForEndOfFrame();
-        _canInteract = true;
-    }
-
-    private void OnEnable()
-    {
-        interact.action.Enable();
-    }
     
-    private void OnDisable()
-    {
-        interact.action.Disable();
-    }
-
-    private void OnDestroy()
-    {
-        DialogSystemController.onConversationEnded -= ResetActivate;
-        DDEvents.onStartConversation -= StopInteract;
+        private void ResetActivate()
+        {
+            StartCoroutine(ResetInteraction());
+        }
+    
+        private void StopInteract(ConversationTree tree)
+        {
+            _canInteract = false;
+        }
+    
+        IEnumerator ResetInteraction()
+        {
+            yield return new WaitForEndOfFrame();
+            _canInteract = true;
+        }
+    
+        private void OnEnable()
+        {
+            interact.action.Enable();
+        }
+        
+        private void OnDisable()
+        {
+            interact.action.Disable();
+        }
+    
+        private void OnDestroy()
+        {
+            DialogSystemController.onConversationEnded -= ResetActivate;
+            DDEvents.onStartConversation -= StopInteract;
+        }
     }
 }

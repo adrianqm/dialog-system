@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 [System.Serializable]
@@ -11,5 +12,12 @@ public class GroupNode : ScriptableObject
     {
         GroupNode node = Instantiate(this);
         return node;
+    }
+    
+    public void SetGroupTitle(string newTitle)
+    {
+        Undo.RecordObject(this, "Conversation Tree (SetGroupTitle)");
+        title = newTitle;
+        EditorUtility.SetDirty(this);
     }
 }

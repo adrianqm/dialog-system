@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace AQM.Tools
 {
@@ -7,8 +9,23 @@ namespace AQM.Tools
     {
         public string guid;
         public string choiceMessage;
-        public List<Node> children = new();
+        public PortSO port;
 
+        public void Init(ChoiceNodeSO originNode, string defaultText)
+        {
+            guid = GUID.Generate().ToString();
+            name = $"Choice-{guid}";
+            choiceMessage = defaultText;
+            //hideFlags = HideFlags.HideInHierarchy;
+            port = originNode.CreateOutputPort();
+        }
+        
+        public void SaveAs(DialogSystemDatabase db)
+        {
+            AssetDatabase.AddObjectToAsset(this,db);
+            port.SaveAs(db);
+        }
+        
         public Choice Clone()
         {
             Choice choice = Instantiate(this);

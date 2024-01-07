@@ -1,0 +1,6 @@
+#title {
+    flex-shrink: 0;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    -unity-text-align: upper-center;
+}

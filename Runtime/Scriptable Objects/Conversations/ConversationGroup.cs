@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace AQM.Tools
@@ -49,6 +50,37 @@ namespace AQM.Tools
             });
 
             return clone;
+        }
+        
+        public void CreateConversation(DialogSystemDatabase db)
+        {
+            
+            ConversationTree newConversation = ScriptableObject.CreateInstance(typeof(ConversationTree)) as ConversationTree;
+            if (newConversation)
+            {
+                newConversation.name = "ConversationTree";
+                newConversation.guid = GUID.Generate().ToString();
+                newConversation.title = "Default Title";
+                newConversation.description = "Default Desc";
+                //newConversation.hideFlags = HideFlags.HideInHierarchy;
+                
+                //Undo.RecordObject(this, "Actors Tree (CreateActor)");
+                conversations.Add(newConversation);
+                
+                if (!Application.isPlaying)
+                {
+                    AssetDatabase.AddObjectToAsset( newConversation,db);
+                }
+                //Undo.RegisterCreatedObjectUndo(newActor, "Actors Tree (CreateActor)");
+                AssetDatabase.SaveAssets();
+            }
+        }
+        
+        public void DeleteConversation(ConversationTree conversation)
+        {
+            conversations.Remove(conversation);
+            Undo.DestroyObjectImmediate(conversation);
+            AssetDatabase.SaveAssets();
         }
     }
 }

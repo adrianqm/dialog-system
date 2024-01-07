@@ -7,22 +7,34 @@ namespace AQM.Tools
 {
     public static class CustomDFS
     {
-        private static List<Node> visitedNodes;
+        private static List<NodeSO> visitedNodes;
     
-        public static List<Node> StartDFS (Node currentNode)
+        public static List<NodeSO> StartDFS (NodeSO currentNode)
         {
-            visitedNodes = new List<Node>();
+            visitedNodes = new List<NodeSO>();
             DFSUtil(currentNode, visitedNodes);
             return visitedNodes;
         }
 
-        private static void DFSUtil(Node currentNode, List<Node> visitedNodes)
+        private static void DFSUtil(NodeSO currentNode, List<NodeSO> visitedNodes)
         {
             visitedNodes.Add(currentNode);
-            ParentNode parentNode = currentNode as ParentNode;
+            StartNodeSO parentNode = currentNode as StartNodeSO;
             if (parentNode)
             {
-                foreach (var n in parentNode.children)
+                foreach (var n in parentNode.outputPorts[0].targetNodes)
+                {
+                    if (!visitedNodes.Contains(n))
+                    {
+                        DFSUtil(n, visitedNodes);
+                    }
+                }
+            }
+            
+            DialogNodeSO dialogNodeSo = currentNode as DialogNodeSO;
+            if (dialogNodeSo)
+            {
+                foreach (var n in dialogNodeSo.outputPorts[0].targetNodes)
                 {
                     if (!visitedNodes.Contains(n))
                     {
@@ -31,12 +43,12 @@ namespace AQM.Tools
                 }
             }
         
-            ChoiceNode choiceNode = currentNode as ChoiceNode;
-            if (choiceNode)
+            ChoiceNodeSO choiceNodeSo = currentNode as ChoiceNodeSO;
+            if (choiceNodeSo)
             {
-                foreach (var c in choiceNode.choices)
+                foreach (var c in choiceNodeSo.choices)
                 {
-                    foreach (var n in c.children)
+                    foreach (var n in c.port.targetNodes)
                     {
                         if (!visitedNodes.Contains(n))
                         {
@@ -45,7 +57,7 @@ namespace AQM.Tools
                     }
                 }
                 
-                foreach (var n in choiceNode.defaultChildren)
+                foreach (var n in choiceNodeSo.defaultPort.targetNodes)
                 {
                     if (!visitedNodes.Contains(n))
                     {

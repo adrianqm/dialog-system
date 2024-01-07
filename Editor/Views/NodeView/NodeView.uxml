@@ -1,0 +1,14 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <Style src="project://database/Assets/dialog-system/Editor/Views/NodeView/NodeViewStyle.uss?fileID=7433441132597879392&amp;guid=bd625d698775d324d943d7a2c368160e&amp;type=3#NodeViewStyle" />
+    <ui:VisualElement name="node-border" picking-mode="Ignore" style="display: flex; border-left-color: rgb(29, 29, 36); border-right-color: rgb(29, 29, 36); border-top-color: rgb(29, 29, 36); border-bottom-color: rgb(29, 29, 36); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; align-items: stretch; justify-content: flex-start; align-self: auto; flex-direction: column; flex-grow: initial; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0;">
+        <ui:VisualElement name="contents" style="min-width: auto;">
+            <ui:VisualElement name="extension" style="flex-grow: 1;" />
+            <ui:VisualElement name="top" style="opacity: 1; display: flex; justify-content: flex-start; align-items: auto; align-self: auto; flex-direction: column; background-color: rgb(24, 24, 29);">
+                <ui:VisualElement name="input" />
+                <ui:VisualElement name="output" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="selection-border" picking-mode="Ignore" style="display: flex;" />
+    <ui:VisualElement name="node-state" picking-mode="Ignore" style="background-image: none;" />
+</ui:UXML>
