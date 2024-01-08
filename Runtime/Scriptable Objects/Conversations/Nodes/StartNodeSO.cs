@@ -7,22 +7,12 @@ namespace AQM.Tools
 {
     public class StartNodeSO : NodeSO
     {
-        public override NodeSO Clone()
-        {
-            StartNodeSO nodeSo = Instantiate(this);
-            return nodeSo;
-        }
         
 #if UNITY_EDITOR
         public override void Init(Vector2 position)
         {
             base.Init(position);
             name = $"StartNode-{guid}";
-        }
-        
-        public override void OnRunning()
-        {
-            NodeState = State.Running;
         }
         
         protected override void CreateDefaultInputPorts(){}
@@ -44,6 +34,13 @@ namespace AQM.Tools
             EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
         }
         
+        
+        public override NodeSO Clone()
+        {
+            StartNodeSO nodeSo = Instantiate(this);
+            return nodeSo;
+        }
+        
         private void OnPlayModeStateChanged(PlayModeStateChange obj)
         {
             switch (obj)
@@ -54,8 +51,6 @@ namespace AQM.Tools
                 case PlayModeStateChange.EnteredPlayMode: break;
             }
         }
-
-        public override void OnDestroy() {}
     }
 #endif
 }

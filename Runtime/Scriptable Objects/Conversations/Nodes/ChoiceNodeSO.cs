@@ -21,7 +21,14 @@ namespace AQM.Tools
         
         public override DSNode GetData()
         {
-            List<string> choicesList = choices.ConvertAll(c => c.choiceMessage);
+            List<string> choicesList = new(); 
+            foreach (var choice in choices)
+            {
+                if (choice.CheckConditions())
+                {
+                    choicesList.Add(choice.choiceMessage);
+                }
+            }
             return new DSChoice(actor,message,choicesList);
         }
         
@@ -61,6 +68,7 @@ namespace AQM.Tools
             choices.Remove(choice);
             RemoveOutputPort(choice.port);
             Undo.DestroyObjectImmediate(choice);
+            AssetDatabase.SaveAssets();
         }
         
         public PortSO CreateOutputPort()
@@ -74,12 +82,13 @@ namespace AQM.Tools
         public void RemoveOutputPort(PortSO port)
         {
             outputPorts.Remove(port);
+            
             EditorUtility.SetDirty(this);
         }
 
         public override void OnDestroy()
         {
-            EditorUtility.SetDirty(this);
+            //EditorUtility.SetDirty(this);
             foreach (Choice choice in choices)
                 Undo.DestroyObjectImmediate(choice);
             base.OnDestroy();

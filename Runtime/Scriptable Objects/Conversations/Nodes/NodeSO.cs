@@ -34,10 +34,15 @@ namespace AQM.Tools
             set => _nodeState = value;
         }
 
-        public bool CheckConditions() { return true; }
+        public virtual bool CheckConditions() { return true; }
+        
         public virtual DSNode GetData() { return null; }
         public abstract NodeSO Clone();
-        public abstract void OnRunning();
+
+        public virtual void OnRunning()
+        {
+            NodeState = State.Running;
+        }
         
         public virtual void Init(Vector2 position)
         {
@@ -85,7 +90,6 @@ namespace AQM.Tools
             if(!port) return;
             port.SortPort();
         }
-        
         public void AddChild (string originPortId, NodeSO child)
         {
             var port = outputPorts.First(port => port.id == originPortId);
@@ -110,24 +114,16 @@ namespace AQM.Tools
 
         public virtual void OnDestroy()
         {
-            EditorUtility.SetDirty(this);
             foreach (PortSO inputPort in inputPorts)
             {
-                //inputPort.RemoveAllTargetNodes();
-                //Undo.RecordObject(this, "Node (Remove Port)");
                 Undo.DestroyObjectImmediate(inputPort);
-                //EditorUtility.SetDirty(this);
             }
-            
             
             foreach (PortSO outputPort in outputPorts)
             {
-                //outputPort.RemoveAllTargetNodes();
-                //Undo.RecordObject(this, "Node (Remove Port)");
                 Undo.DestroyObjectImmediate(outputPort);
-                //EditorUtility.SetDirty(this);
             }
-            AssetDatabase.SaveAssets();
+            EditorUtility.SetDirty(this);
         }
     }
 }

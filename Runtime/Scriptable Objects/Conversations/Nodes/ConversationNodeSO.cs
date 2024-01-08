@@ -1,4 +1,5 @@
 ﻿
+using Blackboard.Actions;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,7 +10,32 @@ namespace AQM.Tools
         public Actor actor;
         [TextArea] public string message;
         public RequirementsSO requirements;
-        
+        public ActionList actionList;
+
+        public override void Init(Vector2 position)
+        {
+            base.Init(position);
+            requirements = ScriptableObject.CreateInstance<RequirementsSO>();
+            requirements.Init(guid);
+            actionList = ScriptableObject.CreateInstance<ActionList>();
+        }
+
+        public override bool CheckConditions()
+        {
+            Requirements requirementsList = new Requirements(requirements);
+            return requirementsList.CheckRequirementsGoal();
+        }
+
+        public override void SaveAs(DialogSystemDatabase db)
+        {
+            base.SaveAs(db);
+            AssetDatabase.AddObjectToAsset(requirements,db);
+            foreach (ConditionSO cond in requirements.conditions)
+                AssetDatabase.AddObjectToAsset(cond, db);
+            foreach (Action action in actionList.actions)
+                AssetDatabase.AddObjectToAsset(action, db);
+        }
+
         public override NodeSO Clone()
         {
             ConversationNodeSO node = Instantiate(this);
@@ -17,10 +43,6 @@ namespace AQM.Tools
         }
         
 #if UNITY_EDITOR
-		public override void OnRunning()
-        {
-            NodeState = State.Running;
-        }
       	private void OnEnable()
         {
             EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
@@ -41,7 +63,16 @@ namespace AQM.Tools
                     break;
                 case PlayModeStateChange.EnteredPlayMode: break;
             }
-        }  
+        }
+
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+            Undo.DestroyObjectImmediate(requirements);
+            foreach (ConditionSO cond in requirements.conditions)
+                Undo.DestroyObjectImmediate(cond);
+            EditorUtility.SetDirty(this);
+        }
     }
 #endif
 }

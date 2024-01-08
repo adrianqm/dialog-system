@@ -48,8 +48,6 @@ namespace AQM.Tools
                 case PlayModeStateChange.EnteredPlayMode: break;
             }
         }
-        
-        public override void OnDestroy() {}
 #endif
     }
 }

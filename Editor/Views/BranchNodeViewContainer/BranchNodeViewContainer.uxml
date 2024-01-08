@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/dialog-system/Editor/Views/BranchNodeViewContainer/BranchNodeViewContainer.uss?fileID=7433441132597879392&amp;guid=07b58a0fddb8d8b4f939ce3ece90a9fb&amp;type=3#BranchNodeViewContainer" />
+    <ui:VisualElement name="branch-container" class="branch-container">
+        <ui:VisualElement name="title-container" class="title-container">
+            <ui:Label tabindex="-1" text="Branch" parse-escape-sequences="true" display-tooltip-when-elided="true" name="title" class="title" />
+            <ui:VisualElement name="branch-image" class="branch-image" />
+        </ui:VisualElement>
+        <RequirementsListView class="requirement-list" />
+    </ui:VisualElement>
+</ui:UXML>

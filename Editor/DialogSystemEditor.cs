@@ -187,7 +187,7 @@ using UnityEngine.UIElements;
             {
                 string assetPath = AssetDatabase.GUIDToAssetPath(guid);
                 DialogSystemDatabase db = AssetDatabase.LoadAssetAtPath<DialogSystemDatabase>(assetPath);
-                EditorGUIUtility.SetIconForObject(db, icon);
+                EditorGUIUtility.SetIconForObject(db, icon); 
                 AssetDatabase.ImportAsset(assetPath);
             }
             AssetDatabase.Refresh();

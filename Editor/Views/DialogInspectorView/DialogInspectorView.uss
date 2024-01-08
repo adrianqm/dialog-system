@@ -318,3 +318,8 @@
 .unity-foldout__text {
     min-width: 125px;
 }
+
+.condition-list {
+    padding-right: 2px;
+    padding-left: 3px;
+}

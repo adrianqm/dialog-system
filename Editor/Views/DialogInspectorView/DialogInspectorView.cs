@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using AQM.Tools;
+using Blackboard.Actions;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
@@ -13,6 +14,7 @@ using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.Tables;
 #endif
 using UnityEngine.UIElements;
+using Action = System.Action;
 
 public class DialogInspectorView : VisualElement
 {
@@ -314,10 +316,24 @@ public class DialogInspectorView : VisualElement
 
         if (choice)
         {
+            
+            // Add Choice Requirements
+            RequirementsListView requirementsListView = new RequirementsListView();
+            requirementsListView.AddToClassList("condition-list");
+            requirementsListView.SaveAsSubAssetOf(_currentDatabase);
+            requirementsListView.Populate(choice.requirements);
+            
+            // Add Choice Actions
+            //ActionListView actionsListView = new ActionListView();
+            //actionsListView.AddToClassList("require-list");
+            //actionsListView.SaveAsSubAssetOf(_currentDatabase);
+            //actionsListView.Populate(choice.actionlist);
+            
             translatedText.style.marginRight = 3;
             translatedText.AddToClassList("choice");
             var foldOut = new Foldout{text= "-", value = false};
             foldOut.Add(translatedText);
+            foldOut.Add(requirementsListView);
             localizationContainer.Add(foldOut);
             
             VisualElement toggleInputVe = foldOut.Q(className: "unity-foldout__input");
@@ -330,9 +346,20 @@ public class DialogInspectorView : VisualElement
         }
         else
         {
-            translatedText.style.marginRight = 0;
-            translatedText.AddToClassList("field");
-            localizationContainer.Add(translatedText);
+            ConversationNodeSO conversationNode = nodeSo as ConversationNodeSO;
+            if(conversationNode != null)
+            {
+                // Add Choice Requirements
+                RequirementsListView requirementsListView = new RequirementsListView();
+                requirementsListView.AddToClassList("condition-list");
+                requirementsListView.SaveAsSubAssetOf(_currentDatabase);
+                requirementsListView.Populate(conversationNode.requirements);
+            
+                translatedText.style.marginRight = 0;
+                translatedText.AddToClassList("field");
+                localizationContainer.Add(translatedText);
+                localizationContainer.Add(requirementsListView);
+            }
         }
         
         if (choice == null)

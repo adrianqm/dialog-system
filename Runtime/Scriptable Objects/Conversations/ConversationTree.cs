@@ -129,14 +129,6 @@ namespace AQM.Tools
                 AssetDatabase.SaveAssets();
             };
         }
-
-        private void Remove()
-        {
-            if (_nodeToDestroy == null) return;
-            Undo.DestroyObjectImmediate(_nodeToDestroy);
-            AssetDatabase.SaveAssets();
-            EditorApplication.delayCall -= Remove;
-        }
 #endif
 
         private void EndConversation()

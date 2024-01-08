@@ -10,7 +10,8 @@ public static class NodeFactory
         Start,
         Complete,
         Dialog,
-        Choice
+        Choice,
+        Branch
     }
     public static NodeSO CreateNode(NodeType type, Vector2 position)
     {
@@ -35,6 +36,11 @@ public static class NodeFactory
                 ChoiceNodeSO choiceNode = ScriptableObject.CreateInstance<ChoiceNodeSO>();
                 choiceNode.Init(position);
                 return choiceNode;
+            
+            case NodeType.Branch:
+                BranchNodeSO branchNode = ScriptableObject.CreateInstance<BranchNodeSO>();
+                branchNode.Init(position);
+                return branchNode;
             
             default:
                 return null;

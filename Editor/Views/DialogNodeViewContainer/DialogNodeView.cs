@@ -184,6 +184,7 @@ public class DialogNodeView : NodeView
     {
         VisualElement ve = new VisualElement();
         
+        // Add Delete Button
         Button deleteButton = new Button();
         deleteButton.Add(new Image{
             image = EditorGUIUtility.IconContent("TreeEditor.Trash").image
@@ -191,6 +192,7 @@ public class DialogNodeView : NodeView
         deleteButton.AddToClassList("choiceDataBtn");
         ve.Add(deleteButton);
         
+        // Add Choice Text Field
         TextField choiceTextField = new TextField()
         {
             value = choice.choiceMessage,
@@ -218,6 +220,7 @@ public class DialogNodeView : NodeView
 #endif
         ve.Add(choiceTextField);
         
+        // Add Choice Port
         var newOutput = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, typeof(bool));
         newOutput.portName = "";
         newOutput.viewDataKey = choice.port.id;
@@ -298,7 +301,7 @@ public class DialogNodeView : NodeView
 
     private void GetAndBindActor(Actor actor, Action<Actor> onSelectActor)
     {
-        _actorContainer = this.Q("nodeSo-container");
+        _actorContainer = this.Q("node-container");
         SpritePreviewElement sprite = this.Q<SpritePreviewElement>("actor-sprite");
         _actorSprite = sprite;
         _actorSprite.bindingPath = "actorImage";

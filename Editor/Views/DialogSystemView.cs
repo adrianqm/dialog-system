@@ -519,6 +519,7 @@ public class DialogSystemView : GraphView
         {
             evt.menu.AppendAction("Create Dialog Node", (a)=> CreateNode(NodeFactory.NodeType.Dialog,pos));
             evt.menu.AppendAction("Create Choice Node", (a)=> CreateNode(NodeFactory.NodeType.Choice,pos));
+            evt.menu.AppendAction("Create Branch Node", (a)=> CreateNode(NodeFactory.NodeType.Branch,pos));
             evt.menu.AppendAction("Create Group Box", actionEvent => CreateGroupBox(pos));
             evt.menu.AppendSeparator();
         }
@@ -610,6 +611,9 @@ public class DialogSystemView : GraphView
                 break;
             case ChoiceNodeSO:
                 nodeView = new DialogNodeView(nodeSo, this, ClearSelection);
+                break;
+            case BranchNodeSO:
+                nodeView = new BranchNodeView(nodeSo);
                 break;
             default:
                 nodeView = new NodeView(nodeSo);

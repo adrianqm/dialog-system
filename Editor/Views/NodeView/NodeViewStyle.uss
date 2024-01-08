@@ -281,6 +281,24 @@ VisualElement {
     max-width: 100%;
 }
 
+.multiInputContainer {
+    background-color: rgba(70, 70, 70, 0.5);
+    min-width: 50%;
+    max-width: 50%;
+    flex-direction: row;
+    align-self: center;
+    flex-grow: 1;
+    min-height: 100%;
+}
+
+.multiOutputContainer {
+    align-items: flex-end;
+    flex-direction: column;
+    justify-content: flex-end;
+    flex-grow: 1;
+    background-color: rgb(24, 24, 29);
+}
+
 .choiceInputContainer {
     flex-grow: 1;
     flex-direction: row;
