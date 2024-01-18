@@ -233,10 +233,10 @@
     margin-right: 0;
     margin-bottom: 0;
     margin-left: 0;
-    padding-top: 2px;
-    padding-right: 2px;
-    padding-bottom: 2px;
-    padding-left: 2px;
+    padding-top: 3px;
+    padding-right: 3px;
+    padding-bottom: 3px;
+    padding-left: 3px;
     border-top-left-radius: 0;
     border-top-right-radius: 2px;
     border-bottom-right-radius: 2px;
@@ -247,6 +247,7 @@
     border-left-width: 0;
     height: 18px;
     -unity-text-align: middle-center;
+    width: 18px;
 }
 
 .messageChoiceGuidLabel {

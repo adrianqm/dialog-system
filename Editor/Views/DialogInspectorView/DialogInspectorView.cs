@@ -229,7 +229,7 @@ public class DialogInspectorView : VisualElement
             copyButtonVe.AddToClassList("message-guid-copy-container");
             Button copyButton = new Button();
             copyButton.Add(new Image {
-                image = EditorGUIUtility.IconContent("d_winbtn_win_restore_a").image
+                image = EditorGUIUtility.IconContent("d_SearchQueryAsset Icon").image
             });
             copyButton.AddToClassList("copyBtn");
             copyButton.clickable = new Clickable(() =>
@@ -280,7 +280,7 @@ public class DialogInspectorView : VisualElement
         copyVe.Clear();
         Button copyButton = new Button();
         copyButton.Add(new Image {
-            image = EditorGUIUtility.IconContent("d_winbtn_win_restore_a").image
+            image = EditorGUIUtility.IconContent("d_SearchQueryAsset Icon").image
         });
         copyButton.AddToClassList("copyBtn");
         copyButton.clickable = new Clickable(() =>

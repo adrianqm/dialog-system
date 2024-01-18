@@ -6,6 +6,7 @@ namespace AQM.Tools
 {
     public static class PortFactory
     {
+#if UNITY_EDITOR
         public static PortSO Create(string portName, NodeSO originNode, List<NodeSO> targetNodes = null)
         {
             var port = ScriptableObject.CreateInstance<PortSO>();
@@ -19,5 +20,6 @@ namespace AQM.Tools
                 port.targetNodes = new List<NodeSO>();
             return port;
         }
+#endif
     }
 }

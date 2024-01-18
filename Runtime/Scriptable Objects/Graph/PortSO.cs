@@ -11,7 +11,8 @@ namespace AQM.Tools
         public string portName;
         public NodeSO originNode;
         public List<NodeSO> targetNodes = new List<NodeSO>();
-
+        
+#if UNITY_EDITOR
         public void AddTargetNode(NodeSO targetNode)
         {
             Undo.RecordObject(this, "Node (Add child)");
@@ -47,5 +48,6 @@ namespace AQM.Tools
         {
             EditorUtility.SetDirty(this);
         }
+#endif
     }
 }

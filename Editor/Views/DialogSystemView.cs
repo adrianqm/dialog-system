@@ -49,9 +49,9 @@ public class DialogSystemView : GraphView
         styleSheets.Add(styleSheet);
 
         Undo.undoRedoPerformed += OnUndoRedo;
-        #if LOCALIZATION_EXIST
-            LocalizationEditorSettings.EditorEvents.TableEntryModified += TableEntryModified;
-        #endif
+#if LOCALIZATION_EXIST
+        LocalizationEditorSettings.EditorEvents.TableEntryModified += TableEntryModified;
+#endif
     }
     
     public void SetUpTreeView(DialogSystemDatabase db)
@@ -281,7 +281,7 @@ public class DialogSystemView : GraphView
             //commandInvoker.Redo();
 
             evt.StopImmediatePropagation();
-            evt.PreventDefault();
+            evt.StopPropagation();
         }
     }
 
@@ -502,14 +502,14 @@ public class DialogSystemView : GraphView
             }
         }
 
-        if (graphViewChange.movedElements != null)
+        /*if (graphViewChange.movedElements != null)
         {
             nodes.ForEach((n) =>
             {
                 NodeView view = n as NodeView;
                 if (view != null) view.node.SortAllOutputPorts();
             });
-        }
+        }*/
         return graphViewChange;
     }
     
@@ -517,9 +517,13 @@ public class DialogSystemView : GraphView
     {
         var pos = MouseToContent(evt.mousePosition,false);
         {
-            evt.menu.AppendAction("Create Dialog Node", (a)=> CreateNode(NodeFactory.NodeType.Dialog,pos));
-            evt.menu.AppendAction("Create Choice Node", (a)=> CreateNode(NodeFactory.NodeType.Choice,pos));
-            evt.menu.AppendAction("Create Branch Node", (a)=> CreateNode(NodeFactory.NodeType.Branch,pos));
+            evt.menu.AppendAction("Create Node / Dialog Node", (a)=> CreateNode(NodeFactory.NodeType.Dialog,pos));
+            evt.menu.AppendAction("Create Node / Choice Node", (a)=> CreateNode(NodeFactory.NodeType.Choice,pos));
+            evt.menu.AppendAction("Create Node / Branch Node", (a)=> CreateNode(NodeFactory.NodeType.Branch,pos));
+            foreach (var treeBookmark in _tree.bookmarks)
+            {
+                evt.menu.AppendAction("Go to Bookmark / "+treeBookmark.bookmarkTitle, (a)=> CreateBookmark(NodeFactory.NodeType.Bookmark,pos, treeBookmark));
+            }
             evt.menu.AppendAction("Create Group Box", actionEvent => CreateGroupBox(pos));
             evt.menu.AppendSeparator();
         }
@@ -576,11 +580,20 @@ public class DialogSystemView : GraphView
     public void CreateNode(NodeFactory.NodeType type,Vector2 position)
     {
         NodeSO nodeSo = _tree.CreateNode(_currentDatabase,type,position);
+        CreateNodeView(nodeSo);
 #if LOCALIZATION_EXIST
         LocalizationUtils.SetDefaultLocaleEntry(nodeSo.guid,"");
 #endif
+    }
+
+    public void CreateBookmark(NodeFactory.NodeType type,Vector2 position, BookmarkSO goToBookmark)
+    {
+        NodeSO nodeSo = _tree.CreateNode(_currentDatabase,type,position);
+        BookmarkNodeSO bookmarkSo = nodeSo as BookmarkNodeSO;
+        if (bookmarkSo != null) bookmarkSo.SetUpBookmark(goToBookmark);
         CreateNodeView(nodeSo);
     }
+    
     private NodeView CreateDialogNodeCopy(Type type,Vector2 position, SerializableDialogNode nodeToCopy)
     {
         NodeSO nodeSo = ConversationUtils.CreateDialogNodeCopy(_currentDatabase, _tree, type, position, nodeToCopy);
@@ -614,6 +627,9 @@ public class DialogSystemView : GraphView
                 break;
             case BranchNodeSO:
                 nodeView = new BranchNodeView(nodeSo);
+                break;
+            case BookmarkNodeSO bookmarkNodeSo:
+                nodeView = new BookmarkNodeView(bookmarkNodeSo);
                 break;
             default:
                 nodeView = new NodeView(nodeSo);
@@ -671,6 +687,11 @@ public class DialogSystemView : GraphView
     public DialogSystemDatabase GetDatabase()
     {
         return _currentDatabase;
+    }
+
+    public ConversationTree GetCurrentTree()
+    {
+        return _tree;
     }
     
 }

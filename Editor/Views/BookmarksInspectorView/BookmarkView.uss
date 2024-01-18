@@ -1,0 +1,40 @@
+.bookmark--ve {
+    flex-direction: row;
+    flex-grow: 1;
+}
+
+.bookmark--title {
+    flex-grow: 1;
+    flex-direction: column;
+    flex-shrink: 1;
+}
+
+.bookmark--color {
+    min-width: 15px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    width: 37px;
+}
+
+.bookmark--focus-btn {
+    display: flex;
+    width: 15px;
+    height: 15px;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+}
+
+.bookmark--mark-image {
+    display: flex;
+    background-image: url('project://database/Assets/dialog-system/Assets/bookmark.png?fileID=2800000&guid=59fc8e2babcce2a4380543a0d2c3314b&type=3#bookmark');
+    width: 27px;
+    flex-direction: row;
+    min-width: 14px;
+    height: 13px;
+}
+
+.unity-color-field__label {
+    display: none;
+}

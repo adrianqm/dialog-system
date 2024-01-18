@@ -50,7 +50,7 @@ namespace AQM.Tools
             
             foreach (PortSO outputPortData in node.outputPorts)
             {
-                var outputPort = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, typeof(bool));
+                var outputPort = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Single, typeof(bool));
                 outputPort.portName = outputPortData.portName;
                 outputPort.viewDataKey = outputPortData.id;
         

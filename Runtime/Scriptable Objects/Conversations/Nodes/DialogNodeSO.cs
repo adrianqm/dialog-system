@@ -8,6 +8,12 @@ namespace AQM.Tools
     [System.Serializable]
     public class DialogNodeSO : ConversationNodeSO
     {
+        public override DSNode GetData()
+        {
+            return new DSDialog(actor, message);
+        }
+        
+#if UNITY_EDITOR
         public override void Init(Vector2 position)
         {
             base.Init(position);
@@ -20,11 +26,7 @@ namespace AQM.Tools
             outputPorts.Add(outputPort);
             EditorUtility.SetDirty(this);
         }
-        
-        public override DSNode GetData()
-        {
-            return new DSDialog(actor, message);
-        }
+#endif
     }
 }
 

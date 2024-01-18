@@ -8,7 +8,14 @@ namespace AQM.Tools
         public BranchSO branch;
         public PortSO TrueOutputPort => outputPorts[0];
         public PortSO FalseOutputPort => outputPorts[1];
-
+        
+        public override NodeSO Clone()
+        {
+            BranchNodeSO nodeSo = Instantiate(this);
+            return nodeSo;
+        }
+        
+#if UNITY_EDITOR
         public override void Init(Vector2 position)
         {
             base.Init(position);
@@ -31,10 +38,27 @@ namespace AQM.Tools
             base.SaveAs(db);
             branch.SaveAs(db);
         }
-        public override NodeSO Clone()
+        
+        private void OnEnable()
         {
-            BranchNodeSO nodeSo = Instantiate(this);
-            return nodeSo;
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+        }
+
+        private void OnDisable()
+        {
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+        }
+        
+        private void OnPlayModeStateChanged(PlayModeStateChange obj)
+        {
+            switch (obj)
+            {
+                case PlayModeStateChange.EnteredEditMode:
+                    NodeState = State.Initial;
+                    break;
+                case PlayModeStateChange.EnteredPlayMode: break;
+            }
         }
         
         public override void OnDestroy()
@@ -42,5 +66,6 @@ namespace AQM.Tools
             base.OnDestroy();
             Undo.DestroyObjectImmediate(branch);
         }
+#endif
     }
 }

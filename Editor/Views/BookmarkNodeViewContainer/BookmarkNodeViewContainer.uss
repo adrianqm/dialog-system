@@ -1,0 +1,24 @@
+#title {
+    -unity-text-align: upper-center;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    -unity-font-style: bold;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    font-size: 14px;
+    padding-right: 23px;
+    padding-left: 27px;
+}
+
+#goToImage {
+    background-image: url('project://database/Assets/dialog-system/Assets/go-back.png?fileID=2800000&guid=34a3cdf6c7168be4b83052e17efdf5fc&type=3#go-back');
+    background-color: rgba(255, 255, 255, 0);
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    top: 12px;
+    bottom: 1px;
+    left: 8px;
+}

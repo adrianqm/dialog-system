@@ -39,18 +39,15 @@ namespace AQM.Tools
             }
             return null;
         }
-        
+
         public DialogSystemDatabase Clone()
         {
             DialogSystemDatabase tree = Instantiate(this);
-            tree.title = "(Cloned) "+ title;
+            tree.title = "(Cloned) " + title;
             tree.description = description;
             tree.conversationGroups = new List<ConversationGroup>();
-            conversationGroups.ForEach((group) =>
-            {
-                tree.conversationGroups.Add(group.Clone());
-            });
-            
+            conversationGroups.ForEach((group) => { tree.conversationGroups.Add(group.Clone()); });
+
             tree.actors = new List<Actor>();
             actors.ForEach((actor) =>
             {
@@ -60,6 +57,7 @@ namespace AQM.Tools
             return tree;
         }
         
+#if UNITY_EDITOR
         public void DeleteDatabase()
         {
             var path = AssetDatabase.GUIDToAssetPath(guid);
@@ -161,7 +159,7 @@ namespace AQM.Tools
             Undo.DestroyObjectImmediate(actor);
             AssetDatabase.SaveAssets();
         }
-        
+#endif
     }
 }
 

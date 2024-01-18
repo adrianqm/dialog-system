@@ -1,8 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace AQM.Tools
@@ -15,7 +13,7 @@ namespace AQM.Tools
         public GroupNode group;
         public List<PortSO> inputPorts = new();
         public List<PortSO> outputPorts = new();
-
+        
         public enum State
         {
             Initial,
@@ -25,25 +23,25 @@ namespace AQM.Tools
             Visited,
             VisitedUnreachable
         }
-
+        
         private State _nodeState = State.Initial;
-
         public State NodeState
         {
             get => _nodeState;
             set => _nodeState = value;
         }
-
+        
         public virtual bool CheckConditions() { return true; }
         
         public virtual DSNode GetData() { return null; }
         public abstract NodeSO Clone();
-
+        
         public virtual void OnRunning()
         {
             NodeState = State.Running;
         }
         
+#if UNITY_EDITOR
         public virtual void Init(Vector2 position)
         {
             this.guid = GUID.Generate().ToString();
@@ -57,8 +55,8 @@ namespace AQM.Tools
         protected virtual void CreateDefaultInputPorts()
         {
             var inputPort = PortFactory.Create("", this);
-           inputPorts.Add(inputPort);
-           EditorUtility.SetDirty(this);
+            inputPorts.Add(inputPort);
+            EditorUtility.SetDirty(this);
         }
         
         protected virtual void CreateDefaultOutputPorts()
@@ -125,6 +123,8 @@ namespace AQM.Tools
             }
             EditorUtility.SetDirty(this);
         }
+#endif
+        
     }
 }
 

@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/dialog-system/Editor/Views/BookmarksInspectorView/BookmarkView.uss?fileID=7433441132597879392&amp;guid=2ab10667a2f297449976967edaf1c678&amp;type=3#BookmarkView" />
+    <ui:VisualElement name="bookmake-ve" class="bookmark--ve" style="align-items: center;">
+        <ui:TextField picking-mode="Ignore" label="Text Field" value="filler text" name="title" class="bookmark--title" />
+        <uie:ColorField label="Color" value="RGBA(0.000, 1.000, 1.000, 1.000)" name="color" class="bookmark--color" />
+        <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="focus-node" class="bookmark--focus-btn">
+            <ui:VisualElement style="flex-grow: 1;" />
+        </ui:Button>
+        <ui:VisualElement name="mark" class="bookmark--mark-image" style="display: flex; width: 14px;" />
+    </ui:VisualElement>
+</ui:UXML>

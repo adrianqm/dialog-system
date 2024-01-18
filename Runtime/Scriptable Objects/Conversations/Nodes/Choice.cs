@@ -16,6 +16,21 @@ namespace AQM.Tools
         public RequirementsSO requirements;
         public ActionList actionList;
 
+        public bool CheckConditions()
+        {
+            Requirements requirementsList = new Requirements(requirements);
+            return requirementsList.CheckRequirementsGoal();
+        }
+        
+
+        public Choice Clone()
+        {
+            Choice choice = Instantiate(this);
+            //choice.children = children.ConvertAll(c => c.Clone());
+            return choice;
+        }
+        
+#if UNITY_EDITOR
         public void Init(ChoiceNodeSO originNode, string defaultText)
         {
             guid = GUID.Generate().ToString();
@@ -38,25 +53,13 @@ namespace AQM.Tools
                 AssetDatabase.AddObjectToAsset(action, db);
             port.SaveAs(db);
         }
-
-        public bool CheckConditions()
-        {
-            Requirements requirementsList = new Requirements(requirements);
-            return requirementsList.CheckRequirementsGoal();
-        }
-
+        
         private void OnDestroy()
         {
             Undo.DestroyObjectImmediate(requirements);
             foreach (ConditionSO cond in requirements.conditions)
                 Undo.DestroyObjectImmediate(cond);
         }
-
-        public Choice Clone()
-        {
-            Choice choice = Instantiate(this);
-            //choice.children = children.ConvertAll(c => c.Clone());
-            return choice;
-        }
+#endif
     }
 }

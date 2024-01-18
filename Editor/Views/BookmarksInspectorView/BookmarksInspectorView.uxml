@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/dialog-system/Editor/Views/BookmarksInspectorView/BookmarksInspectorView.uss?fileID=7433441132597879392&amp;guid=cf4b82955c12a894a80b00b44e30000b&amp;type=3#BookmarksInspectorView" />
+    <ui:Label tabindex="-1" text="Bookmarks  Inspector" display-tooltip-when-elided="true" name="titleInspector" style="height: 30px; -unity-text-align: middle-center; background-color: rgb(24, 24, 29);" />
+    <ui:VisualElement name="content" style="flex-grow: 1; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 10px;">
+        <ui:VisualElement name="bookmarksContainer">
+            <ui:Label tabindex="-1" text="Bookmarks" display-tooltip-when-elided="true" name="bookmarksLabel" style="margin-right: 0; padding-right: 1px;" />
+            <ui:ListView name="bookmarksList" show-add-remove-footer="true" fixed-item-height="25" reorderable="true" reorder-mode="Animated" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

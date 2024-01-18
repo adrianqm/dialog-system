@@ -52,6 +52,8 @@ namespace AQM.Tools
             return clone;
         }
         
+#if UNITY_EDITOR
+        
         public void CreateConversation(DialogSystemDatabase db)
         {
             
@@ -82,5 +84,6 @@ namespace AQM.Tools
             Undo.DestroyObjectImmediate(conversation);
             AssetDatabase.SaveAssets();
         }
+#endif
     }
 }

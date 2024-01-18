@@ -12,30 +12,12 @@ namespace AQM.Tools
         public RequirementsSO requirements;
         public ActionList actionList;
 
-        public override void Init(Vector2 position)
-        {
-            base.Init(position);
-            requirements = ScriptableObject.CreateInstance<RequirementsSO>();
-            requirements.Init(guid);
-            actionList = ScriptableObject.CreateInstance<ActionList>();
-        }
-
         public override bool CheckConditions()
         {
             Requirements requirementsList = new Requirements(requirements);
             return requirementsList.CheckRequirementsGoal();
         }
-
-        public override void SaveAs(DialogSystemDatabase db)
-        {
-            base.SaveAs(db);
-            AssetDatabase.AddObjectToAsset(requirements,db);
-            foreach (ConditionSO cond in requirements.conditions)
-                AssetDatabase.AddObjectToAsset(cond, db);
-            foreach (Action action in actionList.actions)
-                AssetDatabase.AddObjectToAsset(action, db);
-        }
-
+        
         public override NodeSO Clone()
         {
             ConversationNodeSO node = Instantiate(this);
@@ -43,6 +25,14 @@ namespace AQM.Tools
         }
         
 #if UNITY_EDITOR
+        public override void Init(Vector2 position)
+        {
+            base.Init(position);
+            requirements = ScriptableObject.CreateInstance<RequirementsSO>();
+            requirements.Init(guid);
+            actionList = ScriptableObject.CreateInstance<ActionList>();
+        }
+        
       	private void OnEnable()
         {
             EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
@@ -64,6 +54,16 @@ namespace AQM.Tools
                 case PlayModeStateChange.EnteredPlayMode: break;
             }
         }
+        
+        public override void SaveAs(DialogSystemDatabase db)
+        {
+            base.SaveAs(db);
+            AssetDatabase.AddObjectToAsset(requirements,db);
+            foreach (ConditionSO cond in requirements.conditions)
+                AssetDatabase.AddObjectToAsset(cond, db);
+            foreach (Action action in actionList.actions)
+                AssetDatabase.AddObjectToAsset(action, db);
+        }
 
         public override void OnDestroy()
         {
@@ -73,6 +73,6 @@ namespace AQM.Tools
                 Undo.DestroyObjectImmediate(cond);
             EditorUtility.SetDirty(this);
         }
-    }
 #endif
+    }
 }

@@ -7,7 +7,8 @@ public class InspectorView : VisualElement
   public new class UxmlFactory:  UxmlFactory<InspectorView, InspectorView.UxmlTraits> {}
 
   private NodeView _currentNodeView;
-  private DialogInspectorView _currentContainer;
+  private VisualElement _currentContainer;
+  private ConversationTree _currentConversationTree;
   
   internal void ShowDialogInspector(NodeView nodeView)
   {
@@ -29,20 +30,36 @@ public class InspectorView : VisualElement
       ConversationInspectorView container = new ConversationInspectorView(conversationTree);
       Add(container);
       ResetDialogContainerValues();
+      _currentContainer = container;
+      _currentConversationTree = conversationTree;
   }
   
   internal void ShowBookmarksInspector(ConversationTree conversationTree)
   {
       ClearInspector();
-      ConversationInspectorView container = new ConversationInspectorView(conversationTree);
+      BookmarksInspectorView container = new BookmarksInspectorView(conversationTree);
       Add(container);
       ResetDialogContainerValues();
+      _currentContainer = container;
+      _currentConversationTree = conversationTree;
   }
 
   private void ResetDialogContainerValues()
   {
       _currentNodeView = null;
-      _currentContainer = null;
+  }
+
+  public void RefreshCurrentInspector()
+  {
+      switch (_currentContainer)
+      {
+          case DialogInspectorView: ShowDialogInspector(_currentNodeView);
+              break;
+          case BookmarksInspectorView: ShowBookmarksInspector(_currentConversationTree);
+              break;
+          case ConversationInspectorView: ShowConversationInspector(_currentConversationTree);
+              break;
+      }
   }
   
   public NodeSO GetCurrentNode()
@@ -52,9 +69,9 @@ public class InspectorView : VisualElement
   
   internal void ClearInspector()
   {
-      if (_currentContainer != null)
+      if (_currentContainer != null && _currentContainer is DialogInspectorView dialogInspector)
       {
-          _currentContainer.ClearViewCallbacks();
+          dialogInspector.ClearViewCallbacks();
       }
       Clear();
   }

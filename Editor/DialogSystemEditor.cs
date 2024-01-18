@@ -359,11 +359,7 @@ using UnityEngine.UIElements;
 
         void OnRefreshInspector()
         {
-            NodeSO currentNode = _inspectorView.GetCurrentNode();
-            if (currentNode != null)
-            {
-                _inspectorView.ShowDialogInspector(_treeView.FindNodeView(currentNode));
-            }
+            _inspectorView.RefreshCurrentInspector();
         }
 
         void OnNodesRemoved()

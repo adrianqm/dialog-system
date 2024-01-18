@@ -147,7 +147,7 @@ public class DialogNodeView : NodeView
 
         if (node is ChoiceNodeSO choiceNodeSo)
         {
-            _defaultPort = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, typeof(bool));
+            _defaultPort = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Single, typeof(bool));
             _defaultPort.portName = "";
             _defaultPort.viewDataKey = choiceNodeSo.defaultPort.id;
             ve.Add(_defaultPort);
@@ -221,7 +221,7 @@ public class DialogNodeView : NodeView
         ve.Add(choiceTextField);
         
         // Add Choice Port
-        var newOutput = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, typeof(bool));
+        var newOutput = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Single, typeof(bool));
         newOutput.portName = "";
         newOutput.viewDataKey = choice.port.id;
         outputPortsList.Add(newOutput);
@@ -346,7 +346,7 @@ public class DialogNodeView : NodeView
         _actorContainer.Unbind();
         _actor = selectedActor;
         _actorSerialized = new SerializedObject(_actor);
-        _actorContainer.TrackSerializedObjectValue(_actorSerialized, CheckForWarnings);
+        _actorContainer.TrackSerializedObjectValue(_actorSerialized, UpdateBackground);
         SerializedObject actor = new SerializedObject(_actor);
         _actorSprite.Bind(actor);
         _actorLabel.Bind(actor);
@@ -381,7 +381,7 @@ public class DialogNodeView : NodeView
 #endif
     }
     
-    private void CheckForWarnings(SerializedObject serializedObject)
+    private void UpdateBackground(SerializedObject serializedObject)
     {
         _actorSprite.style.backgroundColor = _actor.bgColor;
         _actorLabel.style.backgroundColor = _actor.bgColor;

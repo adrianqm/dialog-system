@@ -13,11 +13,13 @@ public class GroupNode : ScriptableObject
         GroupNode node = Instantiate(this);
         return node;
     }
-    
+#if UNITY_EDITOR
     public void SetGroupTitle(string newTitle)
     {
         Undo.RecordObject(this, "Conversation Tree (SetGroupTitle)");
         title = newTitle;
         EditorUtility.SetDirty(this);
     }
+#endif
+    
 }

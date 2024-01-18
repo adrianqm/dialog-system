@@ -4,14 +4,15 @@ using UnityEngine;
 
 public static class NodeFactory
 {
-
+#if UNITY_EDITOR
     public enum NodeType
     {
         Start,
         Complete,
         Dialog,
         Choice,
-        Branch
+        Branch,
+        Bookmark
     }
     public static NodeSO CreateNode(NodeType type, Vector2 position)
     {
@@ -42,8 +43,14 @@ public static class NodeFactory
                 branchNode.Init(position);
                 return branchNode;
             
+            case NodeType.Bookmark:
+                BookmarkNodeSO bookmarkNode = ScriptableObject.CreateInstance<BookmarkNodeSO>();
+                bookmarkNode.Init(position);
+                return  bookmarkNode;
+            
             default:
                 return null;
         }
     }
+#endif
 }

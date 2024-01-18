@@ -7,21 +7,22 @@ namespace AQM.Tools
 {
     public class CompleteNodeSO : NodeSO
     {
-        public override void Init(Vector2 position)
-        {
-            base.Init(position);
-            name = $"CompleteNode-{guid}";
-        }
-        
         public override NodeSO Clone()
         {
             CompleteNodeSO nodeSo = Instantiate(this);
             return nodeSo;
         }
+        
+#if UNITY_EDITOR
+        
+        public override void Init(Vector2 position)
+        {
+            base.Init(position);
+            name = $"CompleteNode-{guid}";
+        }
 
         protected override void CreateDefaultOutputPorts(){}
         
-#if UNITY_EDITOR
         public override void OnRunning()
         {
             Debug.Log("Complete");

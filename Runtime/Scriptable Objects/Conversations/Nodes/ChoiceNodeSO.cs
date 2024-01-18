@@ -12,13 +12,6 @@ namespace AQM.Tools
         public List<Choice> choices = new ();
         public PortSO defaultPort;
         
-        public override void Init(Vector2 position)
-        {
-            base.Init(position);
-            name = $"ChoiceNode-{guid}";
-            CreateDefaultOutputPort();
-        }
-        
         public override DSNode GetData()
         {
             List<string> choicesList = new(); 
@@ -37,14 +30,22 @@ namespace AQM.Tools
             ChoiceNodeSO node = Instantiate(this);
             return node;
         }
-
+        
+#if UNITY_EDITOR
+        
+        public override void Init(Vector2 position)
+        {
+            base.Init(position);
+            name = $"ChoiceNode-{guid}";
+            CreateDefaultOutputPort();
+        }
+        
         private void CreateDefaultOutputPort()
         {
             defaultPort = CreateOutputPort();
         }
         
         protected override void CreateDefaultOutputPorts(){}
-#if UNITY_EDITOR
         
         public Choice CreateChoice(DialogSystemDatabase db,string defaultText = "")
         {

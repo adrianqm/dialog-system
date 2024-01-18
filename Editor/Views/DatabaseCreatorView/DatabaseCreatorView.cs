@@ -36,7 +36,7 @@ public class DatabaseCreatorView : VisualElement
     void SetUpCloseButton()
     {
         Button closeButton = this.Q<Button>("db-editor-close");
-        var texture = EditorGUIUtility.IconContent("winbtn_win_close@2x").image;
+        var texture = EditorGUIUtility.IconContent("CrossIcon").image;
         closeButton.focusable = false;
         closeButton.Add(new Image {
             image = texture,
