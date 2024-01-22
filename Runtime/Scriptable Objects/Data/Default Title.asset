@@ -76,7 +76,7 @@ MonoBehaviour:
   m_Name: ChoiceNode-cc37e27688b9a0f489cc2ceb05076c0c
   m_EditorClassIdentifier: 
   guid: cc37e27688b9a0f489cc2ceb05076c0c
-  position: {x: 616.0486, y: 328.8}
+  position: {x: 524.7999, y: -98.5571}
   group: {fileID: 0}
   bookmark: {fileID: 0}
   inputPorts:
@@ -173,7 +173,8 @@ MonoBehaviour:
   m_Name: requirements-5795b694631baf84ba5c67cf6f4cb69e
   m_EditorClassIdentifier: 
   id: 5795b694631baf84ba5c67cf6f4cb69e
-  conditions: []
+  conditions:
+  - {fileID: -5954106637466522825}
 --- !u!114 &-5323775288652868530
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -187,7 +188,7 @@ MonoBehaviour:
   m_Name: BranchNode-5795b694631baf84ba5c67cf6f4cb69e
   m_EditorClassIdentifier: 
   guid: 5795b694631baf84ba5c67cf6f4cb69e
-  position: {x: 214.30911, y: 110.39996}
+  position: {x: 202.80154, y: 161.59996}
   group: {fileID: 0}
   bookmark: {fileID: 0}
   inputPorts:
