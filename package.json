@@ -12,13 +12,8 @@
     "samples": [
         {
             "displayName": "Demo Scene",
-            "description": "Demo Scene with Unity Localization included",
-            "path": "Samples/Demo Scene"
-        },
-        {
-            "displayName": "Prefabs",
-            "description": "Prefabs of the package",
-            "path": "Runtime/Prefabs"
+            "description": "Demo Scene with samples",
+            "path": "Samples/Demo"
         }
     ],
     "author": {
