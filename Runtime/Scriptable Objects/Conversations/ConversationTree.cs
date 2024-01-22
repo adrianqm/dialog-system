@@ -111,11 +111,10 @@ namespace AQM.Tools
         private DSNode CheckNextChildMove(List<NodeSO> children)
         {
             NodeSO childToMove = null;
-            foreach (var child in children.Where(child => child.CheckConditions()))
+            if (children.Count > 0 )
             {
                 runningNode.NodeState = NodeSO.State.Visited;
-                childToMove = SetRunningNode(child);
-                break;
+                childToMove = SetRunningNode(children[0]);
             }
 
             if (!childToMove)
