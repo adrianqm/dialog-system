@@ -2,8 +2,10 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Localization;
 using UnityEditorForks;
+#if LOCALIZATION_EXIST
 using UnityEngine.Localization;
 using UnityEngine.Localization.Tables;
+#endif
 
 namespace AQM.Tools
 {

@@ -33,12 +33,12 @@ public class DialogInspectorView : VisualElement
     private Button _findActorButton;
     private VisualElement _actorContainer;
     private Actor _actor;
-#if LOCALIZATION_EXIST
     private Dictionary<string, KeyValuePair<Label,TextField>> _translationMapText = new();
-    private StringTableCollection _collection;
     private SpritePreviewElement _actorSprite;
     private Label _actorName;
     private SerializedObject _actorSerialized;
+#if LOCALIZATION_EXIST
+private StringTableCollection _collection;
 #endif
     private Dictionary<string, VisualElement> _choicesMap = new();
     private Action _unregisterAll = null;
@@ -92,7 +92,7 @@ public class DialogInspectorView : VisualElement
             BindLocalization(node);
         }
 #else
-        BindMessage(nodeSo);
+        BindMessage(node);
 #endif
     }
 
@@ -115,7 +115,7 @@ public class DialogInspectorView : VisualElement
             BindLocalization(node);
         }
 #else
-        BindMessage(nodeSo);
+        BindMessage(node);
 #endif
         BindChoices(node);
     }

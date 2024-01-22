@@ -669,6 +669,7 @@ public class DialogSystemView : GraphView
         });
     }
 
+#if LOCALIZATION_EXIST
     private void TableEntryModified(SharedTableData.SharedTableEntry tableEntry)
     {
         if(_tree == null) return;
@@ -685,6 +686,7 @@ public class DialogSystemView : GraphView
             nodeView.UpdateLocalizedMessage();
         }
     }
+#endif
 
     public void ClearGraph()
     {

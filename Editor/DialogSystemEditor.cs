@@ -4,12 +4,14 @@ using AQM.Tools;
 using Blackboard.Utils.Editor;
 using UnityEditor;
 using UnityEditor.Callbacks;
-using UnityEditor.Localization;
-using UnityEditor.Localization.UI;
 using UnityEditor.UIElements;
 using UnityEngine;
+#if LOCALIZATION_EXIST
+using UnityEditor.Localization;
+using UnityEditor.Localization.UI;
 using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.Tables;
+#endif
 using UnityEngine.UIElements;
 
     public class DialogSystemEditor : EditorWindow
@@ -345,7 +347,9 @@ using UnityEngine.UIElements;
         
         private void HandleCollectionNameChange(ChangeEvent<string> evt)
         {
+#if LOCALIZATION_EXIST
             DSData.instance.database.tableCollectionName = evt.newValue;
+#endif
         }
 
         private void SetTree(ConversationTree tree)
