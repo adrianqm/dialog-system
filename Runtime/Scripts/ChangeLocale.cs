@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Localization.Settings;
+#if LOCALIZATION_EXIST
+    using UnityEngine.Localization.Settings;
+#endif
 
 namespace AQM.Tools
 {
@@ -51,8 +53,6 @@ namespace AQM.Tools
         {
             changeLocale.action.Disable();
         }
-
-
 #endif
     }  
 }
