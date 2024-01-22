@@ -6,6 +6,7 @@
         <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="focus-node" class="bookmark--focus-btn">
             <ui:VisualElement style="flex-grow: 1;" />
         </ui:Button>
-        <ui:VisualElement name="mark" class="bookmark--mark-image" style="display: flex; width: 14px;" />
+        <ui:VisualElement name="mark" class="bookmark--mark-image" style="width: 14px;" />
+        <ui:VisualElement name="mark-selected" class="bookmark--mark-image-selected hidden" style="width: 14px;" />
     </ui:VisualElement>
 </ui:UXML>

@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <Style src="project://database/Assets/dialog-system/Editor/Custom%20Views/Conversation%20List%20View/ConversationListView.uss?fileID=7433441132597879392&amp;guid=9e3e285d9bd85fb40a076fd016b156cf&amp;type=3#ConversationListView" />
-    <SplitView fixed-pane-initial-dimension="200" style="min-width: 200px;">
+    <Blackboard.Editor.SplitView fixed-pane-initial-dimension="200" style="min-width: 200px;">
         <ui:VisualElement name="left-panel" style="flex-grow: 0; width: 200px; min-width: 200px;">
             <ConversationSelectorView style="flex-grow: 1; min-width: 200px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
         </ui:VisualElement>
@@ -11,5 +11,5 @@
             </ui:VisualElement>
             <ConversationMultiColumListView focusable="true" style="flex-grow: 1;" />
         </ui:VisualElement>
-    </SplitView>
+    </Blackboard.Editor.SplitView>
 </ui:UXML>

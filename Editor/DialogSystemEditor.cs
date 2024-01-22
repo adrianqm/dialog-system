@@ -1,6 +1,7 @@
 
 using System;
 using AQM.Tools;
+using Blackboard.Utils.Editor;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.Localization;
@@ -355,6 +356,7 @@ using UnityEngine.UIElements;
         void OnNodeSelectionChanged(NodeView node)
         {
             _inspectorView.ShowDialogInspector(node);
+            _conversationEditView.ClearButtonHovers();
         }
 
         void OnRefreshInspector()

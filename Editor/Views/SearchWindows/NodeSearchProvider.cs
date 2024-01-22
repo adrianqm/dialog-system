@@ -45,7 +45,7 @@ namespace AQM.Tools
         {
             List<SearchTreeEntry> searchlist = new List<SearchTreeEntry>()
             {
-                new SearchTreeGroupEntry(new GUIContent("Actors"),0),
+                new SearchTreeGroupEntry(new GUIContent("Nodes"),0),
                 new SearchTreeGroupEntry(new GUIContent("Dialogue Nodes"), 1),
                 new(new GUIContent("Single Choice", _indentationIcon))
                 {
@@ -59,6 +59,13 @@ namespace AQM.Tools
                 }
             };
             searchlist.Add(new SearchTreeGroupEntry(new GUIContent("Go to Bookmark"), 1));
+            if (_tree.startBookmark)
+            {
+                SearchTreeEntry entry = new SearchTreeEntry(new GUIContent(_tree.startBookmark.bookmarkTitle,_indentationIcon));
+                entry.level = 2;
+                entry.userData = new EntryType(Types.Bookmark,_tree.startBookmark);
+                searchlist.Add(entry);
+            }
             foreach (var treeBookmark in _tree.bookmarks)
             {
                 SearchTreeEntry entry = new SearchTreeEntry(new GUIContent(treeBookmark.bookmarkTitle,_indentationIcon));

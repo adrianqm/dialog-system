@@ -1,14 +1,24 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <Style src="project://database/Assets/dialog-system/Custom%20Views/ConversationInspectorView/ConversationInspectorView.uss?fileID=7433441132597879392&amp;guid=4fba166fe476e3340a2de2dd23d33e9d&amp;type=3#ConversationInspectorView" />
+    <Style src="project://database/Assets/dialog-system/Editor/Views/ConversationInspectorView/ConversationInspectorView.uss?fileID=7433441132597879392&amp;guid=4fba166fe476e3340a2de2dd23d33e9d&amp;type=3#ConversationInspectorView" />
     <ui:Label tabindex="-1" text="Conversation Inspector" display-tooltip-when-elided="true" name="titleInspector" style="height: 30px; -unity-text-align: middle-center; background-color: rgb(24, 24, 29);" />
-    <ui:VisualElement name="content" style="flex-grow: 1; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 10px;">
-        <ui:VisualElement name="titleContainer" style="flex-grow: 0; background-color: rgb(24, 24, 29); padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px;">
-            <ui:Label tabindex="-1" text="Title" display-tooltip-when-elided="true" style="-unity-text-align: upper-center;" />
-            <ui:TextField picking-mode="Ignore" label="Message" readonly="false" password="false" multiline="true" name="titleTextField" style="opacity: 1; overflow: hidden; align-items: auto; flex-direction: column; height: auto; justify-content: flex-start; align-self: auto; min-height: 40px; flex-shrink: 1;" />
+    <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1">
+        <ui:VisualElement name="content" style="flex-grow: 1; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 10px;">
+            <ui:VisualElement name="titleContainer" style="flex-grow: 0; background-color: rgb(24, 24, 29); padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px;">
+                <ui:Label tabindex="-1" text="Title" display-tooltip-when-elided="true" style="-unity-text-align: upper-center;" />
+                <ui:TextField picking-mode="Ignore" label="Message" readonly="false" password="false" multiline="true" name="titleTextField" style="opacity: 1; overflow: hidden; align-items: auto; flex-direction: column; height: auto; justify-content: flex-start; align-self: auto; min-height: 40px; flex-shrink: 1;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="descriptionContainer" style="flex-grow: 0; background-color: rgb(24, 24, 29); padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; margin-top: 10px;">
+                <ui:Label tabindex="-1" text="Description" display-tooltip-when-elided="true" style="-unity-text-align: upper-center;" />
+                <ui:TextField picking-mode="Ignore" label="Message" readonly="false" password="false" multiline="true" name="descriptionTextField" style="opacity: 1; overflow: hidden; align-items: auto; flex-direction: column; height: auto; justify-content: flex-start; align-self: auto; min-height: 40px; flex-shrink: 1;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="actorContainer" class="hidden-class" style="flex-grow: 0; background-color: rgb(24, 24, 29); padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; margin-bottom: 10px; margin-top: 10px;">
+                <ui:Label tabindex="-1" text="Default Actor" display-tooltip-when-elided="true" style="-unity-text-align: upper-center; margin-right: 0; padding-right: 1px;" />
+                <ui:VisualElement name="actor-container" class="actor-container" style="padding-left: 1px; padding-right: 0; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; border-right-width: 2px; border-left-width: 2px;">
+                    <SpritePreviewElement name="actor-sprite" style="width: 25px; height: 25px; padding-left: 2px; padding-top: 2px; padding-right: 2px; padding-bottom: 2px;" />
+                    <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="actor-name" enable-rich-text="true" style="padding-left: 4px; padding-right: 7px; padding-top: 0; padding-bottom: 0; flex-shrink: 1; min-height: 5px; flex-direction: row; flex-grow: 1; justify-content: center; min-width: 50px; max-height: 100px; white-space: normal; -unity-text-align: middle-center;" />
+                    <ui:Button display-tooltip-when-elided="true" name="find-actor-button" class="find-actor-button" style="border-left-color: rgba(0, 0, 0, 0); border-right-color: rgba(0, 0, 0, 0); border-top-color: rgba(0, 0, 0, 0); border-bottom-color: rgba(0, 0, 0, 0); background-color: rgba(188, 188, 188, 0); margin-right: 0; width: 19px;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="descriptionContainer" style="flex-grow: 0; background-color: rgb(24, 24, 29); padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; margin-top: 10px;">
-            <ui:Label tabindex="-1" text="Description" display-tooltip-when-elided="true" style="-unity-text-align: upper-center;" />
-            <ui:TextField picking-mode="Ignore" label="Message" readonly="false" password="false" multiline="true" name="descriptionTextField" style="opacity: 1; overflow: hidden; align-items: auto; flex-direction: column; height: auto; justify-content: flex-start; align-self: auto; min-height: 40px; flex-shrink: 1;" />
-        </ui:VisualElement>
-    </ui:VisualElement>
+    </ui:ScrollView>
 </ui:UXML>

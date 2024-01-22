@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,15 +12,17 @@ namespace AQM.Tools
     public class BookmarksInspectorView : VisualElement
     {
         private ConversationTree _conversationTree;
-        private List<BookmarkSO> _bookmarks = new List<BookmarkSO>();
+        private List<BookmarkSO> _bookmarks = new ();
         private ListView _listView;
+        private DialogSystemView _graphView;
         
         private readonly string assetName = "BookmarksInspectorView";
-        public BookmarksInspectorView(ConversationTree conversationTree)
+        public BookmarksInspectorView(DialogSystemView graphView, ConversationTree conversationTree)
         {
             VisualTreeAsset uxml = UIToolkitLoader.LoadUXML(DialogSystemEditor.RelativePath,assetName);
             uxml.CloneTree(this);
 
+            _graphView = graphView;
             _conversationTree = conversationTree;
             if (_conversationTree != null)
             {
@@ -42,12 +45,11 @@ namespace AQM.Tools
         private void BindItem(VisualElement ve, int index)
         {
             var bookmarkView = ve as BookmarkView;
-            bookmarkView?.BindCondition(_bookmarks[index]);
+            bookmarkView?.BindBookmark(_graphView, _bookmarks[index]);
         }
 
         private void RegisterCallbacks()
         {
-        
             _listView.Q<Button>("unity-list-view__add-button").clickable = new Clickable(() =>
             {
                 _conversationTree.CreateBookmark(DSData.instance.database);

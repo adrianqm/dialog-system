@@ -5,7 +5,6 @@ namespace AQM.Tools
 {
     public class BookmarkNodeSO : NodeSO
     {
-        public BookmarkSO bookmark;
         public override NodeSO Clone()
         {
             BookmarkNodeSO nodeSo = Instantiate(this);
@@ -24,6 +23,28 @@ namespace AQM.Tools
         {
             bookmark = bookmarkSo;
             EditorUtility.SetDirty(this);
+        }
+        
+        private void OnEnable()
+        {
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+        }
+
+        private void OnDisable()
+        {
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+        }
+        
+        private void OnPlayModeStateChanged(PlayModeStateChange obj)
+        {
+            switch (obj)
+            {
+                case PlayModeStateChange.EnteredEditMode:
+                    NodeState = State.Initial;
+                    break;
+                case PlayModeStateChange.EnteredPlayMode: break;
+            }
         }
 #endif
     }

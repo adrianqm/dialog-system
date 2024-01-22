@@ -1,7 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <Style src="project://database/Assets/dialog-system/Editor/Custom%20Views/Conversations%20View/ConversationsView.uss?fileID=7433441132597879392&amp;guid=2ab90e006bdb05447a908f99e6af9922&amp;type=3#ConversationsView" />
-    <SplitView fixed-pane-initial-dimension="250" orientation="Horizontal" style="flex-grow: 1;">
-        <ui:VisualElement name="left-dialog-panel" style="width: 200px; min-width: 250px;">
+    <Style src="project://database/Assets/dialog-system/Editor/Views/ConversationsView/ConversationsView.uss?fileID=7433441132597879392&amp;guid=2ab90e006bdb05447a908f99e6af9922&amp;type=3#ConversationsView" />
+    <Blackboard.Editor.SplitView fixed-pane-initial-dimension="275" orientation="Horizontal" style="flex-grow: 1;">
+        <ui:VisualElement name="left-dialog-panel" style="width: 200px; min-width: 275px;">
             <InspectorView name="InspectorView" style="flex-grow: 1; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; min-width: 250px; align-items: stretch; display: flex; background-color: rgba(46, 50, 54, 0.6);" />
         </ui:VisualElement>
         <ui:VisualElement name="right-dialog-panel" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); min-width: 250px;">
@@ -21,5 +21,5 @@
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
-    </SplitView>
+    </Blackboard.Editor.SplitView>
 </ui:UXML>

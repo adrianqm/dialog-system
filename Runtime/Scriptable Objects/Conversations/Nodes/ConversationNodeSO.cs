@@ -1,5 +1,6 @@
 ﻿
-using Blackboard.Actions;
+using Blackboard.Commands;
+using Blackboard.Requirement;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,12 +11,12 @@ namespace AQM.Tools
         public Actor actor;
         [TextArea] public string message;
         public RequirementsSO requirements;
-        public ActionList actionList;
+        public CommandList actionList;
 
         public override bool CheckConditions()
         {
             Requirements requirementsList = new Requirements(requirements);
-            return requirementsList.CheckRequirementsGoal();
+            return requirementsList.AreFulfilled;
         }
         
         public override NodeSO Clone()
@@ -30,7 +31,7 @@ namespace AQM.Tools
             base.Init(position);
             requirements = ScriptableObject.CreateInstance<RequirementsSO>();
             requirements.Init(guid);
-            actionList = ScriptableObject.CreateInstance<ActionList>();
+            actionList = ScriptableObject.CreateInstance<CommandList>();
         }
         
       	private void OnEnable()
@@ -61,7 +62,7 @@ namespace AQM.Tools
             AssetDatabase.AddObjectToAsset(requirements,db);
             foreach (ConditionSO cond in requirements.conditions)
                 AssetDatabase.AddObjectToAsset(cond, db);
-            foreach (Action action in actionList.actions)
+            foreach (Command action in actionList.commands)
                 AssetDatabase.AddObjectToAsset(action, db);
         }
 
@@ -71,6 +72,9 @@ namespace AQM.Tools
             Undo.DestroyObjectImmediate(requirements);
             foreach (ConditionSO cond in requirements.conditions)
                 Undo.DestroyObjectImmediate(cond);
+            Undo.DestroyObjectImmediate(actionList);
+            foreach (Command c in actionList.commands)
+                Undo.DestroyObjectImmediate(c);
             EditorUtility.SetDirty(this);
         }
 #endif

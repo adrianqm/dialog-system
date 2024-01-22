@@ -13,10 +13,13 @@ namespace AQM.Tools
         public Color bgColor;
         
 #if UNITY_EDITOR
-        public void Init()
+        public void Init(string title,NodeSO node, Color color)
         {
             guid = GUID.Generate().ToString();
             name = $"Bookmark-{guid}";
+            bookmarkTitle = title;
+            goToNode = node;
+            bgColor = color;
         }
         
         public void SaveAs(DialogSystemDatabase db)

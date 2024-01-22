@@ -107,11 +107,8 @@ public class DialogSystemView : GraphView
 
     private void AddNodeSearchWindow()
     {
-        if (_nodeSearchProvider == null)
-        {
-            _nodeSearchProvider = ScriptableObject.CreateInstance<NodeSearchProvider>();
-            _nodeSearchProvider.SetUp(this);
-        }
+        _nodeSearchProvider = ScriptableObject.CreateInstance<NodeSearchProvider>();
+        _nodeSearchProvider.SetUp(this);
 
         nodeCreationRequest = context =>
             SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), _nodeSearchProvider);
@@ -160,9 +157,9 @@ public class DialogSystemView : GraphView
         PopulateView(_tree);
     }
     
-    public NodeView FindNodeView(NodeSO nodeSo)
+    public NodeView FindNodeView(string guid)
     {
-        return GetNodeByGuid(nodeSo.guid) as NodeView;
+        return GetNodeByGuid(guid) as NodeView;
     }
     
     public DialogNodeView FindDialogNodeView(NodeSO nodeSo)
@@ -197,7 +194,6 @@ public class DialogSystemView : GraphView
         
         DeleteElements(graphElements);
         
-        
         graphViewChanged += OnGraphViewChanged;
         serializeGraphElements += CutCopyOperation;
         unserializeAndPaste += PasteOperation;
@@ -208,14 +204,16 @@ public class DialogSystemView : GraphView
         
         if (_tree.startNode == null)
         {
-            _tree.startNode = _tree.CreateNode(_currentDatabase,NodeFactory.NodeType.Start,new Vector2(0f,200f)) as StartNodeSO;
+            _tree.startNode = _tree.CreateNode(_currentDatabase,NodeFactory.NodeType.Start,new Vector2(0f,200f), false) as StartNodeSO;
+            Color defaultColor = new Color(0.5686275f, 0.3411765f, 0, 1);
+            _tree.startBookmark = _tree.CreateBookmark(_currentDatabase, "[START]",_tree.startNode,defaultColor, false,false);
             EditorUtility.SetDirty(_tree);
             AssetDatabase.SaveAssets();
         }
         
         if (_tree.completeNode == null)
         {
-            _tree.completeNode = _tree.CreateNode(_currentDatabase,NodeFactory.NodeType.Complete, new Vector2(1000f,200f)) as CompleteNodeSO;
+            _tree.completeNode = _tree.CreateNode(_currentDatabase,NodeFactory.NodeType.Complete, new Vector2(1000f,200f), false) as CompleteNodeSO;
             EditorUtility.SetDirty(_tree);
             AssetDatabase.SaveAssets();
         }
@@ -243,7 +241,7 @@ public class DialogSystemView : GraphView
                 foreach (NodeSO targetNode in targetNodes)
                 {
                     if(targetNode == null) return;
-                    NodeView targetNodeView = FindNodeView(targetNode);
+                    NodeView targetNodeView = FindNodeView(targetNode.guid);
                     var originPortView = GetPortByGuid(outputPort.id);
                     Edge edge = originPortView.ConnectTo(targetNodeView.inputPortsList[0]);
                     AddElement(edge);
@@ -260,7 +258,7 @@ public class DialogSystemView : GraphView
     {
         children.ForEach(child =>
         {
-            NodeView childView = FindNodeView(child);
+            NodeView childView = FindNodeView(child.guid);
             if (childView != null)
             {
                 Edge edge = port.ConnectTo(childView.inputPortsList[0]);
@@ -272,6 +270,15 @@ public class DialogSystemView : GraphView
     public void FrameAllNodes()
     {
         FrameAll();
+    }
+    
+    public void FrameNode(string guid)
+    {
+        ClearSelection();
+        NodeView view = FindNodeView(guid);
+        AddToSelection(view);
+        onNodeSelected.Invoke(view);
+        FrameSelection();
     }
     
     private void DisableRedoAction(KeyDownEvent evt)
@@ -520,6 +527,7 @@ public class DialogSystemView : GraphView
             evt.menu.AppendAction("Create Node / Dialog Node", (a)=> CreateNode(NodeFactory.NodeType.Dialog,pos));
             evt.menu.AppendAction("Create Node / Choice Node", (a)=> CreateNode(NodeFactory.NodeType.Choice,pos));
             evt.menu.AppendAction("Create Node / Branch Node", (a)=> CreateNode(NodeFactory.NodeType.Branch,pos));
+            evt.menu.AppendAction("Go to Bookmark / "+_tree.startBookmark.bookmarkTitle, (a)=> CreateBookmark(NodeFactory.NodeType.Bookmark,pos, _tree.startBookmark));
             foreach (var treeBookmark in _tree.bookmarks)
             {
                 evt.menu.AppendAction("Go to Bookmark / "+treeBookmark.bookmarkTitle, (a)=> CreateBookmark(NodeFactory.NodeType.Bookmark,pos, treeBookmark));
@@ -629,7 +637,7 @@ public class DialogSystemView : GraphView
                 nodeView = new BranchNodeView(nodeSo);
                 break;
             case BookmarkNodeSO bookmarkNodeSo:
-                nodeView = new BookmarkNodeView(bookmarkNodeSo);
+                nodeView = new BookmarkNodeView(this,bookmarkNodeSo);
                 break;
             default:
                 nodeView = new NodeView(nodeSo);

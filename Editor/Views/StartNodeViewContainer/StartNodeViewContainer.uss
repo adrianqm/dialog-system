@@ -2,7 +2,7 @@
     -unity-text-align: upper-center;
     padding-bottom: 10px;
     padding-top: 10px;
-    background-color: rgb(138, 76, 0);
+    background-color: rgb(145, 87, 0);
     -unity-font-style: bold;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;

@@ -6,7 +6,8 @@
     "unity": "2019.3",
     "type": "asset",
     "dependencies": {
-        "com.unity.inputsystem": "1.4.4"
+        "com.unity.inputsystem": "1.4.4",
+        "com.mariosep.blackboard": "https://github.com/Mariosep/blackboard.git"
     },
     "samples": [
         {

@@ -1,14 +1,16 @@
 
+using System;
 using AQM.Tools;
 using UnityEngine.UIElements;
 
 public class InspectorView : VisualElement
 {
   public new class UxmlFactory:  UxmlFactory<InspectorView, InspectorView.UxmlTraits> {}
-
+  
   private NodeView _currentNodeView;
   private VisualElement _currentContainer;
   private ConversationTree _currentConversationTree;
+  private DialogSystemView _graphView;
   
   internal void ShowDialogInspector(NodeView nodeView)
   {
@@ -34,14 +36,15 @@ public class InspectorView : VisualElement
       _currentConversationTree = conversationTree;
   }
   
-  internal void ShowBookmarksInspector(ConversationTree conversationTree)
+  internal void ShowBookmarksInspector(DialogSystemView graphView, ConversationTree conversationTree)
   {
       ClearInspector();
-      BookmarksInspectorView container = new BookmarksInspectorView(conversationTree);
+      BookmarksInspectorView container = new BookmarksInspectorView(graphView, conversationTree);
       Add(container);
       ResetDialogContainerValues();
       _currentContainer = container;
       _currentConversationTree = conversationTree;
+      _graphView = graphView;
   }
 
   private void ResetDialogContainerValues()
@@ -55,16 +58,11 @@ public class InspectorView : VisualElement
       {
           case DialogInspectorView: ShowDialogInspector(_currentNodeView);
               break;
-          case BookmarksInspectorView: ShowBookmarksInspector(_currentConversationTree);
-              break;
           case ConversationInspectorView: ShowConversationInspector(_currentConversationTree);
               break;
+          case BookmarksInspectorView: ShowBookmarksInspector(_graphView, _currentConversationTree);
+              break;
       }
-  }
-  
-  public NodeSO GetCurrentNode()
-  {
-      return _currentNodeView?.node;
   }
   
   internal void ClearInspector()

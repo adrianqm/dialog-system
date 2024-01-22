@@ -11,6 +11,7 @@ namespace AQM.Tools
         [HideInInspector] public string guid;
         public Vector2 position;
         public GroupNode group;
+        public BookmarkSO bookmark;
         public List<PortSO> inputPorts = new();
         public List<PortSO> outputPorts = new();
         

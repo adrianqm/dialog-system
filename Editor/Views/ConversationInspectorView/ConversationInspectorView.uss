@@ -31,3 +31,21 @@
     white-space: normal;
     text-overflow: clip;
 }
+
+.actor-container {
+    flex-grow: 1;
+    flex-direction: row;
+    align-self: center;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.find-actor-button {
+    width: 21px;
+    height: 19px;
+    margin-right: 3px;
+    padding-top: 1px;
+    padding-right: 0;
+    padding-bottom: 1px;
+    padding-left: 0;
+}

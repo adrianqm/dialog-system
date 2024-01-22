@@ -8,12 +8,12 @@ using UnityEngine.UIElements;
 
 public class BookmarkNodeView  : NodeView
 {
-    public BookmarkNodeView(BookmarkNodeSO nodeSo) : base(nodeSo)
+    public BookmarkNodeView(DialogSystemView graphview, BookmarkNodeSO nodeSo) : base(nodeSo)
     {
         inputContainer.AddToClassList("singleInputContainer100");
         outputContainer.AddToClassList("singleOutputContainer");
         
-        var nodeViewContainer = new BookmarkNodeViewContainer(nodeSo);
+        var nodeViewContainer = new BookmarkNodeViewContainer(graphview.GetCurrentTree(), nodeSo);
         extensionContainer.Add(nodeViewContainer);
         CreateDefaultInputPorts();
         RefreshExpandedState();

@@ -936,7 +936,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &802869057
 Transform:
   m_ObjectHideFlags: 0
@@ -1612,7 +1612,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9dd38c908c5460d4ab42cdf10f44bf3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogSystemDatabase: {fileID: 11400000, guid: 1c90420c9b63f004b884a07e4a6fa1d0, type: 2}
+  dialogSystemDatabase: {fileID: 0}
   inputKeys:
   - {fileID: -1215368942516958011, guid: f3e6b50850206464287b158c92e4cb08, type: 3}
   - {fileID: 5697762415176839361, guid: f3e6b50850206464287b158c92e4cb08, type: 3}
@@ -2154,7 +2154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 536963a12b43a1341811c20656f01c01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  conversation: {fileID: 1806343964037233015, guid: 1c90420c9b63f004b884a07e4a6fa1d0, type: 2}
+  conversation: {fileID: 0}
   lookAtPoint: {fileID: 819760954}
 --- !u!1 &1122216686
 GameObject:
@@ -2723,6 +2723,7 @@ MonoBehaviour:
   triggerOnce: 1
   requirements: {fileID: 0}
   onTrigger: {fileID: 0}
+  triggered: 0
 --- !u!135 &1543416565
 SphereCollider:
   m_ObjectHideFlags: 0

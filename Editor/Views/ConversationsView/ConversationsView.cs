@@ -33,17 +33,7 @@ public class ConversationsView : VisualElement
         // To remove Hover style
         _treeView.RegisterCallback<ClickEvent>((evt) =>
         {
-            if (_conversationNameLabel != null)
-            {
-                _conversationNameLabel.RemoveFromClassList("conversation-name-label--selected");
-                _conversationNameLabel.AddToClassList("conversation-name-label");
-            }
-            
-            if (_bookmarkButton != null)
-            {
-                _bookmarkButton.RemoveFromClassList("bookmark-btn--selected");
-                _bookmarkButton.AddToClassList("bookmark-btn");
-            }
+            ClearButtonHovers();
         });
         
         RegisterConversationHeaderButton("show-minimap", "d_AnimatorController On Icon", () =>
@@ -102,18 +92,23 @@ public class ConversationsView : VisualElement
     {
         _inspectorView.ClearInspector();
         _treeView.ClearGraph();
+        ClearButtonHovers();
+        _topConversationBar.style.display = DisplayStyle.None;
+    }
+
+    public void ClearButtonHovers()
+    {
         if (_conversationNameLabel != null)
         {
             _conversationNameLabel.RemoveFromClassList("conversation-name-label--selected");
             _conversationNameLabel.AddToClassList("conversation-name-label");
         }
-
+            
         if (_bookmarkButton != null)
         {
             _bookmarkButton.RemoveFromClassList("bookmark-btn--selected");
             _bookmarkButton.AddToClassList("bookmark-btn");
         }
-        _topConversationBar.style.display = DisplayStyle.None;
     }
     
     public void SetConversationNameSelected()
@@ -137,7 +132,7 @@ public class ConversationsView : VisualElement
             _bookmarkButton.RemoveFromClassList("bookmark-btn");
             
             _treeView.ClearSelection();
-            _inspectorView.ShowBookmarksInspector(_currentTree);
+            _inspectorView.ShowBookmarksInspector(_treeView, _currentTree);
             
             _conversationNameLabel.RemoveFromClassList("conversation-name-label--selected");
             _conversationNameLabel.AddToClassList("conversation-name-label");

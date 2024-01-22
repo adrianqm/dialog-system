@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using AQM.Tools;
-using Blackboard.Actions;
+using Blackboard.Editor.Requirement;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
@@ -36,7 +36,6 @@ public class DialogInspectorView : VisualElement
 #if LOCALIZATION_EXIST
     private Dictionary<string, KeyValuePair<Label,TextField>> _translationMapText = new();
     private StringTableCollection _collection;
-    private Locale _defaultLocale;
     private SpritePreviewElement _actorSprite;
     private Label _actorName;
     private SerializedObject _actorSerialized;
@@ -268,7 +267,6 @@ public class DialogInspectorView : VisualElement
     private void BindLocalization(NodeSO nodeSo)
     {
         _collection = DSData.instance.tableCollection;
-        _defaultLocale = DSData.instance.database.defaultLocale;
         _translationMapText.Clear();
         LocalizationSettings.InitializationOperation.WaitForCompletion();
         
@@ -319,9 +317,10 @@ public class DialogInspectorView : VisualElement
             
             // Add Choice Requirements
             RequirementsListView requirementsListView = new RequirementsListView();
+            requirementsListView.collapdseByDefault = true;
             requirementsListView.AddToClassList("condition-list");
             requirementsListView.SaveAsSubAssetOf(_currentDatabase);
-            requirementsListView.Populate(choice.requirements);
+            requirementsListView.PopulateView(choice.requirements);
             
             // Add Choice Actions
             //ActionListView actionsListView = new ActionListView();
@@ -351,9 +350,10 @@ public class DialogInspectorView : VisualElement
             {
                 // Add Choice Requirements
                 RequirementsListView requirementsListView = new RequirementsListView();
+                requirementsListView.collapdseByDefault = true;
                 requirementsListView.AddToClassList("condition-list");
                 requirementsListView.SaveAsSubAssetOf(_currentDatabase);
-                requirementsListView.Populate(conversationNode.requirements);
+                requirementsListView.PopulateView(conversationNode.requirements);
             
                 translatedText.style.marginRight = 0;
                 translatedText.AddToClassList("field");

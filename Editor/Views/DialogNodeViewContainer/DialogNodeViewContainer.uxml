@@ -6,10 +6,22 @@
         </ui:VisualElement>
         <ui:VisualElement name="actor-text-container" class="actor-text-container" style="max-height: none;">
             <ui:VisualElement name="actor-name-text-container" class="actor-name-text-container">
-                <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" name="actor-name-text" style="width: 211px; border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; padding-left: 10px; padding-right: 2px; padding-top: 2px; padding-bottom: 1px; justify-content: center; flex-direction: row; align-items: center; align-self: center;" />
-                <ui:VisualElement name="actor-search" style="flex-grow: 1; position: absolute; right: 2px; top: 1px; bottom: 0;" />
+                <ui:VisualElement name="actor-left">
+                    <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" name="actor-name-text" />
+                    <ui:VisualElement name="actor-search" style="flex-grow: 1; position: absolute; right: 2px; top: 1px; bottom: 0;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="bookmark-right">
+                    <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="bookmark-remove" class="bookmark-img-btn hidden" />
+                    <ui:Label tabindex="-1" text="Prueba 2" parse-escape-sequences="true" display-tooltip-when-elided="true" name="bookmar-title-text" />
+                    <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="bookmark-no-selected" class="bookmark-img-btn">
+                        <ui:VisualElement name="bm-no-selected-img" style="flex-grow: 1;" />
+                    </ui:Button>
+                    <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="bookmark-selected" class="bookmark-img-btn hidden">
+                        <ui:VisualElement name="bm-selected-img" style="flex-grow: 1;" />
+                    </ui:Button>
+                </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="message-container" class="message-container">
+            <ui:VisualElement name="message-container" focusable="true" class="message-container">
                 <ui:TextField label="Text Field" value="filler text" name="message-textfield" picking-mode="Ignore" multiline="true" style="height: auto; align-items: stretch; align-self: auto; flex-shrink: 0; justify-content: flex-start; min-height: 32px; flex-wrap: nowrap; padding-right: 5px; padding-top: 0; padding-bottom: 0; max-height: 300px; max-width: 250px; margin-left: 3px; margin-right: 3px; margin-top: 1px; margin-bottom: 0;" />
             </ui:VisualElement>
         </ui:VisualElement>

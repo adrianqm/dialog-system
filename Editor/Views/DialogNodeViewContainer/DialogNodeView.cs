@@ -15,14 +15,22 @@ public class DialogNodeView : NodeView
     private TextField _messageTextField;
     private VisualElement _outputChoiceContainer;
     private Label _actorLabel;
+    private Label _bookmarkLabel;
     private Actor _actor;
+    private BookmarkSO _bookmark;
     private Action _onClearSelection;
     private Button _disabledChoiceButton;
+    private Button _bookmarkNoSelectedBtn;
+    private Button _bookmarkSelectedBtn;
+    private Button _bookmarkRemoveBtn;
     private VisualElement _actorContainer;
     private SerializedObject _actorSerialized;
+    private VisualElement _bookmarkContainer;
+    private SerializedObject _bookmarkSerialized;
     private Dictionary<string, KeyValuePair<VisualElement, Port>> _choicesMap = new();
     
     private DialogSystemView _graphView;
+    private ConversationTree _currentConversationTree;
     private DialogSystemDatabase _currentDatabase;
 
     private Port _defaultPort;
@@ -31,6 +39,7 @@ public class DialogNodeView : NodeView
     public  DialogNodeView(NodeSO nodeSo, DialogSystemView graphView, Action onClearSelection) : base(nodeSo)
     {
         _graphView = graphView;
+        _currentConversationTree = graphView.GetCurrentTree();
         _currentDatabase = graphView.GetDatabase();
         _onClearSelection = onClearSelection;
         
@@ -63,9 +72,29 @@ public class DialogNodeView : NodeView
 
     private void SetUpTopData(ConversationNodeSO conversationNode)
     {
+        // Set default if null
+        if (!conversationNode.actor && _currentConversationTree.defaultActor != null)
+        {
+            conversationNode.actor = _currentConversationTree.defaultActor;
+            EditorUtility.SetDirty(conversationNode);
+        }
         GetAndBindActor(conversationNode.actor,(actor) =>
         {
             conversationNode.actor = actor;
+            EditorUtility.SetDirty(conversationNode);
+            
+            //Set defaultActor
+            if (_currentConversationTree.defaultActor == null)
+            {
+                _currentConversationTree.defaultActor = actor;
+                EditorUtility.SetDirty(_currentConversationTree);
+            }
+            onNodeSelected.Invoke(this);
+            _onClearSelection.Invoke();
+        });
+        SetupBookmark(conversationNode.bookmark, (bookmark) =>
+        {
+            conversationNode.bookmark = bookmark;
             EditorUtility.SetDirty(conversationNode);
             onNodeSelected.Invoke(this);
             _onClearSelection.Invoke();
@@ -278,6 +307,11 @@ public class DialogNodeView : NodeView
         BindActor(selectedActor);
     }
 
+    public void UpdateBookmarkToBind(BookmarkSO selectedBookmarkSo)
+    {
+        BindBookmark(selectedBookmarkSo);
+    }
+
 #if LOCALIZATION_EXIST
     public void UpdateLocalizedMessage()
     {
@@ -298,6 +332,66 @@ public class DialogNodeView : NodeView
         }
     }
 #endif
+
+    private void SetupBookmark(BookmarkSO bookmark, Action<BookmarkSO> onSelectBookmark)
+    {
+        _bookmarkContainer = this.Q("bookmark-right");
+        _bookmarkLabel = this.Q<Label>("bookmar-title-text");
+        _actorLabel.bindingPath = "bookmarkTitle";
+        
+        _bookmarkNoSelectedBtn = this.Q<Button>("bookmark-no-selected");
+        _bookmarkNoSelectedBtn.clickable = new Clickable(() =>
+        {
+            SetUpBookmarkSearch(onSelectBookmark.Invoke);
+        });
+        _bookmarkSelectedBtn = this.Q<Button>("bookmark-selected");
+        _bookmarkSelectedBtn.clickable = new Clickable(() =>
+        {
+            SetUpBookmarkSearch(onSelectBookmark.Invoke);
+        });
+        
+        _bookmarkRemoveBtn = this.Q<Button>("bookmark-remove");
+        Image img = new Image
+        {
+            image = EditorGUIUtility.IconContent("Cancel").image
+        };
+        img.AddToClassList("remove-img");
+        _bookmarkRemoveBtn.Add(img);
+        _bookmarkRemoveBtn.clickable = new Clickable(() =>
+        {
+            _bookmarkContainer.Unbind();
+            _bookmark.goToNode = null;
+            _bookmark = null;
+            node.bookmark = null;
+            _bookmarkLabel.text = "";
+            _bookmarkContainer.style.backgroundColor = new StyleColor();
+            _bookmarkLabel.style.display = DisplayStyle.None;
+            _bookmarkSelectedBtn.AddToClassList("hidden");
+            _bookmarkRemoveBtn.AddToClassList("hidden");
+            _bookmarkNoSelectedBtn.RemoveFromClassList("hidden");
+        });
+        
+        if ( bookmark)
+        {
+            BindBookmark(bookmark);
+        }
+    }
+
+    private void SetUpBookmarkSearch(Action<BookmarkSO> onSelectBookmark)
+    {
+        BookmarksSearchProvider provider =
+            ScriptableObject.CreateInstance<BookmarksSearchProvider>();
+        provider.SetUp(_currentConversationTree,
+            (bookmarkSelected) =>
+            {
+                if(_bookmark) _bookmark.goToNode = null;
+                bookmarkSelected.goToNode = node;
+                UpdateBookmarkToBind(bookmarkSelected);
+                onSelectBookmark.Invoke(bookmarkSelected);
+            }, true);
+        SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(Event.current.mousePosition)),
+            provider);
+    }
 
     private void GetAndBindActor(Actor actor, Action<Actor> onSelectActor)
     {
@@ -349,10 +443,31 @@ public class DialogNodeView : NodeView
         _actorContainer.TrackSerializedObjectValue(_actorSerialized, UpdateBackground);
         SerializedObject actor = new SerializedObject(_actor);
         _actorSprite.Bind(actor);
-        _actorLabel.Bind(actor);
+        _actorLabel.text = _actor.fullName;
         _actorSprite.style.backgroundColor = _actor.bgColor;
         _actorLabel.style.backgroundColor = _actor.bgColor;
         _messageTextField?.Bind(new SerializedObject(node));
+        //BindBookmark(_bookmark);
+    }
+
+    private void BindBookmark(BookmarkSO bookmarkSo)
+    {
+        _bookmarkContainer.Unbind();
+        _bookmark = bookmarkSo;
+        _bookmarkSerialized = new SerializedObject(_bookmark);
+        _bookmarkContainer.TrackSerializedObjectValue(_bookmarkSerialized, UpdateBookmarkTracked);
+        _bookmarkLabel.text = _bookmark.bookmarkTitle;
+        _bookmarkContainer.style.backgroundColor = _bookmark.bgColor;
+        _bookmarkLabel.style.display = DisplayStyle.Flex;
+        _bookmarkSelectedBtn.RemoveFromClassList("hidden");
+        _bookmarkRemoveBtn.RemoveFromClassList("hidden");
+        _bookmarkNoSelectedBtn.AddToClassList("hidden");
+    }
+
+    private void UpdateBookmarkTracked(SerializedObject serializedObject)
+    {
+        _bookmarkLabel.text = _bookmark.bookmarkTitle;
+        _bookmarkContainer.style.backgroundColor = _bookmark.bgColor;
     }
 
     private void BindMessage()
@@ -383,6 +498,7 @@ public class DialogNodeView : NodeView
     
     private void UpdateBackground(SerializedObject serializedObject)
     {
+        _actorLabel.text = _actor.fullName;
         _actorSprite.style.backgroundColor = _actor.bgColor;
         _actorLabel.style.backgroundColor = _actor.bgColor;
     }

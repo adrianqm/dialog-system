@@ -1,5 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <Style src="project://database/Assets/dialog-system/Editor/Views/StartNodeViewContainer/StartNodeViewContainer.uss?fileID=7433441132597879392&amp;guid=f28c95fb024ab3a4ca265865b243ed10&amp;type=3#StartNodeViewContainer" />
-    <ui:Label tabindex="-1" text="[START]" parse-escape-sequences="true" display-tooltip-when-elided="true" name="title" style="background-color: rgb(145, 87, 0);" />
+    <ui:Label tabindex="-1" text="[START]" parse-escape-sequences="true" display-tooltip-when-elided="true" name="title" />
     <ui:VisualElement name="bookmarkImage" style="flex-grow: 1;" />
 </ui:UXML>

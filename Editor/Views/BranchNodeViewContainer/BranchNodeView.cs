@@ -1,9 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+
 using AQM.Tools;
-using UnityEditor.Experimental.GraphView;
-using UnityEngine;
+using Blackboard.Editor.Requirement;
 using UnityEngine.UIElements;
 
 public class BranchNodeView  : NodeView
@@ -30,7 +27,7 @@ public class BranchNodeView  : NodeView
         {
             RequirementsListView requirementsListView = this.Q<RequirementsListView>();
             requirementsListView.SaveAsSubAssetOf(DSData.instance.database);
-            requirementsListView.Populate(branchSo.branch.requirements);
+            requirementsListView.PopulateView(branchSo.branch.requirements);
         }
     }
 }

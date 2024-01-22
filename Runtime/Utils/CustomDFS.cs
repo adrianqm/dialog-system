@@ -65,6 +65,26 @@ namespace AQM.Tools
                     }
                 }
             }
+            
+            BranchNodeSO branchNodeSo = currentNode as BranchNodeSO;
+            if (branchNodeSo)
+            {
+                foreach (var n in branchNodeSo.TrueOutputPort.targetNodes)
+                {
+                    if (!visitedNodes.Contains(n))
+                    {
+                        DFSUtil(n, visitedNodes);
+                    }
+                }
+                foreach (var n in branchNodeSo.FalseOutputPort.targetNodes)
+                {
+                    if (!visitedNodes.Contains(n))
+                    {
+                        DFSUtil(n, visitedNodes);
+                    }
+                }
+                
+            }
         }
     }
 }

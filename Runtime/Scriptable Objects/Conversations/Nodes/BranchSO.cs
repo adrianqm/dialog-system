@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Blackboard.Requirement;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,7 +11,7 @@ namespace AQM.Tools
         public bool CheckConditions()
         {
             Requirements requirementsList = new Requirements(requirements);
-            return requirementsList.CheckRequirementsGoal();
+            return requirementsList.AreFulfilled;
         }
         
 #if UNITY_EDITOR

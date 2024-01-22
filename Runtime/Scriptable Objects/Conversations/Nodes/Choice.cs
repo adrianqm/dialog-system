@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using Blackboard.Actions;
+using Blackboard.Commands;
+using Blackboard.Requirement;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
-using Action = Blackboard.Actions.Action;
 
 namespace AQM.Tools
 {
@@ -14,12 +14,12 @@ namespace AQM.Tools
         public string choiceMessage;
         public PortSO port;
         public RequirementsSO requirements;
-        public ActionList actionList;
+        public CommandList actionList;
 
         public bool CheckConditions()
         {
             Requirements requirementsList = new Requirements(requirements);
-            return requirementsList.CheckRequirementsGoal();
+            return requirementsList.AreFulfilled;
         }
         
 
@@ -40,7 +40,7 @@ namespace AQM.Tools
             port = originNode.CreateOutputPort();
             requirements = ScriptableObject.CreateInstance<RequirementsSO>();
             requirements.Init(guid);
-            actionList = ScriptableObject.CreateInstance<ActionList>();
+            actionList = ScriptableObject.CreateInstance<CommandList>();
         }
         
         public void SaveAs(DialogSystemDatabase db)
@@ -49,8 +49,8 @@ namespace AQM.Tools
             AssetDatabase.AddObjectToAsset(requirements,db);
             foreach (ConditionSO cond in requirements.conditions)
                 AssetDatabase.AddObjectToAsset(cond, db);
-            foreach (Action action in actionList.actions)
-                AssetDatabase.AddObjectToAsset(action, db);
+            foreach (Command command in actionList.commands)
+                AssetDatabase.AddObjectToAsset(command, db);
             port.SaveAs(db);
         }
         
@@ -59,6 +59,9 @@ namespace AQM.Tools
             Undo.DestroyObjectImmediate(requirements);
             foreach (ConditionSO cond in requirements.conditions)
                 Undo.DestroyObjectImmediate(cond);
+            Undo.DestroyObjectImmediate(actionList);
+            foreach (Command c in actionList.commands)
+                Undo.DestroyObjectImmediate(c);
         }
 #endif
     }

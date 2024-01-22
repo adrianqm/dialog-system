@@ -26,6 +26,8 @@ namespace AQM.Tools
         }
         
         public NodeSO startNode;
+        public BookmarkSO startBookmark;
+        public Actor defaultActor;
         public NodeSO completeNode;
         public List<NodeSO> nodes = new ();
         public List<GroupNode> groups = new ();
@@ -71,7 +73,7 @@ namespace AQM.Tools
             runningNode.NodeState = NodeSO.State.Finished;
             _finishedNode = runningNode;
             runningNode = null;
-            onEndConversation.Invoke();
+            onEndConversation?.Invoke();
         }
         
         public DSNode GetNextNode(int option = -2)
@@ -190,23 +192,41 @@ namespace AQM.Tools
                 if(branchNodeSo.branch.CheckConditions())
                 {
                     nextChild = branchNodeSo.TrueOutputPort.targetNodes[0];
-                    runningNode = nextChild;
-                    runningNode.OnRunning();
+                    nextChild = SetRunningNode(nextChild);
                 }else
                 {
                     nextChild = branchNodeSo.FalseOutputPort.targetNodes[0];
-                    runningNode = nextChild;
-                    runningNode.OnRunning();
+                    nextChild = SetRunningNode(nextChild);
+                }
+            }
+            
+            if (nodeSo is BookmarkNodeSO bookmarkNodeSo)
+            {
+                nodeSo.NodeState = NodeSO.State.VisitedUnreachable;
+                if(bookmarkNodeSo.bookmark.goToNode != null)
+                {
+                    nextChild = bookmarkNodeSo.bookmark.goToNode;
+                    nextChild = SetRunningNode(nextChild);
+                }
+            }
+            
+            if (nodeSo is StartNodeSO startNodeSo)
+            {
+                nodeSo.NodeState = NodeSO.State.VisitedUnreachable;
+                if(startNodeSo.outputPorts[0].targetNodes.Count > 0)
+                {
+                    nextChild = startNodeSo.outputPorts[0].targetNodes[0];
+                    nextChild = SetRunningNode(nextChild);
                 }
             }
 #if UNITY_EDITOR
-            List<NodeSO> visitedNodes = CustomDFS.StartDFS(nodeSo);
+            List<NodeSO> visitedNodes = CustomDFS.StartDFS(nextChild);
 #endif
             foreach (var n in nodes)
             {
                 if (nextChild.guid == n.guid)
                 {
-                    if (n is CompleteNodeSO)
+                    if (n is CompleteNodeSO || n is BookmarkNodeSO ||  n is BranchNodeSO || n is StartNodeSO)
                     {
                         runningNode = n;
                         EndConversation();
@@ -217,9 +237,15 @@ namespace AQM.Tools
                     }
                     continue;
                 }
-                if (visitedNodes.Find(vn => vn.guid == n.guid)) continue;
+#if UNITY_EDITOR
+                if (visitedNodes.Find(vn => vn.guid == n.guid))
+                {
+                    n.NodeState = NodeSO.State.Initial;
+                    continue;
+                }
                 if (n.NodeState == NodeSO.State.Visited) n.NodeState = NodeSO.State.VisitedUnreachable;
                 else if(n.NodeState != NodeSO.State.VisitedUnreachable) n.NodeState = NodeSO.State.Unreachable;
+#endif
             }
 
             return nextChild;
@@ -270,6 +296,15 @@ namespace AQM.Tools
             }
             return tree;
         }
+        private void ResetNodeStates()
+        {
+            conversationState = State.Running;
+            // Reset states to initial
+            foreach (var n in nodes)
+            {
+                n.NodeState = NodeSO.State.Initial;
+            }
+        }
         
 #if UNITY_EDITOR
         private void OnEnable()
@@ -297,29 +332,26 @@ namespace AQM.Tools
                     break;
             }
         }
-
-        private void ResetNodeStates()
-        {
-            conversationState = State.Running;
-            // Reset states to initial
-            foreach (var n in nodes)
-            {
-                n.NodeState = NodeSO.State.Initial;
-            }
-        }
         
-        public NodeSO CreateNode(DialogSystemDatabase db, NodeFactory.NodeType type, Vector2 position)
+        public NodeSO CreateNode(DialogSystemDatabase db, NodeFactory.NodeType type, Vector2 position, bool registerCreated = true)
         {
             NodeSO node = NodeFactory.CreateNode(type, position);
-            
-            Undo.RecordObject(this, "Conversation Tree (CreateNode)");
+
+            if (registerCreated)
+            {
+                Undo.RecordObject(this, "Conversation Tree (CreateNode)");
+            }
+
             nodes ??= new List<NodeSO>();
             nodes.Add(node);
             
             if (!Application.isPlaying)
              node.SaveAs(db);
-            
-            Undo.RegisterCreatedObjectUndo(node, "Conversation Tree (CreateNode)");
+
+            if (registerCreated)
+            {
+                Undo.RegisterCreatedObjectUndo(node, "Conversation Tree (CreateNode)");
+            }
             AssetDatabase.SaveAssets();
             return node;
         }
@@ -336,18 +368,29 @@ namespace AQM.Tools
             };
         }
         
-        public BookmarkSO CreateBookmark(DialogSystemDatabase db)
+        public BookmarkSO CreateBookmark(DialogSystemDatabase db, string bookmarkTitle = "default", 
+            NodeSO goToNode = null, Color color = new (),bool registerCreated = true,bool addToList = true)
         {
-            BookmarkSO bookmark = BookmarkFactory.CreateBookmark();
-            
-            Undo.RecordObject(this, "Conversation Tree (CreateBookmark)");
-            bookmarks ??= new List<BookmarkSO>();
-            bookmarks.Add(bookmark);
+            BookmarkSO bookmark = BookmarkFactory.CreateBookmark(bookmarkTitle, goToNode,color);
+
+            if (registerCreated)
+            {
+                Undo.RecordObject(this, "Conversation Tree (CreateBookmark)");
+            }
+
+            if (addToList)
+            {
+                bookmarks ??= new List<BookmarkSO>();
+                bookmarks.Add(bookmark);
+            }
             
             if (!Application.isPlaying)
                 bookmark.SaveAs(db);
-            
-            Undo.RegisterCreatedObjectUndo(bookmark, "Conversation Tree (CreateBookmark)");
+
+            if (registerCreated)
+            {
+                Undo.RegisterCreatedObjectUndo(bookmark, "Conversation Tree (CreateBookmark)");
+            }
             AssetDatabase.SaveAssets();
             return bookmark;
         }
@@ -365,6 +408,12 @@ namespace AQM.Tools
             foreach (var node in nodes.ToList())
             {
                 Undo.DestroyObjectImmediate(node);
+            }
+            
+            Undo.DestroyObjectImmediate(startBookmark);
+            foreach (var bookmark in bookmarks.ToList())
+            {
+                Undo.DestroyObjectImmediate(bookmark);
             }
         }
 #endif

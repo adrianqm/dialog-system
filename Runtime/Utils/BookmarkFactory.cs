@@ -7,11 +7,13 @@ namespace AQM.Tools
 
     public static class BookmarkFactory
     {
-        public static BookmarkSO CreateBookmark()
+#if UNITY_EDITOR
+        public static BookmarkSO CreateBookmark(string title,NodeSO node, Color color)
         {
             BookmarkSO bookmark = ScriptableObject.CreateInstance<BookmarkSO>();
-            bookmark.Init();
+            bookmark.Init(title,node,color);
             return  bookmark;
         }
+#endif
     }
 }
