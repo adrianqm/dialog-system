@@ -1,4 +1,5 @@
 ﻿using UnityEditor;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 public static class UIToolkitLoader
@@ -13,5 +14,11 @@ public static class UIToolkitLoader
     {
         string path = $"{editorWindowPath}/Views/{styleSheetName}/{styleSheetName}.uss";
         return AssetDatabase.LoadAssetAtPath<StyleSheet>(path);
+    }
+    
+    public static Sprite LoadSprite(string editorWindowPath, string spriteName)
+    {
+        string path = $"{editorWindowPath}/Assets/{spriteName}";
+        return AssetDatabase.LoadAssetAtPath<Sprite>(path);
     }
 }

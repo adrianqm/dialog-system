@@ -431,7 +431,7 @@ public class DialogNodeView : NodeView
         }
         else
         {
-            _actorSprite.value = Resources.Load<Sprite>( "unknown-person" );
+            _actorSprite.value = UIToolkitLoader.LoadSprite(DialogSystemEditor.RelativePath, "unknown-person.jpg");
             _actorLabel.text = "-";
         }
     }

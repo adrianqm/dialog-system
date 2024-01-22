@@ -31,7 +31,7 @@
 .branch-image {
     width: 14px;
     height: 10px;
-    background-image: url('project://database/Assets/dialog-system/Runtime/Assets/branch.256x184.png?fileID=2800000&guid=ee10920410abeab44bd54ca6aa04157c&type=3#branch.256x184');
+    background-image: url('project://database/Assets/dialog-system/Editor/Assets/branch.256x184.png?fileID=2800000&guid=ee10920410abeab44bd54ca6aa04157c&type=3#branch.256x184');
     justify-content: center;
     flex-direction: row;
     align-self: center;

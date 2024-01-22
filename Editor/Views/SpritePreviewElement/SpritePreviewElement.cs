@@ -30,8 +30,9 @@ public class SpritePreviewElement : BindableElement, INotifyValueChanged<Object>
             m_ObjectField.objectType = typeof(Sprite);
             m_ObjectField.RegisterValueChangedCallback(OnObjectFieldValueChanged);
             Add(m_ObjectField);
-
-            styleSheets.Add(Resources.Load<StyleSheet>(USSClassName));
+            
+            StyleSheet styleSheet = UIToolkitLoader.LoadStyleSheet(DialogSystemEditor.RelativePath, USSClassName);
+            styleSheets.Add(styleSheet);
         }
         
         void OnObjectFieldValueChanged(ChangeEvent<Object> evt)

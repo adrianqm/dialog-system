@@ -28,7 +28,7 @@
 
 .bookmark--mark-image {
     display: flex;
-    background-image: url('project://database/Assets/dialog-system/Runtime/Assets/bookmark.png?fileID=2800000&guid=59fc8e2babcce2a4380543a0d2c3314b&type=3#bookmark');
+    background-image: url('project://database/Assets/dialog-system/Editor/Assets/bookmark.png?fileID=2800000&guid=59fc8e2babcce2a4380543a0d2c3314b&type=3#bookmark');
     width: 27px;
     flex-direction: row;
     min-width: 14px;
@@ -41,7 +41,7 @@
 
 .bookmark--mark-image-selected {
     display: flex;
-    background-image: url('project://database/Assets/dialog-system/Runtime/Assets/bookmark_filled.png?fileID=2800000&guid=84e64485b2dbaa0469ac8c8a55d6227f&type=3#bookmark_filled');
+    background-image: url('project://database/Assets/dialog-system/Editor/Assets/bookmark_filled.png?fileID=2800000&guid=84e64485b2dbaa0469ac8c8a55d6227f&type=3#bookmark_filled');
     width: 27px;
     flex-direction: row;
     min-width: 14px;

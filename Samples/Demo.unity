@@ -1898,9 +1898,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8eb2769172b295746bf3d4425455e883, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  group: {fileID: 89216071}
-  tmp: {fileID: 1001991425}
-  changeLocale: {fileID: 8309756027560176996, guid: c41d12fc6fbafc94a8e9d68e475227b2, type: 3}
 --- !u!1 &1054007735
 GameObject:
   m_ObjectHideFlags: 0

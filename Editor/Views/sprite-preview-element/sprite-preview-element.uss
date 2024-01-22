@@ -1,0 +1,13 @@
+.sprite-preview-element {
+    width: 40px;
+    height: 40px;
+}
+
+.sprite-preview-element > .unity-image {
+    flex-grow: 1;
+}
+
+.sprite-preview-element .unity-object-field__input {
+    visibility: hidden;
+    display: none;
+}

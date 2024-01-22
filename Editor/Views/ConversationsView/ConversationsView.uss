@@ -108,7 +108,7 @@ GridBackground {
 }
 
 .boomark-image {
-    background-image: url('project://database/Assets/dialog-system/Runtime/Assets/bookmark_filled.png?fileID=2800000&guid=84e64485b2dbaa0469ac8c8a55d6227f&type=3#bookmark_filled');
+    background-image: url('project://database/Assets/dialog-system/Editor/Assets/bookmark_filled.png?fileID=2800000&guid=84e64485b2dbaa0469ac8c8a55d6227f&type=3#bookmark_filled');
     padding-top: 5px;
     padding-right: 0;
     padding-bottom: 5px;

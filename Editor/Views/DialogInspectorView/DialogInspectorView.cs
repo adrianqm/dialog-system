@@ -413,7 +413,7 @@ private StringTableCollection _collection;
         }
         else
         {
-            _actorSprite.value = Resources.Load<Sprite>( "unknown-person" );
+            _actorSprite.value = UIToolkitLoader.LoadSprite(DialogSystemEditor.RelativePath, "unknown-person.jpg");
             _actorName.text = "Unknown Dialog Actor";
         }
         _findActorButton.clickable = new Clickable(() =>
