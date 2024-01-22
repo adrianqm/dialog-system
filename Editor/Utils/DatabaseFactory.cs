@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Blackboard.Utils.Editor;
 using UnityEditor;
 using UnityEngine;
 
@@ -19,8 +20,8 @@ namespace AQM.Tools
             
             if (!Application.isPlaying)
             {
-                string dbPath ="Assets/dialog-system/Runtime/Scriptable Objects/Data/"+title+".asset";
-                AssetDatabase.CreateAsset(db, dbPath);
+                string dbPath ="Assets/SO/Dialog Designer/"+title+".asset";
+                ScriptableObjectUtility.SaveAsset(db,dbPath);
                 db.guid = AssetDatabase.AssetPathToGUID(dbPath);
                 
                 //Create Conversations

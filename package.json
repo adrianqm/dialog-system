@@ -1,6 +1,6 @@
 {
     "name": "com.aqm.dialogdesigner",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "displayName": "DDesigner",
     "description": "Advanced Dialog Designer for Unity with visual graph tool.",
     "unity": "2019.3",
