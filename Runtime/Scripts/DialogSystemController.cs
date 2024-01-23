@@ -17,6 +17,7 @@ namespace AQM.Tools
         public static Action<DSDialog> onShowNewDialog;
         public static Action<DSChoice> onShowNewChoice;
         public static Action<DSChoice,float> onShowNewChoiceInTime;
+        public static Action onConversationStarted;
         public static Action onConversationEnded;
         
         [SerializeField] private DialogSystemDatabase dialogSystemDatabase;
@@ -97,7 +98,7 @@ namespace AQM.Tools
             DSNode nextNode = dialogSystemDatabase.StartConversation(_currentConversation);
             if (nextNode != null)
             {
-                InputManager.Instance.ToogleActionMap(InputManager.Instance.playerInputActions.UI);
+                onConversationStarted?.Invoke();
                 _currentConversation.onEndConversation += EndConversation;
             
 #if LOCALIZATION_EXIST
@@ -181,7 +182,6 @@ namespace AQM.Tools
 
         private void EndConversation()
         {
-            InputManager.Instance.ToogleActionMap(InputManager.Instance.playerInputActions.Player);
             DisableInputKeys();
             _currentConversation.onEndConversation -= EndConversation;
             _currentConversation = null;

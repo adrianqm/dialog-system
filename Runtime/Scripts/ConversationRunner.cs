@@ -16,6 +16,7 @@ namespace AQM.Tools
             if (!conversation) return;
             DDEvents.onStartConversation?.Invoke(conversation);
             DDEvents.actorConversationStarted?.Invoke(lookAtPoint);
+            InputManager.Instance.ToogleActionMap(InputManager.Instance.playerInputActions.UI);
         }
     }
 }

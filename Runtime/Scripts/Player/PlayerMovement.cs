@@ -35,6 +35,8 @@ namespace AQM.Tools
             _rb = GetComponent<Rigidbody>();
             _rb.freezeRotation = true;
             _inputControls = InputManager.Instance.playerInputActions.Player.Movement;
+            DialogSystemController.onConversationStarted += OnStartConversation;
+            DialogSystemController.onConversationEnded+= OnConversationEnded;
         }
 
         private void Update()
@@ -104,6 +106,22 @@ namespace AQM.Tools
         private void OnDisable()
         {
             sprint.action.Disable();
+        }
+
+        private void OnStartConversation()
+        {
+            InputManager.Instance.ToogleActionMap(InputManager.Instance.playerInputActions.UI);
+        }
+        
+        private void OnConversationEnded()
+        {
+            InputManager.Instance.ToogleActionMap(InputManager.Instance.playerInputActions.Player);
+        }
+
+        private void OnDestroy()
+        {
+            DialogSystemController.onConversationStarted -= OnStartConversation;
+            DialogSystemController.onConversationEnded-= OnConversationEnded;
         }
     }
 }
