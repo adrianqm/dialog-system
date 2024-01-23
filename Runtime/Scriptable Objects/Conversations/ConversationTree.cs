@@ -340,7 +340,14 @@ namespace AQM.Tools
         public NodeSO CreateNode(DialogSystemDatabase db, NodeFactory.NodeType type, Vector2 position, bool registerCreated = true)
         {
             NodeSO node = NodeFactory.CreateNode(type, position);
-
+            
+            // Set default actor if null
+            if (defaultActor != null && node is ConversationNodeSO conversationNode)
+            {
+                conversationNode.actor = defaultActor;
+                EditorUtility.SetDirty(conversationNode);
+            }
+            
             if (registerCreated)
             {
                 Undo.RecordObject(this, "Conversation Tree (CreateNode)");

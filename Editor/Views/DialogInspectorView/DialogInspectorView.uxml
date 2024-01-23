@@ -32,7 +32,7 @@
                         <ui:VisualElement name="blanck-space" class="choiceDeleteBtn" />
                         <ui:VisualElement style="flex-grow: 1;">
                             <ui:Foldout text="Default" name="default-choice-foldout" value="false">
-                                <Blackboard.Editor.Commands.CommandListView name="default-action-list" class="condition-list" />
+                                <Blackboard.Editor.Commands.CommandListView name="default-action-list" collapsed-by-default="true" class="condition-list" />
                             </ui:Foldout>
                         </ui:VisualElement>
                     </ui:VisualElement>

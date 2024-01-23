@@ -83,6 +83,7 @@ private StringTableCollection _collection;
         {
             node.actor = actor;
             EditorUtility.SetDirty(node);
+            _nodeView.SetDefaultActorIfNotExist(actor);
         });
 #if LOCALIZATION_EXIST
         if (!DSData.instance.tableCollection || !DSData.instance.database.defaultLocale)
@@ -106,6 +107,7 @@ private StringTableCollection _collection;
         {
             node.actor = actor;
             EditorUtility.SetDirty(node);
+            _nodeView.SetDefaultActorIfNotExist(actor);
         });
 #if LOCALIZATION_EXIST
         if (!DSData.instance.tableCollection || !DSData.instance.database.defaultLocale)
@@ -335,7 +337,7 @@ private StringTableCollection _collection;
             actionsListView.AddToClassList("condition-list");
             actionsListView.SaveAsSubAssetOf(_currentDatabase);
             actionsListView.PopulateView(choice.actionList);
-            actionsListView.SetHeaderTitle("On Selected");
+            actionsListView.SetHeaderTitle("On Choice Selected");
             
             translatedText.style.marginRight = 3;
             translatedText.AddToClassList("choice");

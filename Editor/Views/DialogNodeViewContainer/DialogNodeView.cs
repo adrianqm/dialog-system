@@ -70,25 +70,24 @@ public class DialogNodeView : NodeView
         RefreshExpandedState();
     }
 
+    public void SetDefaultActorIfNotExist(Actor actor)
+    {
+        if (_currentConversationTree.defaultActor == null)
+        {
+            _currentConversationTree.defaultActor = actor;
+            EditorUtility.SetDirty(_currentConversationTree);
+        }
+    }
+
     private void SetUpTopData(ConversationNodeSO conversationNode)
     {
-        // Set default if null
-        if (!conversationNode.actor && _currentConversationTree.defaultActor != null)
-        {
-            conversationNode.actor = _currentConversationTree.defaultActor;
-            EditorUtility.SetDirty(conversationNode);
-        }
         GetAndBindActor(conversationNode.actor,(actor) =>
         {
             conversationNode.actor = actor;
             EditorUtility.SetDirty(conversationNode);
             
-            //Set defaultActor
-            if (_currentConversationTree.defaultActor == null)
-            {
-                _currentConversationTree.defaultActor = actor;
-                EditorUtility.SetDirty(_currentConversationTree);
-            }
+            SetDefaultActorIfNotExist(actor);
+            
             onNodeSelected.Invoke(this);
             _onClearSelection.Invoke();
         });
