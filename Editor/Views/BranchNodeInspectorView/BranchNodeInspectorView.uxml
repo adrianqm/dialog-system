@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/dialog-system/Editor/Views/BranchNodeInspectorView/BranchNodeInspectorView.uss?fileID=7433441132597879392&amp;guid=a1ead808a2a82af49be64c3cbaa5d568&amp;type=3#BranchNodeInspectorView" />
+    <ui:Label tabindex="-1" text="Branch  Inspector" display-tooltip-when-elided="true" name="titleInspector" enable-rich-text="false" parse-escape-sequences="false" style="height: 30px; -unity-text-align: middle-center; background-color: rgb(24, 24, 29);" />
+    <ui:VisualElement name="content" style="flex-grow: 1; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 10px;">
+        <ui:VisualElement name="requirements-container" style="flex-grow: 1;">
+            <ui:Label tabindex="-1" text="Branch Requirements" display-tooltip-when-elided="true" name="requirementsLabel" style="margin-right: 0; padding-right: 1px; -unity-text-align: upper-center;" />
+            <Blackboard.Editor.Requirement.RequirementsListView name="requirements" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

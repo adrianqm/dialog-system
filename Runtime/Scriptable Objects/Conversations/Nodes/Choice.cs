@@ -19,9 +19,13 @@ namespace AQM.Tools
         public bool CheckConditions()
         {
             Requirements requirementsList = new Requirements(requirements);
-            return requirementsList.AreFulfilled;
+            return requirements.conditions.Count == 0 || requirementsList.AreFulfilled;
         }
-        
+
+        public void OnSelected()
+        {
+            actionList.Execute();
+        }
 
         public Choice Clone()
         {
@@ -41,6 +45,7 @@ namespace AQM.Tools
             requirements = ScriptableObject.CreateInstance<RequirementsSO>();
             requirements.Init(guid);
             actionList = ScriptableObject.CreateInstance<CommandList>();
+            actionList.Init(guid);
         }
         
         public void SaveAs(DialogSystemDatabase db)
@@ -49,6 +54,7 @@ namespace AQM.Tools
             AssetDatabase.AddObjectToAsset(requirements,db);
             foreach (ConditionSO cond in requirements.conditions)
                 AssetDatabase.AddObjectToAsset(cond, db);
+            AssetDatabase.AddObjectToAsset(actionList,db);
             foreach (Command command in actionList.commands)
                 AssetDatabase.AddObjectToAsset(command, db);
             port.SaveAs(db);

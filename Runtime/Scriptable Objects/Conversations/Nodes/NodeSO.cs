@@ -33,6 +33,7 @@ namespace AQM.Tools
         }
         
         public virtual bool CheckConditions() { return true; }
+        public virtual void OnCompleteNode() {}
         
         public virtual DSNode GetData() { return null; }
         public abstract NodeSO Clone();

@@ -84,15 +84,20 @@ namespace AQM.Tools
             DialogNodeSO dialogNodeSo = runningNode as DialogNodeSO;
             if (dialogNodeSo)
             {
+                dialogNodeSo.OnCompleteNode();
                 nextNode = CheckNextChildMove(dialogNodeSo.outputPorts[0].targetNodes);
             }
             
             ChoiceNodeSO choiceNodeSo = runningNode as ChoiceNodeSO;
             if (choiceNodeSo && option >= 0)
             {
+                choiceNodeSo.OnCompleteNode();
+                choiceNodeSo.choices[option].OnSelected();
                 nextNode = CheckNextChildMove(choiceNodeSo.choices[option].port.targetNodes);
             }else if (choiceNodeSo && option == -1)
             {
+                choiceNodeSo.OnCompleteNode();
+                choiceNodeSo.OnDefaultSelected();
                 nextNode = CheckNextChildMove(choiceNodeSo.defaultPort.targetNodes);
             }
 
@@ -111,7 +116,7 @@ namespace AQM.Tools
         private DSNode CheckNextChildMove(List<NodeSO> children)
         {
             NodeSO childToMove = null;
-            if (children.Count > 0 )
+            if (children.Count > 0 && children[0].CheckConditions())
             {
                 runningNode.NodeState = NodeSO.State.Visited;
                 childToMove = SetRunningNode(children[0]);

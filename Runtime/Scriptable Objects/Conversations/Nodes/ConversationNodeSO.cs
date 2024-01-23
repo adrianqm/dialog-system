@@ -16,9 +16,15 @@ namespace AQM.Tools
         public override bool CheckConditions()
         {
             Requirements requirementsList = new Requirements(requirements);
-            return requirementsList.AreFulfilled;
+            return requirements.conditions.Count == 0 || requirementsList.AreFulfilled;
         }
-        
+
+        public override void OnCompleteNode()
+        {
+            base.OnCompleteNode();
+            actionList.Execute();
+        }
+
         public override NodeSO Clone()
         {
             ConversationNodeSO node = Instantiate(this);
@@ -32,6 +38,7 @@ namespace AQM.Tools
             requirements = ScriptableObject.CreateInstance<RequirementsSO>();
             requirements.Init(guid);
             actionList = ScriptableObject.CreateInstance<CommandList>();
+            actionList.Init(guid);
         }
         
       	private void OnEnable()
@@ -62,6 +69,7 @@ namespace AQM.Tools
             AssetDatabase.AddObjectToAsset(requirements,db);
             foreach (ConditionSO cond in requirements.conditions)
                 AssetDatabase.AddObjectToAsset(cond, db);
+            AssetDatabase.AddObjectToAsset(actionList,db);
             foreach (Command action in actionList.commands)
                 AssetDatabase.AddObjectToAsset(action, db);
         }

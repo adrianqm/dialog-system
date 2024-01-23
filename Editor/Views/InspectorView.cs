@@ -20,10 +20,23 @@ public class InspectorView : VisualElement
   private void CreateDialogInspector(NodeView nodeView)
   {
       ClearInspector();
-      DialogInspectorView container = new DialogInspectorView(nodeView);
-      Add(container);
-      _currentNodeView = nodeView;
-      _currentContainer = container;
+      if (nodeView is DialogNodeView)
+      {
+        DialogInspectorView container = new DialogInspectorView(nodeView);
+        Add(container);
+        _currentNodeView = nodeView;
+        _currentContainer = container;
+      }else if (nodeView is BranchNodeView)
+      {
+          BranchNodeSO branchNode = nodeView.node as BranchNodeSO;
+          if (branchNode)
+          {
+              BranchNodeInspectorView container = new BranchNodeInspectorView(branchNode);
+              Add(container);
+              _currentNodeView = nodeView;
+              _currentContainer = container;
+          }
+      }
   }
 
   internal void ShowConversationInspector(ConversationTree conversationTree)

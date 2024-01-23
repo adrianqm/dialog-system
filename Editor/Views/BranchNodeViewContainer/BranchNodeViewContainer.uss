@@ -3,7 +3,7 @@
     align-items: stretch;
     justify-content: flex-start;
     min-height: 58px;
-    min-width: 175px;
+    min-width: 100px;
     display: flex;
 }
 
@@ -24,8 +24,11 @@
     padding-left: 7px;
     min-height: 46px;
     align-items: stretch;
-    max-height: 99px;
     min-width: 265px;
+    flex-direction: column;
+    align-self: auto;
+    flex-shrink: 1;
+    max-height: 51px;
 }
 
 .branch-image {

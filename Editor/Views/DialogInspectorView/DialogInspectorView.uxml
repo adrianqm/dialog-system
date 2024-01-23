@@ -27,6 +27,16 @@
                 <ui:Label tabindex="-1" text="Choices" display-tooltip-when-elided="true" name="choices-label" style="-unity-text-align: upper-center; flex-direction: row; padding-right: 1px;" />
                 <ui:VisualElement name="choices-add" style="flex-grow: 1; flex-direction: row; height: 20px; align-self: auto; align-items: center; margin-bottom: 10px;" />
                 <ui:VisualElement name="choices-foldout" />
+                <ui:VisualElement name="default-choice" style="flex-grow: 1;">
+                    <ui:VisualElement name="choice-container" class="choiceDataContainer" style="flex-grow: 1;">
+                        <ui:VisualElement name="blanck-space" class="choiceDeleteBtn" />
+                        <ui:VisualElement style="flex-grow: 1;">
+                            <ui:Foldout text="Default" name="default-choice-foldout" value="false">
+                                <Blackboard.Editor.Commands.CommandListView name="default-action-list" class="condition-list" />
+                            </ui:Foldout>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:ScrollView>

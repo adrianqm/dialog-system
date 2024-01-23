@@ -1,0 +1,22 @@
+#requirements-container {
+    padding-top: 7px;
+    padding-right: 7px;
+    padding-bottom: 7px;
+    padding-left: 7px;
+    background-color: rgb(24, 24, 29);
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.unity-list-view__reorderable-handle {
+    padding-top: 10px;
+}
+
+.unity-list-view__reorderable-item__container {
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+}

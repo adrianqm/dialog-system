@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using AQM.Tools;
+using Blackboard.Commands;
+using Blackboard.Editor.Commands;
 using Blackboard.Editor.Requirement;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
@@ -136,6 +138,11 @@ private StringTableCollection _collection;
         }
 
         CheckOutputRemaining();
+
+        CommandListView defaultChoiceActionList = this.Q<CommandListView>("default-action-list");
+        defaultChoiceActionList.SaveAsSubAssetOf(_currentDatabase);
+        defaultChoiceActionList.PopulateView(node.defaultActionList);
+        defaultChoiceActionList.SetHeaderTitle("On Default Selected");
         
         // Register New Callback
         addButton.clickable = new Clickable(() =>
@@ -297,9 +304,9 @@ private StringTableCollection _collection;
     {
         localizationContainer.Unbind();
         localizationContainer.Clear();
-        string tableGuid = choice != null ? choice.guid : nodeSo.guid;
         
 #if LOCALIZATION_EXIST
+        string tableGuid = choice != null ? choice.guid : nodeSo.guid;
         StringTable table = null;
         string translation = "";
         if (DSData.instance.tableCollection && DSData.instance.database.defaultLocale)
@@ -323,16 +330,19 @@ private StringTableCollection _collection;
             requirementsListView.PopulateView(choice.requirements);
             
             // Add Choice Actions
-            //ActionListView actionsListView = new ActionListView();
-            //actionsListView.AddToClassList("require-list");
-            //actionsListView.SaveAsSubAssetOf(_currentDatabase);
-            //actionsListView.Populate(choice.actionlist);
+            CommandListView actionsListView = new CommandListView();
+            actionsListView.collapdseByDefault = true;
+            actionsListView.AddToClassList("condition-list");
+            actionsListView.SaveAsSubAssetOf(_currentDatabase);
+            actionsListView.PopulateView(choice.actionList);
+            actionsListView.SetHeaderTitle("On Selected");
             
             translatedText.style.marginRight = 3;
             translatedText.AddToClassList("choice");
             var foldOut = new Foldout{text= "-", value = false};
             foldOut.Add(translatedText);
             foldOut.Add(requirementsListView);
+            foldOut.Add(actionsListView);
             localizationContainer.Add(foldOut);
             
             VisualElement toggleInputVe = foldOut.Q(className: "unity-foldout__input");
@@ -354,11 +364,20 @@ private StringTableCollection _collection;
                 requirementsListView.AddToClassList("condition-list");
                 requirementsListView.SaveAsSubAssetOf(_currentDatabase);
                 requirementsListView.PopulateView(conversationNode.requirements);
+                
+                // Add Choice Actions
+                CommandListView actionsListView = new CommandListView();
+                actionsListView.collapdseByDefault = true;
+                actionsListView.AddToClassList("condition-list");
+                actionsListView.SaveAsSubAssetOf(_currentDatabase);
+                actionsListView.PopulateView(conversationNode.actionList);
+                actionsListView.SetHeaderTitle("On Complete");
             
                 translatedText.style.marginRight = 0;
                 translatedText.AddToClassList("field");
                 localizationContainer.Add(translatedText);
                 localizationContainer.Add(requirementsListView);
+                localizationContainer.Add(actionsListView);
             }
         }
         

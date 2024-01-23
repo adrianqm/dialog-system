@@ -92,17 +92,19 @@ namespace AQM.Tools
         
         private void StartConversation(ConversationTree conversationTree)
         {
-            InputManager.Instance.ToogleActionMap(InputManager.Instance.playerInputActions.UI);
             _currentConversation = conversationTree;
             _currentChoiceNode = null;
-            _currentConversation.onEndConversation += EndConversation;
-            
-            #if LOCALIZATION_EXIST
-                LocalizationSettings.SelectedLocaleChanged += ChangedLocale;
-            #endif
-
             DSNode nextNode = dialogSystemDatabase.StartConversation(_currentConversation);
-            HandleNextNode(nextNode);
+            if (nextNode != null)
+            {
+                InputManager.Instance.ToogleActionMap(InputManager.Instance.playerInputActions.UI);
+                _currentConversation.onEndConversation += EndConversation;
+            
+#if LOCALIZATION_EXIST
+                LocalizationSettings.SelectedLocaleChanged += ChangedLocale;
+#endif
+                HandleNextNode(nextNode);
+            }
         }
         
     #if LOCALIZATION_EXIST

@@ -25,8 +25,7 @@ public class BranchNodeView  : NodeView
         BranchNodeSO branchSo = nodeSo as BranchNodeSO;
         if (branchSo)
         {
-            RequirementsListView requirementsListView = this.Q<RequirementsListView>();
-            requirementsListView.SaveAsSubAssetOf(DSData.instance.database);
+            SimplifiedRequirementsListView requirementsListView = this.Q<SimplifiedRequirementsListView>();
             requirementsListView.PopulateView(branchSo.branch.requirements);
         }
     }

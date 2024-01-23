@@ -5,6 +5,6 @@
             <ui:Label tabindex="-1" text="Branch" parse-escape-sequences="true" display-tooltip-when-elided="true" name="title" class="title" />
             <ui:VisualElement name="branch-image" class="branch-image" />
         </ui:VisualElement>
-        <Blackboard.Editor.Requirement.RequirementsListView collapsed-by-default="true" class="requirement-list" />
+        <Blackboard.Editor.Requirement.SimplifiedRequirementsListView class="requirement-list" />
     </ui:VisualElement>
 </ui:UXML>

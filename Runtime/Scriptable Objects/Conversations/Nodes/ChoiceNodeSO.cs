@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Blackboard.Commands;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,6 +12,12 @@ namespace AQM.Tools
     {
         public List<Choice> choices = new ();
         public PortSO defaultPort;
+        public CommandList defaultActionList;
+
+        public void OnDefaultSelected()
+        {
+            defaultActionList.Execute();
+        }
         
         public override DSNode GetData()
         {
@@ -38,6 +45,8 @@ namespace AQM.Tools
             base.Init(position);
             name = $"ChoiceNode-{guid}";
             CreateDefaultOutputPort();
+            defaultActionList = ScriptableObject.CreateInstance<CommandList>();
+            defaultActionList.Init(guid);
         }
         
         private void CreateDefaultOutputPort()
@@ -86,12 +95,24 @@ namespace AQM.Tools
             
             EditorUtility.SetDirty(this);
         }
+        
+        public override void SaveAs(DialogSystemDatabase db)
+        {
+            base.SaveAs(db);
+            AssetDatabase.AddObjectToAsset(defaultActionList,db);
+            foreach (Command action in defaultActionList.commands)
+                AssetDatabase.AddObjectToAsset(action, db);
+        }
 
         public override void OnDestroy()
         {
             //EditorUtility.SetDirty(this);
             foreach (Choice choice in choices)
                 Undo.DestroyObjectImmediate(choice);
+            
+            Undo.DestroyObjectImmediate(defaultActionList);
+            foreach (Command c in defaultActionList.commands)
+                Undo.DestroyObjectImmediate(c);
             base.OnDestroy();
         }
 #endif
