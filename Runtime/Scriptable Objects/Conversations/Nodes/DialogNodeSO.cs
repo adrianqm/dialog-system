@@ -10,7 +10,7 @@ namespace AQM.Tools
     {
         public override DSNode GetData()
         {
-            return new DSDialog(actor, message);
+            return new DSDialog(actor, message, delayTime);
         }
         
 #if UNITY_EDITOR

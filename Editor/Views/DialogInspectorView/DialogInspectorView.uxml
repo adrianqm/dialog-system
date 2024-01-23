@@ -14,7 +14,7 @@
                     <ui:Button display-tooltip-when-elided="true" name="find-actor-button" class="find-actor-button" style="border-left-color: rgba(0, 0, 0, 0); border-right-color: rgba(0, 0, 0, 0); border-top-color: rgba(0, 0, 0, 0); border-bottom-color: rgba(0, 0, 0, 0); background-color: rgba(188, 188, 188, 0); margin-right: 0; width: 19px;" />
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="messageContainer" class="hidden-class" style="flex-grow: 0; background-color: rgb(24, 24, 29); padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 0; border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; margin-bottom: 10px;">
+            <ui:VisualElement name="messageContainer" class="hidden-class" style="flex-grow: 0; background-color: rgb(24, 24, 29); padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 2px; border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; margin-bottom: 10px;">
                 <ui:Label tabindex="-1" text="Message" display-tooltip-when-elided="true" name="message-label" style="-unity-text-align: upper-center; margin-right: 0; padding-right: 1px;" />
                 <ui:VisualElement name="message-guid-container" class="message-guid-container hidden-class" style="top: 3px; right: 5px;">
                     <ui:Label tabindex="-1" text="ID" parse-escape-sequences="true" display-tooltip-when-elided="true" name="message-guid-id" focusable="false" class="message-guid-id" />
@@ -37,6 +37,14 @@
                         </ui:VisualElement>
                     </ui:VisualElement>
                 </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="delayContainer" class="hidden-class" style="flex-grow: 0; background-color: rgb(24, 24, 29); padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; margin-bottom: 10px;">
+                <ui:VisualElement name="time-label-container" style="flex-grow: 1; flex-direction: row;">
+                    <ui:Label tabindex="-1" text="Delay" display-tooltip-when-elided="true" name="time-label" style="margin-right: 4px;" />
+                    <ui:VisualElement name="clock-image" style="background-image: url(&apos;project://database/Assets/dialog-system/Editor/Assets/clock.png?fileID=21300000&amp;guid=ecdb41de39210164497f8ce6cebad783&amp;type=3#clock&apos;); width: 12px; height: 12px; min-width: 12px; padding-top: 3px; margin-top: 1px; margin-left: 1px;" />
+                </ui:VisualElement>
+                <ui:FloatField label="Time" value="42,2" name="time-float" />
+                <ui:Label tabindex="-1" text="sec" parse-escape-sequences="true" display-tooltip-when-elided="true" name="sec-label" style="margin-right: 5px; font-size: 11px;" />
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:ScrollView>

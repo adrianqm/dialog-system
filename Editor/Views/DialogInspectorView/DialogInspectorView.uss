@@ -340,3 +340,29 @@
     flex-grow: 1;
     margin-left: 0;
 }
+
+#delayContainer {
+    flex-direction: row;
+    align-self: auto;
+    align-items: center;
+}
+
+#time-label {
+    padding-left: 5px;
+}
+
+#time-float {
+    padding-top: 5px;
+    padding-right: 0;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    max-width: 109px;
+}
+
+#time-float .unity-label {
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-bottom: 7px;
+    padding-left: 5px;
+    display: none;
+}

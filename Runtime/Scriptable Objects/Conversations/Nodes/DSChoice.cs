@@ -12,7 +12,7 @@ namespace AQM.Tools
         public string Message => _message;
         public List<string> Choices => _choices;
 
-        public DSChoice(Actor actor, string message, List<string> choices) : base(actor)
+        public DSChoice(Actor actor, string message, List<string> choices, float delayTime) : base(actor,delayTime)
         {
             _message = message;
             _choices = choices;

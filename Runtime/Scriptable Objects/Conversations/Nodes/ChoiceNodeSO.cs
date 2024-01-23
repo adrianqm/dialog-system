@@ -29,7 +29,7 @@ namespace AQM.Tools
                     choicesList.Add(choice.choiceMessage);
                 }
             }
-            return new DSChoice(actor,message,choicesList);
+            return new DSChoice(actor,message,choicesList, delayTime);
         }
         
         public override NodeSO Clone()

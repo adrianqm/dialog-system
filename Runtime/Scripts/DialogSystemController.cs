@@ -145,7 +145,16 @@ namespace AQM.Tools
 
         private void HandleNextNode(DSNode nextNode)
         {
-            if (nextNode is DSChoice choiceNode)
+            if(nextNode == null) return;
+            if (nextNode.DelayTime > 0)
+            {
+                StartCoroutine(ShowDialogWithDelay(nextNode));
+            }else ShowNode(nextNode);
+        }
+
+        private void ShowNode(DSNode node)
+        {
+            if (node is DSChoice choiceNode)
             {
                 Cursor.visible = true;
                 Cursor.lockState = CursorLockMode.None;
@@ -156,11 +165,17 @@ namespace AQM.Tools
                 if (hasNoResponse)onShowNewChoiceInTime?.Invoke(choiceNode,noResponseTime);
                 else onShowNewChoice?.Invoke(choiceNode);
             }
-            else if(nextNode is DSDialog dialogNode)
+            else if(node is DSDialog dialogNode)
             {
                 EnableInputKeys();
                 onShowNewDialog?.Invoke(dialogNode);
             }
+        }
+
+        private IEnumerator ShowDialogWithDelay(DSNode node)
+        {
+            yield return new WaitForSeconds(node.DelayTime);
+            ShowNode(node);
         }
         
         private void OnChoiceSelected(int option)

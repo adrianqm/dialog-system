@@ -1585,7 +1585,7 @@ MonoBehaviour:
   - {fileID: 5697762415176839361, guid: f3e6b50850206464287b158c92e4cb08, type: 3}
   dialogTimer: 0
   dialogTime: 2
-  hasNoResponse: 1
+  hasNoResponse: 0
   noResponseTime: 4
 --- !u!1 &1001991423
 GameObject:
