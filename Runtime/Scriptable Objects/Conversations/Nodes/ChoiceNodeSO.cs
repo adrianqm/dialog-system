@@ -63,8 +63,7 @@ namespace AQM.Tools
             Undo.RecordObject(this, "Choice Node (CreateChoice)");
             choices ??= new List<Choice>();
             choices.Add(choice);
-            if (!Application.isPlaying)
-                choice.SaveAs(db);
+            choice.SaveAs(db);
             
             Undo.RegisterCreatedObjectUndo(choice, "Choice Node (CreateChoice)");
             AssetDatabase.SaveAssets();

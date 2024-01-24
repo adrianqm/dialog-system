@@ -159,9 +159,6 @@ namespace AQM.Tools
         {
             if (node is DSChoice choiceNode)
             {
-                Cursor.visible = true;
-                Cursor.lockState = CursorLockMode.None;
-                
                 _currentChoiceNode = choiceNode;
                 _currentChoiceNode.onChoiceSelected += OnChoiceSelected;
                 
@@ -187,8 +184,6 @@ namespace AQM.Tools
         {
             if (_currentChoiceNode != null)
             {
-                Cursor.visible = false;
-                Cursor.lockState = CursorLockMode.Locked;
                 _currentChoiceNode.onChoiceSelected -= OnChoiceSelected;
                 GetNextNode(option);
             }
@@ -262,6 +257,7 @@ namespace AQM.Tools
         {
             DDEvents.onStartConversation -= StartConversation;
             DDEvents.onGetNextNode -= GetNextNode;
+            if(_dialogCo != null) StopCoroutine(_dialogCo);
     #if LOCALIZATION_EXIST
             LocalizationSettings.SelectedLocaleChanged -= ChangedLocale;
     #endif

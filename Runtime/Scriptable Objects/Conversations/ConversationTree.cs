@@ -356,8 +356,7 @@ namespace AQM.Tools
             nodes ??= new List<NodeSO>();
             nodes.Add(node);
             
-            if (!Application.isPlaying)
-             node.SaveAs(db);
+            node.SaveAs(db);
 
             if (registerCreated)
             {
@@ -395,8 +394,7 @@ namespace AQM.Tools
                 bookmarks.Add(bookmark);
             }
             
-            if (!Application.isPlaying)
-                bookmark.SaveAs(db);
+            bookmark.SaveAs(db);
 
             if (registerCreated)
             {

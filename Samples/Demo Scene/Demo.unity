@@ -1585,8 +1585,8 @@ MonoBehaviour:
   - {fileID: 5697762415176839361, guid: f3e6b50850206464287b158c92e4cb08, type: 3}
   dialogTimer: 0
   dialogTime: 2
-  hasNoResponse: 0
-  noResponseTime: 4
+  hasNoResponse: 1
+  noResponseTime: 3
 --- !u!1 &1001991423
 GameObject:
   m_ObjectHideFlags: 0
@@ -2118,7 +2118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 536963a12b43a1341811c20656f01c01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  conversation: {fileID: -5407919614674469963, guid: 1e60489184903134ca2cf6bddc0eb08a, type: 2}
+  conversation: {fileID: 8522782652231559613, guid: 1e60489184903134ca2cf6bddc0eb08a, type: 2}
   lookAtPoint: {fileID: 819760954}
 --- !u!1 &1122216686
 GameObject:

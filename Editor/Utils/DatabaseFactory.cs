@@ -18,19 +18,17 @@ namespace AQM.Tools
             db.conversationGroups = new List<ConversationGroup>();
             db.actors = new List<Actor>();
             
-            if (!Application.isPlaying)
-            {
-                string dbPath ="Assets/SO/Dialog Designer/"+title+".asset";
-                ScriptableObjectUtility.SaveAsset(db,dbPath);
-                db.guid = AssetDatabase.AssetPathToGUID(dbPath);
-                
-                //Create Conversations
-                ConversationGroup conGroup = db.CreateConversationGroup("Default Group");
-                conGroup.CreateConversation(db);
-                
-                //Create Actors
-                db.CreateActor();
-            }
+            string dbPath ="Assets/SO/Dialog Designer/"+title+".asset";
+            ScriptableObjectUtility.SaveAsset(db,dbPath);
+            db.guid = AssetDatabase.AssetPathToGUID(dbPath);
+            
+            //Create Conversations
+            ConversationGroup conGroup = db.CreateConversationGroup("Default Group");
+            conGroup.CreateConversation(db);
+            
+            //Create Actors
+            db.CreateActor();
+            
             AssetDatabase.SaveAssets();
             return db;
         }

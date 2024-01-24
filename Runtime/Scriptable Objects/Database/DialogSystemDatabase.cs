@@ -86,10 +86,7 @@ namespace AQM.Tools
                     fromGroup.groups.Add(newGroup);
                 }
                 
-                if (!Application.isPlaying)
-                {
-                    AssetDatabase.AddObjectToAsset(newGroup,this);
-                }
+                AssetDatabase.AddObjectToAsset(newGroup,this);
                 AssetDatabase.SaveAssets();
             }
             return newGroup;
@@ -146,10 +143,7 @@ namespace AQM.Tools
             
             actors.Add(newActor);
                 
-            if (!Application.isPlaying)
-            {
-                AssetDatabase.AddObjectToAsset(newActor, this);
-            }
+            AssetDatabase.AddObjectToAsset(newActor, this);
             AssetDatabase.SaveAssets();
         }
         

@@ -25,10 +25,7 @@ namespace AQM.Tools
             tree.groups ??= new List<GroupNode>();
             tree.groups.Add(groupNode);
             
-            if (!Application.isPlaying)
-            {
-                AssetDatabase.AddObjectToAsset(groupNode,db);
-            }
+            AssetDatabase.AddObjectToAsset(groupNode,db);
             Undo.RegisterCreatedObjectUndo(groupNode, "Conversation Tree (CreateGroup)");
             AssetDatabase.SaveAssets();
             return groupNode;
@@ -64,11 +61,6 @@ namespace AQM.Tools
         }
         
         
-        private static void AddNodeToList(DialogSystemDatabase db,ConversationTree tree, NodeSO node)
-        {
-            
-        }
-        
         public static DialogNodeSO CreateDialogNodeCopy(DialogSystemDatabase db,ConversationTree tree,  System.Type type, Vector2 position, SerializableDialogNode nodeToCopy)
         {
             DialogNodeSO node = ScriptableObject.CreateInstance(type) as DialogNodeSO;
@@ -80,7 +72,6 @@ namespace AQM.Tools
             node.actor = db.actors.Find(actor => actor.guid == nodeToCopy.actorGuid);
             node.message = nodeToCopy.message;
 
-            AddNodeToList(db,tree,node);
 #if LOCALIZATION_EXIST
             LocalizationUtils.AddCopyKeyToCollection(node.guid,nodeToCopy.guid);
 #endif
@@ -104,8 +95,6 @@ namespace AQM.Tools
                 //Choice choice = ChoiceUtils.CreateChoice(db, node, serializableChoice.choiceMessage);
                 //choiceMap.Add(serializableChoice.guid, choice);
             }
-
-            AddNodeToList(db,tree,node);
 #if LOCALIZATION_EXIST
             LocalizationUtils.AddCopyKeyToCollection(node.guid,nodeToCopy.guid);
 #endif

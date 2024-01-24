@@ -68,11 +68,8 @@ namespace AQM.Tools
                 
                 //Undo.RecordObject(this, "Actors Tree (CreateActor)");
                 conversations.Add(newConversation);
+                AssetDatabase.AddObjectToAsset( newConversation,db);
                 
-                if (!Application.isPlaying)
-                {
-                    AssetDatabase.AddObjectToAsset( newConversation,db);
-                }
                 //Undo.RegisterCreatedObjectUndo(newActor, "Actors Tree (CreateActor)");
                 AssetDatabase.SaveAssets();
             }
