@@ -10,7 +10,7 @@ namespace AQM.Tools
     {
         public Actor actor;
         [TextArea] public string message;
-        [TextArea] public float delayTime;
+        public float delayTime;
         public RequirementsSO requirements;
         public CommandList actionList;
 

@@ -101,6 +101,7 @@ namespace AQM.Tools
             if (nextNode != null)
             {
                 onConversationStarted?.Invoke();
+                _currentConversation.onEndConversation -= EndConversation;
                 _currentConversation.onEndConversation += EndConversation;
             
 #if LOCALIZATION_EXIST
@@ -195,6 +196,7 @@ namespace AQM.Tools
         
         public void GetNextNode(int option = -2)
         {
+            if(_currentConversation == null) return;
             DSNode nextNode = _currentConversation.GetNextNode(option);
             HandleNextNode(nextNode);
         }
