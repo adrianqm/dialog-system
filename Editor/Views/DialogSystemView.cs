@@ -186,18 +186,18 @@ public class DialogSystemView : GraphView
         this._tree = tree;
 
         graphViewChanged -= OnGraphViewChanged;
-        serializeGraphElements -= CutCopyOperation;
-        unserializeAndPaste -= PasteOperation;
-        canPasteSerializedData -= CanPaste;
+        //serializeGraphElements -= CutCopyOperation;
+        //unserializeAndPaste -= PasteOperation;
+        //canPasteSerializedData -= CanPaste;
         _tree.onUpdateViewStates -= OnUpdateStates;
         UnregisterCallback<KeyDownEvent>(DisableRedoAction);
         
         DeleteElements(graphElements);
         
         graphViewChanged += OnGraphViewChanged;
-        serializeGraphElements += CutCopyOperation;
-        unserializeAndPaste += PasteOperation;
-        canPasteSerializedData += CanPaste;
+        //serializeGraphElements += CutCopyOperation;
+        //unserializeAndPaste += PasteOperation;
+        //canPasteSerializedData += CanPaste;
         _tree.onUpdateViewStates += OnUpdateStates;
         AddNodeSearchWindow();
         RegisterCallback<KeyDownEvent>(DisableRedoAction);
