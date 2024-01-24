@@ -17,6 +17,7 @@ namespace AQM.Tools
         public static Action<DSDialog> onShowNewDialog;
         public static Action<DSChoice> onShowNewChoice;
         public static Action<DSChoice,float> onShowNewChoiceInTime;
+        public static Action<DSNode> onNextMessageShown;
         public static Action onConversationStarted;
         public static Action onConversationEnded;
         
@@ -40,6 +41,7 @@ namespace AQM.Tools
         private void Awake()
         {
             DDEvents.onStartConversation += StartConversation;
+            DDEvents.onGetNextNode += GetNextNode;
         }
 
         #if LOCALIZATION_EXIST
@@ -164,11 +166,13 @@ namespace AQM.Tools
                 
                 if (hasNoResponse)onShowNewChoiceInTime?.Invoke(choiceNode,noResponseTime);
                 else onShowNewChoice?.Invoke(choiceNode);
+                onNextMessageShown?.Invoke(node);
             }
             else if(node is DSDialog dialogNode)
             {
                 EnableInputKeys();
                 onShowNewDialog?.Invoke(dialogNode);
+                onNextMessageShown?.Invoke(node);
             }
         }
 
@@ -189,7 +193,7 @@ namespace AQM.Tools
             }
         }
         
-        private void GetNextNode(int option = -2)
+        public void GetNextNode(int option = -2)
         {
             DSNode nextNode = _currentConversation.GetNextNode(option);
             HandleNextNode(nextNode);
@@ -255,6 +259,7 @@ namespace AQM.Tools
         private void OnDestroy()
         {
             DDEvents.onStartConversation -= StartConversation;
+            DDEvents.onGetNextNode -= GetNextNode;
     #if LOCALIZATION_EXIST
             LocalizationSettings.SelectedLocaleChanged -= ChangedLocale;
     #endif
