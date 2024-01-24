@@ -5,7 +5,6 @@ using UnityEditor;
 
 namespace AQM.Tools
 {
-    [System.Serializable]
     public class DialogNodeSO : ConversationNodeSO
     {
         public override DSNode GetData()

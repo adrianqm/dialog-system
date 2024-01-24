@@ -7,7 +7,6 @@ using UnityEngine;
 
 namespace AQM.Tools
 {
-    [System.Serializable]
     public class ChoiceNodeSO : ConversationNodeSO
     {
         public List<Choice> choices = new ();
