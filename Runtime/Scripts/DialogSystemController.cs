@@ -95,6 +95,11 @@ namespace AQM.Tools
         
         private void StartConversation(ConversationTree conversationTree)
         {
+            if (_currentConversation != null)
+            {
+                dialogSystemDatabase.ForceEndOfConversation(_currentConversation);
+                ResetEndData();
+            }
             _currentConversation = conversationTree;
             _currentChoiceNode = null;
             DSNode nextNode = dialogSystemDatabase.StartConversation(_currentConversation);
@@ -198,14 +203,20 @@ namespace AQM.Tools
 
         private void EndConversation()
         {
+            ResetEndData();
+            onConversationEnded?.Invoke();
+        }
+
+        private void ResetEndData()
+        {
             DisableInputKeys();
             _currentConversation.onEndConversation -= EndConversation;
             _currentConversation = null;
-            onConversationEnded?.Invoke();
             
-    #if LOCALIZATION_EXIST
+            
+#if LOCALIZATION_EXIST
             LocalizationSettings.SelectedLocaleChanged -= ChangedLocale;
-    #endif
+#endif
         }
 
         private void EnableInputKeys()
@@ -257,6 +268,7 @@ namespace AQM.Tools
         {
             DDEvents.onStartConversation -= StartConversation;
             DDEvents.onGetNextNode -= GetNextNode;
+            if(_currentConversation) _currentConversation.onEndConversation -= EndConversation;
             if(_dialogCo != null) StopCoroutine(_dialogCo);
     #if LOCALIZATION_EXIST
             LocalizationSettings.SelectedLocaleChanged -= ChangedLocale;

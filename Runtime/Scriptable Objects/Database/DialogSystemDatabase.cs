@@ -27,6 +27,11 @@ namespace AQM.Tools
             return conversationTree.StartConversation(this);
         }
         
+        public void ForceEndOfConversation(ConversationTree conversationTree)
+        {
+            conversationTree.ForceEndOfConversation();
+        }
+        
         public ConversationTree FindConversation(string conversationGuid)
         {
             foreach (var group in conversationGroups)

@@ -66,13 +66,22 @@ namespace AQM.Tools
 
             return null;
         }
+        
+        public void ForceEndOfConversation()
+        {
+            ResetEndData();
+        }
 
-        private void EndConversation()
+        private void ResetEndData()
         {
             conversationState = State.Completed;
             runningNode.NodeState = NodeSO.State.Finished;
             _finishedNode = runningNode;
             runningNode = null;
+        }
+        private void EndConversation()
+        {
+            ResetEndData();
             onEndConversation?.Invoke();
         }
         
@@ -85,7 +94,10 @@ namespace AQM.Tools
             if (dialogNodeSo)
             {
                 dialogNodeSo.OnCompleteNode();
-                nextNode = CheckNextChildMove(dialogNodeSo.outputPorts[0].targetNodes);
+                if (conversationState != State.Completed && runningNode == dialogNodeSo)
+                {
+                    nextNode = CheckNextChildMove(dialogNodeSo.outputPorts[0].targetNodes);
+                }
             }
             
             ChoiceNodeSO choiceNodeSo = runningNode as ChoiceNodeSO;
@@ -93,12 +105,18 @@ namespace AQM.Tools
             {
                 choiceNodeSo.OnCompleteNode();
                 choiceNodeSo.choices[option].OnSelected();
-                nextNode = CheckNextChildMove(choiceNodeSo.choices[option].port.targetNodes);
+                if (conversationState != State.Completed && runningNode == choiceNodeSo)
+                {
+                    nextNode = CheckNextChildMove(choiceNodeSo.choices[option].port.targetNodes);
+                }
             }else if (choiceNodeSo && option == -1)
             {
                 choiceNodeSo.OnCompleteNode();
                 choiceNodeSo.OnDefaultSelected();
-                nextNode = CheckNextChildMove(choiceNodeSo.defaultPort.targetNodes);
+                if (conversationState != State.Completed && runningNode == choiceNodeSo)
+                {
+                    nextNode = CheckNextChildMove(choiceNodeSo.defaultPort.targetNodes);
+                }
             }
 
             return nextNode;

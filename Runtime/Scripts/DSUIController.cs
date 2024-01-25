@@ -21,7 +21,6 @@ namespace AQM.Tools
             DialogSystemController.onShowNewChoice += ShowChoiceNode;
             DialogSystemController.onShowNewChoiceInTime += ShowChoiceNodeInTime;
             DialogSystemController.onConversationEnded += HideConversationUI;
-            DialogSystemController.onConversationEnded += OnConversationEnded;
             
             HideDialogContainer();
             HideChoiceContainer();
@@ -58,11 +57,6 @@ namespace AQM.Tools
             _choiceCanvasGroup.interactable = true;
         }
 
-        private void OnConversationEnded()
-        {
-            OnBlockCursor();
-        }
-
         private void OnBlockCursor()
         {
             Cursor.visible = false;
@@ -73,6 +67,7 @@ namespace AQM.Tools
         {
             HideDialogContainer();
             HideChoiceContainer();
+            OnBlockCursor();
         }
 
         private void HideDialogContainer()
@@ -96,7 +91,6 @@ namespace AQM.Tools
             DialogSystemController.onShowNewChoice -= ShowChoiceNode;
             DialogSystemController.onConversationEnded -= HideConversationUI;
             DialogSystemController.onShowNewChoiceInTime -= ShowChoiceNodeInTime;
-            DialogSystemController.onConversationEnded -= OnConversationEnded;
         }
     }
 }
