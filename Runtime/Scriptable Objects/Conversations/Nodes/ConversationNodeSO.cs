@@ -68,19 +68,11 @@ namespace AQM.Tools
         {
             base.SaveAs(db);
             AssetDatabase.AddObjectToAsset(requirements,db);
-            AssetDatabase.SaveAssets();
             foreach (ConditionSO cond in requirements.conditions)
-            {
                 AssetDatabase.AddObjectToAsset(cond, db);
-                AssetDatabase.SaveAssets();
-            }
             AssetDatabase.AddObjectToAsset(actionList,db);
-            AssetDatabase.SaveAssets();
             foreach (Command action in actionList.commands)
-            {
                 AssetDatabase.AddObjectToAsset(action, db);
-                AssetDatabase.SaveAssets();
-            }
         }
 
         public override void OnDestroy()

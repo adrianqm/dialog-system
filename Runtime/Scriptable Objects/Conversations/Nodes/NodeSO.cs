@@ -105,7 +105,7 @@ namespace AQM.Tools
         public virtual void SaveAs(DialogSystemDatabase db)
         {
             AssetDatabase.AddObjectToAsset(this,db);
-            AssetDatabase.SaveAssets();
+            
             foreach (PortSO inputPort in inputPorts)
                 inputPort.SaveAs(db);
             foreach (PortSO outputPort in outputPorts)

@@ -30,7 +30,6 @@ namespace AQM.Tools
         public void SaveAs(DialogSystemDatabase db)
         {
             AssetDatabase.AddObjectToAsset(this,db);
-            AssetDatabase.SaveAssets();
         }
 
         public void SortPort()
