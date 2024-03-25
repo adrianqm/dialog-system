@@ -1,0 +1,14 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/dialog-system/Editor/Views/TimeNodeViewContainer/TimeNodeViewContainer.uss?fileID=7433441132597879392&amp;guid=7b182985f77a85e40b004da1c68b4113&amp;type=3#TimeNodeViewContainer" />
+    <ui:VisualElement name="time-container" class="time-container" style="min-width: 50px; min-height: 35px;">
+        <ui:VisualElement name="title-container" class="title-container" style="-unity-text-align: middle-left;">
+            <ui:Label tabindex="-1" text="Time" parse-escape-sequences="true" display-tooltip-when-elided="true" name="title" class="title" />
+            <ui:VisualElement name="clock-image" class="clock-image" style="background-image: url(&quot;project://database/Assets/dialog-system/Editor/Assets/clock.png?fileID=2800000&amp;guid=ecdb41de39210164497f8ce6cebad783&amp;type=3#clock&quot;); margin-right: 10px;" />
+            <ui:VisualElement name="elapsed-time" class="elapsed-time" style="flex-grow: 0; justify-content: flex-start; visibility: hidden;">
+                <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="elapsed-time-label" class="title" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-shrink: 1; flex-grow: 1; flex-direction: row; align-items: center; align-self: center;" />
+            </ui:VisualElement>
+            <ui:FloatField label="Time" value="42,2" name="time-float" class="float-input" style="width: 55px;" />
+            <ui:Label tabindex="-1" text="sec" parse-escape-sequences="true" display-tooltip-when-elided="true" name="sec-label" style="font-size: 11px; padding-right: 0;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

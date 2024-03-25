@@ -32,13 +32,13 @@ namespace AQM.Tools
                     selected = i;
                 options.Add(locale.name);
             }
-            tmp.text = options[selected];
+            if(options.Count > 0) tmp.text = options[selected];
             group.alpha = 1;
         }
 
         private void Update()
         {
-            if (!changeLocale.action.WasPressedThisFrame()) return;
+            if (!changeLocale || !changeLocale.action.WasPressedThisFrame()) return;
             selected = (selected + 1) % options.Count;
             LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[selected];
             tmp.text = options[selected];
@@ -46,7 +46,7 @@ namespace AQM.Tools
 
         private void OnEnable()
         {
-            changeLocale.action.Enable();
+            if(changeLocale) changeLocale.action.Enable();
         }
 
         private void OnDisable()

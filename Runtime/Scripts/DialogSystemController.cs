@@ -13,29 +13,27 @@ namespace AQM.Tools
 {
     public class DialogSystemController : Singleton<DialogSystemController>
     {
-        
         public static Action<DSDialog> onShowNewDialog;
         public static Action<DSChoice> onShowNewChoice;
         public static Action<DSChoice,float> onShowNewChoiceInTime;
-        public static Action<DSNode> onNextMessageShown;
         public static Action onConversationStarted;
         public static Action onConversationEnded;
         
         [SerializeField] private DialogSystemDatabase dialogSystemDatabase;
+        public DialogSystemDatabase DialogSystemDatabase => dialogSystemDatabase;
         
         [Header("Dialog Config")]
-        [SerializeField] private List<InputActionReference> inputKeys;
+        
         [SerializeField] private bool dialogTimer;
         [SerializeField] private float dialogTime = 2f;
-        private Coroutine _dialogCo;
+        public bool DialogTimer => dialogTimer;
+        public float DialogTime => dialogTime;
         
         [Header("Choice Config")]
         [SerializeField] private bool hasNoResponse;
         [SerializeField] private float noResponseTime = 2f;
 
-        public DialogSystemDatabase DialogSystemDatabase => dialogSystemDatabase;
-
-        private ConversationTree _currentConversation;
+        private ConversationStateMachine _currentConversation;
         private DSChoice _currentChoiceNode;
 
         private void Awake()
@@ -72,6 +70,16 @@ namespace AQM.Tools
             return pairs;
         }
 
+        public List<Actor> GetActors()
+        {
+            List<Actor> actors = new List<Actor>();
+            if (dialogSystemDatabase)
+            {
+                actors =  dialogSystemDatabase.actors;
+            }
+            return actors;
+        }
+
         private List<KeyValuePair<ConversationTree, string>> GetPairInGroup(ConversationGroup group, string path)
         {
             var pairs = new List<KeyValuePair<ConversationTree, string>>();
@@ -95,28 +103,18 @@ namespace AQM.Tools
         
         private void StartConversation(ConversationTree conversationTree)
         {
-            if (_currentConversation != null)
-            {
-                dialogSystemDatabase.ForceEndOfConversation(_currentConversation);
-                ResetEndData();
-            }
-            _currentConversation = conversationTree;
-            _currentChoiceNode = null;
-            DSNode nextNode = dialogSystemDatabase.StartConversation(_currentConversation);
-            if (nextNode != null)
-            {
-                onConversationStarted?.Invoke();
-                _currentConversation.onEndConversation -= EndConversation;
-                _currentConversation.onEndConversation += EndConversation;
-            
+            DestroyConversation();
+            _currentConversation = gameObject.AddComponent<ConversationStateMachine>();
+            _currentConversation.onConversationStarted += OnStartConversation;
+            _currentConversation.onShowNode += OnShowNode;
+            _currentConversation.onConversationEnded += OnEndConversation;
 #if LOCALIZATION_EXIST
-                LocalizationSettings.SelectedLocaleChanged += ChangedLocale;
+            LocalizationSettings.SelectedLocaleChanged += ChangedLocale;
 #endif
-                HandleNextNode(nextNode);
-            }
+            _currentConversation.Initialize(dialogSystemDatabase,conversationTree);
         }
         
-    #if LOCALIZATION_EXIST
+#if LOCALIZATION_EXIST
         private void ChangedLocale(Locale locale){
             if (!_currentConversation) return;
             DSNode currentNode = _currentConversation.GetCurrentNode();
@@ -140,49 +138,9 @@ namespace AQM.Tools
         }
     #endif
 
-        private void NextMessageCallback(InputAction.CallbackContext context)
+        private void GetNextNode(int option)
         {
-            NextMessage();
-        }
-
-        private void NextMessage()
-        {
-            DisableInputKeys();
-            GetNextNode();
-        }
-
-        private void HandleNextNode(DSNode nextNode)
-        {
-            if(nextNode == null) return;
-            if (nextNode.DelayTime > 0)
-            {
-                StartCoroutine(ShowDialogWithDelay(nextNode));
-            }else ShowNode(nextNode);
-        }
-
-        private void ShowNode(DSNode node)
-        {
-            if (node is DSChoice choiceNode)
-            {
-                _currentChoiceNode = choiceNode;
-                _currentChoiceNode.onChoiceSelected += OnChoiceSelected;
-                
-                if (hasNoResponse)onShowNewChoiceInTime?.Invoke(choiceNode,noResponseTime);
-                else onShowNewChoice?.Invoke(choiceNode);
-                onNextMessageShown?.Invoke(node);
-            }
-            else if(node is DSDialog dialogNode)
-            {
-                EnableInputKeys();
-                onShowNewDialog?.Invoke(dialogNode);
-                onNextMessageShown?.Invoke(node);
-            }
-        }
-
-        private IEnumerator ShowDialogWithDelay(DSNode node)
-        {
-            yield return new WaitForSeconds(node.DelayTime);
-            ShowNode(node);
+            _currentConversation.GetNextStep(option);
         }
         
         private void OnChoiceSelected(int option)
@@ -193,86 +151,51 @@ namespace AQM.Tools
                 GetNextNode(option);
             }
         }
-        
-        public void GetNextNode(int option = -2)
+
+        private void OnStartConversation()
         {
-            if(_currentConversation == null) return;
-            DSNode nextNode = _currentConversation.GetNextNode(option);
-            HandleNextNode(nextNode);
+            onConversationStarted?.Invoke();
         }
 
-        private void EndConversation()
+        private void OnShowNode(DSNode node)
         {
-            ResetEndData();
+            if (node is DSChoice choiceNode)
+            {
+                _currentChoiceNode = choiceNode;
+                _currentChoiceNode.onChoiceSelected += OnChoiceSelected;
+                
+                if (hasNoResponse) onShowNewChoiceInTime?.Invoke(choiceNode,noResponseTime);
+                else onShowNewChoice?.Invoke(choiceNode);
+            }
+            else if(node is DSDialog dialogNode)
+            {
+                onShowNewDialog?.Invoke(dialogNode);
+            }
+        }
+        
+        private void OnEndConversation()
+        {
+            DestroyConversation();
             onConversationEnded?.Invoke();
         }
 
-        private void ResetEndData()
+        private void DestroyConversation()
         {
-            DisableInputKeys();
-            _currentConversation.onEndConversation -= EndConversation;
-            _currentConversation = null;
-            
-            
+            if (!_currentConversation) return;
+            _currentConversation.onConversationStarted -= OnStartConversation;
+            _currentConversation.onShowNode -= OnShowNode;
+            _currentConversation.onConversationEnded -= OnEndConversation;
 #if LOCALIZATION_EXIST
             LocalizationSettings.SelectedLocaleChanged -= ChangedLocale;
 #endif
-        }
-
-        private void EnableInputKeys()
-        {
-            foreach (var key in inputKeys)
-            {
-                key.action.started += NextMessageCallback;
-            }
-
-            if (dialogTimer)
-            {
-                _dialogCo = StartCoroutine(NextMessageCoroutine());
-            }
-        }
-        
-        private void DisableInputKeys()
-        {
-            foreach (var key in inputKeys)
-            {
-                key.action.started -= NextMessageCallback;
-            }
-            
-            if(_dialogCo != null) StopCoroutine(_dialogCo);
-        }
-
-        private IEnumerator NextMessageCoroutine()
-        {
-            yield return new WaitForSeconds(dialogTime);
-            NextMessage();
-        }
-
-        private void OnEnable()
-        {
-            foreach (var key in inputKeys)
-            {
-                key.action.Enable();
-            }
-        }
-
-        private void OnDisable()
-        {
-            foreach (var key in inputKeys)
-            {
-                key.action.Disable();
-            }
+            Destroy(_currentConversation);
         }
 
         private void OnDestroy()
         {
             DDEvents.onStartConversation -= StartConversation;
             DDEvents.onGetNextNode -= GetNextNode;
-            if(_currentConversation) _currentConversation.onEndConversation -= EndConversation;
-            if(_dialogCo != null) StopCoroutine(_dialogCo);
-    #if LOCALIZATION_EXIST
-            LocalizationSettings.SelectedLocaleChanged -= ChangedLocale;
-    #endif
+            DestroyConversation();
         }
     }
 }

@@ -7,7 +7,7 @@
 
         public string Message => _message;
         
-        public DSDialog(Actor actor, string message, float delayTime) : base(actor,delayTime)
+        public DSDialog(Actor actor, string message) : base(actor)
         {
             _message = message;
         }

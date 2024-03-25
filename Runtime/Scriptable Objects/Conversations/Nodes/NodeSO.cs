@@ -38,10 +38,8 @@ namespace AQM.Tools
         public virtual DSNode GetData() { return null; }
         public abstract NodeSO Clone();
         
-        public virtual void OnRunning()
-        {
-            NodeState = State.Running;
-        }
+        public virtual void OnRunning() { NodeState = State.Running; }
+        public virtual void OnCompleted() { NodeState = State.Finished; }
         
 #if UNITY_EDITOR
         public virtual void Init(Vector2 position)

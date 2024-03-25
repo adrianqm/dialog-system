@@ -32,6 +32,7 @@ namespace AQM.Tools
 
         private void Awake()
         {
+            Application.targetFrameRate = 120;
             _rb = GetComponent<Rigidbody>();
             _rb.freezeRotation = true;
             _inputControls = InputManager.Instance.playerInputActions.Player.Movement;

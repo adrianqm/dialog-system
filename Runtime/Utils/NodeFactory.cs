@@ -12,7 +12,8 @@ public static class NodeFactory
         Dialog,
         Choice,
         Branch,
-        Bookmark
+        Bookmark,
+        Time
     }
     public static NodeSO CreateNode(NodeType type, Vector2 position)
     {
@@ -47,6 +48,11 @@ public static class NodeFactory
                 BookmarkNodeSO bookmarkNode = ScriptableObject.CreateInstance<BookmarkNodeSO>();
                 bookmarkNode.Init(position);
                 return  bookmarkNode;
+            
+            case NodeType.Time:
+                TimerNodeSO timerNodeSo = ScriptableObject.CreateInstance<TimerNodeSO>();
+                timerNodeSo.Init(position);
+                return  timerNodeSo;
             
             default:
                 return null;

@@ -30,6 +30,16 @@ public class InspectorView : VisualElement
               _currentNodeView = nodeView;
               _currentContainer = container;
           }
+      }else if (nodeView is TimeNodeView)
+      {
+          TimerNodeSO timeNode = nodeView.node as TimerNodeSO;
+          if (timeNode)
+          {
+              TimeInspectorView container = new TimeInspectorView(timeNode);
+              Add(container);
+              _currentNodeView = nodeView;
+              _currentContainer = container;
+          }
       }else
       {
           DialogInspectorView container = new DialogInspectorView(nodeView);

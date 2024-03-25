@@ -85,7 +85,6 @@ private StringTableCollection _collection;
             EditorUtility.SetDirty(node);
             _nodeView.SetDefaultActorIfNotExist(actor);
         });
-        BindDelayTime(node);
 #if LOCALIZATION_EXIST
         if (!DSData.instance.tableCollection || !DSData.instance.database.defaultLocale)
         {
@@ -110,7 +109,6 @@ private StringTableCollection _collection;
             EditorUtility.SetDirty(node);
             _nodeView.SetDefaultActorIfNotExist(actor);
         });
-        BindDelayTime(node);
 #if LOCALIZATION_EXIST
         if (!DSData.instance.tableCollection || !DSData.instance.database.defaultLocale)
         {
@@ -422,12 +420,6 @@ private StringTableCollection _collection;
         VisualElement localizationMessageVe = this.Q("message-container-text");
         BindElementText(localizationMessageVe,nodeSo);
     }
-    
-    private void BindDelayTime(ConversationNodeSO node){
-        FloatField field = this.Q<FloatField>("time-float");
-        field.bindingPath = "delayTime";
-        field.Bind(new SerializedObject(node));
-    }
 
     private void GetAndBindActor(Actor actor, Action<Actor> onSelectActor)
     {
@@ -495,7 +487,6 @@ private StringTableCollection _collection;
         this.Q("notVisibleContainer").AddToClassList("hidden-class");
         this.Q("actorContainer").RemoveFromClassList("hidden-class");
         this.Q("messageContainer").RemoveFromClassList("hidden-class");
-        this.Q("delayContainer").RemoveFromClassList("hidden-class");
     }
     
     private void SetUpChoiceClasses()

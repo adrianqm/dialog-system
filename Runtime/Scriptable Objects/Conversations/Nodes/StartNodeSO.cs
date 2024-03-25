@@ -7,6 +7,8 @@ namespace AQM.Tools
 {
     public class StartNodeSO : NodeSO
     {
+        public PortSO outputPort;
+        
         public override NodeSO Clone()
         {
             StartNodeSO nodeSo = Instantiate(this);
@@ -25,7 +27,7 @@ namespace AQM.Tools
 
         protected override void CreateDefaultOutputPorts()
         {
-            var outputPort = PortFactory.Create("", this);
+            outputPort = PortFactory.Create("", this);
             outputPorts.Add(outputPort);
         }
         

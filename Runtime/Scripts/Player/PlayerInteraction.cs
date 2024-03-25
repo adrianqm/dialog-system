@@ -46,6 +46,7 @@ namespace AQM.Tools
         private void StopInteract(ConversationTree tree)
         {
             _canInteract = false;
+            InputManager.Instance.ToogleActionMap(InputManager.Instance.playerInputActions.UI);
         }
     
         IEnumerator ResetInteraction()

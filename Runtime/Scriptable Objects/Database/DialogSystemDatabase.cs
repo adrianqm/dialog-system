@@ -21,16 +21,6 @@ namespace AQM.Tools
             public Locale defaultLocale;
             public bool localizationActivated;
         #endif
-
-        public DSNode StartConversation(ConversationTree conversationTree)
-        {
-            return conversationTree.StartConversation(this);
-        }
-        
-        public void ForceEndOfConversation(ConversationTree conversationTree)
-        {
-            conversationTree.ForceEndOfConversation();
-        }
         
         public ConversationTree FindConversation(string conversationGuid)
         {
@@ -43,23 +33,6 @@ namespace AQM.Tools
                 }
             }
             return null;
-        }
-
-        public DialogSystemDatabase Clone()
-        {
-            DialogSystemDatabase tree = Instantiate(this);
-            tree.title = "(Cloned) " + title;
-            tree.description = description;
-            tree.conversationGroups = new List<ConversationGroup>();
-            conversationGroups.ForEach((group) => { tree.conversationGroups.Add(group.Clone()); });
-
-            tree.actors = new List<Actor>();
-            actors.ForEach((actor) =>
-            {
-                Actor clonedActor = actor.Clone();
-                tree.actors.Add(clonedActor);
-            });
-            return tree;
         }
         
 #if UNITY_EDITOR

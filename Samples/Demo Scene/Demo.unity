@@ -1322,7 +1322,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 536963a12b43a1341811c20656f01c01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  conversation: {fileID: 0}
+  conversation: {fileID: 2085489880560801784, guid: 1e60489184903134ca2cf6bddc0eb08a, type: 2}
   lookAtPoint: {fileID: 1435192075}
 --- !u!1 &906471356
 GameObject:
@@ -1545,6 +1545,7 @@ GameObject:
   m_Component:
   - component: {fileID: 948244431}
   - component: {fileID: 948244432}
+  - component: {fileID: 948244433}
   m_Layer: 0
   m_Name: Dialog System Controller
   m_TagString: Untagged
@@ -1580,13 +1581,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogSystemDatabase: {fileID: 11400000, guid: 1e60489184903134ca2cf6bddc0eb08a, type: 2}
-  inputKeys:
-  - {fileID: -1215368942516958011, guid: f3e6b50850206464287b158c92e4cb08, type: 3}
-  - {fileID: 5697762415176839361, guid: f3e6b50850206464287b158c92e4cb08, type: 3}
   dialogTimer: 0
   dialogTime: 2
   hasNoResponse: 1
   noResponseTime: 3
+--- !u!114 &948244433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 948244429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c48bbd07da3c1b04cbf063cc5776435e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputKeys:
+  - {fileID: -1215368942516958011, guid: f3e6b50850206464287b158c92e4cb08, type: 3}
+  - {fileID: 5697762415176839361, guid: f3e6b50850206464287b158c92e4cb08, type: 3}
 --- !u!1 &1001991423
 GameObject:
   m_ObjectHideFlags: 0
@@ -1766,8 +1779,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e25fe48835c8e44885387fe65ce8444, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensX: 100
-  sensY: 100
+  sensX: 150
+  sensY: 150
   orientation: {fileID: 38925989}
   lookAtTime: 0.3
 --- !u!20 &1020364216
@@ -1865,6 +1878,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8eb2769172b295746bf3d4425455e883, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  group: {fileID: 89216071}
+  tmp: {fileID: 1001991425}
+  changeLocale: {fileID: 2894174474004833592, guid: f3e6b50850206464287b158c92e4cb08, type: 3}
 --- !u!1 &1054007735
 GameObject:
   m_ObjectHideFlags: 0
@@ -2118,7 +2134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 536963a12b43a1341811c20656f01c01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  conversation: {fileID: 8522782652231559613, guid: 1e60489184903134ca2cf6bddc0eb08a, type: 2}
+  conversation: {fileID: 0}
   lookAtPoint: {fileID: 819760954}
 --- !u!1 &1122216686
 GameObject:
@@ -2241,7 +2257,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 536963a12b43a1341811c20656f01c01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  conversation: {fileID: 0}
+  conversation: {fileID: 2085489880560801784, guid: 1e60489184903134ca2cf6bddc0eb08a, type: 2}
   lookAtPoint: {fileID: 816227855}
 --- !u!1 &1129794669
 GameObject:
@@ -2758,7 +2774,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 536963a12b43a1341811c20656f01c01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  conversation: {fileID: 0}
+  conversation: {fileID: 2085489880560801784, guid: 1e60489184903134ca2cf6bddc0eb08a, type: 2}
   lookAtPoint: {fileID: 2144201928}
 --- !u!1 &1572393226
 GameObject:

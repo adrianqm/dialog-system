@@ -527,6 +527,7 @@ public class DialogSystemView : GraphView
             evt.menu.AppendAction("Create Node / Dialog Node", (a)=> CreateNode(NodeFactory.NodeType.Dialog,pos));
             evt.menu.AppendAction("Create Node / Choice Node", (a)=> CreateNode(NodeFactory.NodeType.Choice,pos));
             evt.menu.AppendAction("Create Node / Branch Node", (a)=> CreateNode(NodeFactory.NodeType.Branch,pos));
+            evt.menu.AppendAction("Create Node / Time Node", (a)=> CreateNode(NodeFactory.NodeType.Time,pos));
             evt.menu.AppendAction("Go to Bookmark / "+_tree.startBookmark.bookmarkTitle, (a)=> CreateBookmark(NodeFactory.NodeType.Bookmark,pos, _tree.startBookmark));
             foreach (var treeBookmark in _tree.bookmarks)
             {
@@ -638,6 +639,9 @@ public class DialogSystemView : GraphView
                 break;
             case BookmarkNodeSO bookmarkNodeSo:
                 nodeView = new BookmarkNodeView(this,bookmarkNodeSo);
+                break;
+            case TimerNodeSO:
+                nodeView = new TimeNodeView(nodeSo);
                 break;
             default:
                 nodeView = new NodeView(nodeSo);

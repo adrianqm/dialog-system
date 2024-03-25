@@ -54,8 +54,7 @@ public class DialogNodeView : NodeView
             SetUpTopData(dialogNodeSo);
             BindMessage();
             AddToClassList("dialog");
-            VisualElement topContainerView = this.Q("top");
-            topContainerView.style.flexDirection = FlexDirection.Row;
+            topContainer.style.flexDirection = FlexDirection.Row;
             inputContainer.AddToClassList("singleInputContainer");
             outputContainer.AddToClassList("singleOutputContainer");
         }

@@ -7,9 +7,11 @@ namespace AQM.Tools
 {
     public class DialogNodeSO : ConversationNodeSO
     {
+        public PortSO outputPort;
+        
         public override DSNode GetData()
         {
-            return new DSDialog(actor, message, delayTime);
+            return new DSDialog(actor, message);
         }
         
 #if UNITY_EDITOR
@@ -21,7 +23,7 @@ namespace AQM.Tools
         
         protected override void CreateDefaultOutputPorts()
         {
-            var outputPort = PortFactory.Create("", this);
+            outputPort = PortFactory.Create("", this);
             outputPorts.Add(outputPort);
             EditorUtility.SetDirty(this);
         }

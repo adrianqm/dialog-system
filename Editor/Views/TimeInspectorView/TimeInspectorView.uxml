@@ -1,0 +1,14 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/dialog-system/Editor/Views/TimeInspectorView/TimeInspectorView.uss?fileID=7433441132597879392&amp;guid=ff3ca4eb928970744b07cf1be8b5da79&amp;type=3#TimeInspectorView" />
+    <ui:Label tabindex="-1" text="Time Inspector" display-tooltip-when-elided="true" name="titleLabel" class="titleLabel" style="-unity-text-align: middle-center; height: 30px; background-color: rgb(24, 24, 29); -unity-font-style: normal; margin-right: 0; padding-right: 1px;" />
+    <ui:VisualElement name="content" style="flex-grow: 1; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 10px;">
+        <ui:VisualElement name="delayContainer" class="hidden-class" style="flex-grow: 0; background-color: rgb(24, 24, 29); padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; margin-bottom: 10px; display: flex;">
+            <ui:VisualElement name="time-label-container" style="flex-grow: 1; flex-direction: row;">
+                <ui:Label tabindex="-1" text="Time" display-tooltip-when-elided="true" name="time-label" style="margin-right: 4px;" />
+                <ui:VisualElement name="clock-image" style="background-image: url(&quot;project://database/Assets/dialog-system/Editor/Assets/clock.png?fileID=21300000&amp;guid=ecdb41de39210164497f8ce6cebad783&amp;type=3#clock&quot;); width: 12px; height: 12px; min-width: 12px; padding-top: 3px; margin-top: 1px; margin-left: 1px;" />
+            </ui:VisualElement>
+            <ui:FloatField label="Time" value="42,2" name="time-float" />
+            <ui:Label tabindex="-1" text="sec" parse-escape-sequences="true" display-tooltip-when-elided="true" name="sec-label" style="margin-right: 5px; font-size: 11px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
