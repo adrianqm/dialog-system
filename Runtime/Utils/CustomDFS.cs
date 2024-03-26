@@ -85,6 +85,18 @@ namespace AQM.Tools
                 }
                 
             }
+            
+            TimerNodeSO timerNodeSo = currentNode as TimerNodeSO;
+            if (timerNodeSo)
+            {
+                foreach (var n in timerNodeSo.outputPort.targetNodes)
+                {
+                    if (!visitedNodes.Contains(n))
+                    {
+                        DFSUtil(n, visitedNodes);
+                    }
+                }
+            }
         }
     }
 }
