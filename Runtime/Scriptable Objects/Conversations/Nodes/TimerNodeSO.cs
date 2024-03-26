@@ -9,7 +9,13 @@ namespace AQM.Tools
         public float time;
         public float timeRemaining;
         public PortSO outputPort;
-        
+
+        public override void OnInitial()
+        {
+            base.OnInitial();
+            timeRemaining = 0;
+        }
+
         public override NodeSO Clone()
         {
             TimerNodeSO nodeSo = Instantiate(this);
