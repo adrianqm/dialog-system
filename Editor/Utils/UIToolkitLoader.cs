@@ -21,4 +21,11 @@ public static class UIToolkitLoader
         string path = $"{editorWindowPath}/Assets/{spriteName}";
         return AssetDatabase.LoadAssetAtPath<Sprite>(path);
     }
+    
+    public static Texture2D LoadTexture2D (string editorWindowPath, string spriteName)
+    {
+        string path = $"{editorWindowPath}/Assets/{spriteName}";
+        return (Texture2D)AssetDatabase.LoadAssetAtPath(path, typeof(Texture2D));
+    }
+    
 }

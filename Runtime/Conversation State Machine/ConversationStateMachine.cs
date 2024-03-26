@@ -84,7 +84,7 @@ namespace AQM.Tools
                 }
                 if (visitedNodes.Find(vn => vn.guid == n.guid))
                 {
-                    n.NodeState = NodeSO.State.Initial;
+                    n.OnInitial();
                     continue;
                 }
                 if (n.NodeState == NodeSO.State.Visited) n.NodeState = NodeSO.State.VisitedUnreachable;

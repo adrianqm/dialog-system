@@ -6,6 +6,7 @@ using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.Diagnostics;
 #if LOCALIZATION_EXIST
 using UnityEditor.Localization;
 using UnityEditor.Localization.UI;
@@ -17,7 +18,7 @@ using UnityEngine.UIElements;
     public class DialogSystemEditor : EditorWindow
     {
         public static string RelativePath => AssetDataBaseExtensions.GetDirectoryOfScript<DialogSystemEditor>();
-        private readonly string assetName = "DialogSystemEditor";
+        private readonly string _assetName = "DialogSystemEditor";
         
         private ToolbarMenu _fileMenu;
         private DialogSystemView _treeView;
@@ -81,11 +82,11 @@ using UnityEngine.UIElements;
             VisualElement root = rootVisualElement;
 
             // Instantiate UXML
-            visualTreeAsset = UIToolkitLoader.LoadUXML(RelativePath, assetName);
+            visualTreeAsset = UIToolkitLoader.LoadUXML(RelativePath, _assetName);
             visualTreeAsset.CloneTree(root);
 
             // Import StyleSheets
-            styleSheet = UIToolkitLoader.LoadStyleSheet(RelativePath, assetName);
+            styleSheet = UIToolkitLoader.LoadStyleSheet(RelativePath, _assetName);
             root.styleSheets.Add(styleSheet);
             
             // Instantiate Tab Controller
@@ -185,7 +186,7 @@ using UnityEngine.UIElements;
         private void SetDefaultIconForDatabase()
         {
             string[] guids = AssetDatabase.FindAssets($"t:{nameof(DialogSystemDatabase)}");
-            Texture2D icon = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/dialog-system/Assets/Icon.png", typeof(Texture2D));
+            Texture2D icon = UIToolkitLoader.LoadTexture2D(RelativePath, "Icon.png");
             foreach (var guid in guids)
             {
                 string assetPath = AssetDatabase.GUIDToAssetPath(guid);

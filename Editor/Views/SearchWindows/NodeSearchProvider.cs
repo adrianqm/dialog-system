@@ -15,6 +15,8 @@ namespace AQM.Tools
         {
             SingleChoice,
             MultipleChoice,
+            Branch,
+            Time,
             Bookmark,
             Group
         }
@@ -46,15 +48,25 @@ namespace AQM.Tools
             List<SearchTreeEntry> searchlist = new List<SearchTreeEntry>()
             {
                 new SearchTreeGroupEntry(new GUIContent("Nodes"),0),
-                new SearchTreeGroupEntry(new GUIContent("Dialogue Nodes"), 1),
-                new(new GUIContent("Single Choice", _indentationIcon))
+                new SearchTreeGroupEntry(new GUIContent("Create Node"), 1),
+                new(new GUIContent("Dialog Node", _indentationIcon))
                 {
                     userData = new EntryType(Types.SingleChoice),
                     level = 2
                 },
-                new(new GUIContent("Multiple Choice", _indentationIcon))
+                new(new GUIContent("Choice Node", _indentationIcon))
                 {
                     userData = new EntryType(Types.MultipleChoice),
+                    level = 2
+                },
+                new(new GUIContent("Branch Node", _indentationIcon))
+                {
+                    userData = new EntryType(Types.Branch),
+                    level = 2
+                },
+                new(new GUIContent("Time Node", _indentationIcon))
+                {
+                    userData = new EntryType(Types.Time),
                     level = 2
                 }
             };
@@ -96,6 +108,18 @@ namespace AQM.Tools
                 case Types.MultipleChoice:
                 {
                     _graphView.CreateNode(NodeFactory.NodeType.Choice,pos);
+                    return true;
+                }
+
+                case Types.Branch:
+                {
+                    _graphView.CreateNode(NodeFactory.NodeType.Branch,pos);
+                    return true;
+                }
+                
+                case Types.Time:
+                {
+                    _graphView.CreateNode(NodeFactory.NodeType.Time,pos);
                     return true;
                 }
                 

@@ -22,13 +22,6 @@ namespace AQM.Tools
         [SerializeField] private DialogSystemDatabase dialogSystemDatabase;
         public DialogSystemDatabase DialogSystemDatabase => dialogSystemDatabase;
         
-        [Header("Dialog Config")]
-        
-        [SerializeField] private bool dialogTimer;
-        [SerializeField] private float dialogTime = 2f;
-        public bool DialogTimer => dialogTimer;
-        public float DialogTime => dialogTime;
-        
         [Header("Choice Config")]
         [SerializeField] private bool hasNoResponse;
         [SerializeField] private float noResponseTime = 2f;

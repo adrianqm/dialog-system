@@ -21,6 +21,7 @@ namespace AQM.Tools
         public override void EnterState()
         {
             _currentNode = context.CurrentNode as TimerNodeSO;
+            _actionPerformed = false;
             _totalTimeToWait = _currentNode.time;
             _elapsedTime = 0;
             _currentNode.timeRemaining = _totalTimeToWait;

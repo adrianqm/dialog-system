@@ -8,14 +8,18 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(DialogSystemController))]
 public class DSInputController : MonoBehaviour
 {
+    
+    [Header("Dialog Config")]
+        
+    [SerializeField] private bool dialogTimer;
+    [SerializeField] private float dialogTime = 2f;
+    
     [SerializeField] private List<InputActionReference> inputKeys;
-
-    private DialogSystemController _dialogSystemController;
+    
     private Coroutine _dialogCo;
     private void Awake()
     {
         DialogSystemController.onShowNewDialog += OnNewDialog;
-        _dialogSystemController = GetComponent<DialogSystemController>();
     }
     
     private void OnNewDialog(DSDialog node)
@@ -31,7 +35,7 @@ public class DSInputController : MonoBehaviour
     
     private IEnumerator NextMessageCoroutine()
     {
-        yield return new WaitForSeconds(_dialogSystemController.DialogTime);
+        yield return new WaitForSeconds(dialogTime);
         NextMessage();
     }
 
@@ -46,7 +50,7 @@ public class DSInputController : MonoBehaviour
         foreach (var key in inputKeys)
             key.action.started += NextMessageCallback;
         
-        if (_dialogSystemController.DialogTimer)
+        if (dialogTimer)
         {
             _dialogCo = StartCoroutine(NextMessageCoroutine());
         }
